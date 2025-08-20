@@ -14,6 +14,12 @@
   object-fit: cover;
 }
 
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
 .overlay {
   position: absolute;
   top: 0;
@@ -26,6 +32,5 @@
     rgba(0, 20, 40, 0.5) 50%,
     rgba(0, 10, 20, 0.6) 100%
   );
-  backdrop-filter: blur(1.5px);
-  -webkit-backdrop-filter: blur(1.5px);
+  /* Removed blur effect */
 }

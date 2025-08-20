@@ -1,0 +1,234 @@
+.boardContainer {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding-bottom: 4rem;
+}
+
+.pageHeader {
+  background: linear-gradient(135deg, #003366 0%, #004080 100%);
+  color: white;
+  padding: 8rem 2rem 4rem;
+  text-align: center;
+  position: relative;
+}
+
+.pageHeader::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: linear-gradient(to bottom right, transparent 49%, #f8fafc 50%);
+}
+
+.headerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pageTitle {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.pageDescription {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  opacity: 0.9;
+}
+
+.contentContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Section Styling */
+.chairmanSection,
+.viceChairmenSection,
+.membersSection {
+  margin-bottom: 4rem;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  direction: rtl;
+}
+
+.sectionIcon {
+  font-size: 2rem;
+  color: #003366;
+}
+
+.sectionTitle h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e293b;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.sectionTitle h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, #003366, #004080);
+  border-radius: 3px;
+}
+
+/* Chairman Card Styling */
+.chairmanCard {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  max-width: 500px;
+  margin: 0 auto;
+  border-top: 5px solid #003366;
+  transition: all 0.3s ease;
+}
+
+.chairmanCard:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.chairmanCard .memberImageContainer {
+  width: 250px;
+  height: 250px;
+  margin-bottom: 2rem;
+}
+
+.chairmanCard .memberInfo {
+  width: 100%;
+}
+
+/* Vice Chairmen Grid Styling */
+.viceChairmenGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  direction: rtl;
+}
+
+/* Members Grid Styling */
+.membersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+  direction: rtl;
+}
+
+/* Member Card Styling */
+.memberCard {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  border-top: 3px solid #003366;
+  height: 100%;
+}
+
+.memberCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+}
+
+.memberImageContainer {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.memberImageWrapper {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #f1f5f9;
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border: 5px solid white;
+}
+
+.memberImage {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
+
+.memberInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.memberName {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.memberPosition {
+  font-size: 1.1rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .pageTitle {
+    font-size: 2.5rem;
+  }
+  
+  .viceChairmenGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .membersGrid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+  
+  .chairmanCard .memberImageContainer {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .memberName {
+    font-size: 1.3rem;
+  }
+}

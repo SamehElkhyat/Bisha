@@ -1,0 +1,356 @@
+.bulletinsContainer {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding-bottom: 4rem;
+}
+
+.pageHeader {
+  background: linear-gradient(135deg, #003366 0%, #004080 100%);
+  color: white;
+  padding: 8rem 2rem 4rem;
+  text-align: center;
+  position: relative;
+}
+
+.pageHeader::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: linear-gradient(to bottom right, transparent 49%, #f8fafc 50%);
+}
+
+.headerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pageTitle {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.pageDescription {
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  opacity: 0.9;
+}
+
+.contentContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Filter Section */
+.filterSection {
+  margin-bottom: 2rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  direction: rtl;
+}
+
+.searchBox {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 1rem 3rem 1rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  direction: rtl;
+}
+
+.searchInput:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.searchIcon {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  color: #64748b;
+}
+
+.filterControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex: 1;
+  min-width: 200px;
+}
+
+.filterLabel {
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+}
+
+.filterSelect {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  background-color: white;
+  color: #1e293b;
+  cursor: pointer;
+  direction: rtl;
+}
+
+.filterSelect:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Bulletins Grid */
+.bulletinsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  direction: rtl;
+}
+
+/* Bulletin Card */
+.bulletinCard {
+  perspective: 1500px;
+  height: 400px;
+  cursor: pointer;
+}
+
+.bulletinInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.bulletinCard.flipped .bulletinInner {
+  transform: rotateY(180deg);
+}
+
+.bulletinFront, .bulletinBack {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.bulletinFront {
+  background: white;
+}
+
+.bulletinBack {
+  background: white;
+  transform: rotateY(180deg);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.bulletinImageContainer {
+  position: relative;
+  height: 320px;
+  overflow: hidden;
+}
+
+.bulletinImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.bulletinCard:hover .bulletinImage {
+  transform: scale(1.05);
+}
+
+.bulletinOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
+  color: white;
+}
+
+.bulletinDate {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.dateIcon {
+  color: #ffffff;
+}
+
+.bulletinInfo {
+  padding: 1rem;
+  text-align: center;
+}
+
+.bulletinTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bulletinSize {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+/* Bulletin Back */
+.bulletinBackTitle {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.bulletinDescription {
+  flex: 1;
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  overflow-y: auto;
+}
+
+.bulletinActions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.actionButton {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem 0;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.viewButton {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+.viewButton:hover {
+  background: #e2e8f0;
+}
+
+.downloadButton {
+  background: #003366;
+  color: white;
+}
+
+.downloadButton:hover {
+  background: #004080;
+}
+
+.actionIcon {
+  font-size: 1rem;
+}
+
+.flipHint {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* No Results */
+.noResults {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.noResults h3 {
+  font-size: 1.5rem;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.noResults p {
+  color: #64748b;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .bulletinsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .pageTitle {
+    font-size: 2.5rem;
+  }
+  
+  .filterControls {
+    flex-direction: column;
+  }
+  
+  .filterGroup {
+    width: 100%;
+  }
+  
+  .bulletinsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+}
+
+@media (max-width: 576px) {
+  .bulletinsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .bulletinCard {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+}

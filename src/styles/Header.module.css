@@ -48,6 +48,107 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+/* Dropdown styles */
+.dropdownContainer {
+  position: relative;
+}
+
+.dropdownTrigger {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.activeDropdown {
+  color: #a0d2eb;
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.dropdownIcon {
+  font-size: 0.8rem;
+  margin-right: 0.2rem;
+  transition: transform 0.3s ease;
+}
+
+.rotateIcon {
+  transform: rotate(180deg);
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: rgba(0, 40, 80, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 8px;
+  min-width: 180px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 20;
+  overflow: hidden;
+  margin-top: 0.5rem;
+  animation: dropdownFadeIn 0.3s ease-in-out;
+}
+
+.largeDropdown {
+  width: 250px;
+  max-height: 400px;
+  overflow-y: auto;
+  right: -20px;
+}
+
+.largeDropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.largeDropdown::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.largeDropdown::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.largeDropdown::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdownItem {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.8rem 1.2rem;
+  display: block;
+  transition: all 0.2s ease;
+  text-align: right;
+}
+
+.dropdownItem:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #a0d2eb;
+}
+
+.dropdownItem:not(:last-child) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .socialIcons {
   display: flex;
   gap: 1rem;
@@ -86,5 +187,19 @@
 
   .socialIcons {
     order: 1;
+  }
+  
+  .dropdownMenu {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+  }
+
+  .largeDropdown {
+    max-height: 300px;
+    right: 0;
+    left: 0;
+    width: 100%;
   }
 }

@@ -1,0 +1,341 @@
+.libraryContainer {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding-bottom: 4rem;
+}
+
+.pageHeader {
+  background: linear-gradient(135deg, #003366 0%, #004080 100%);
+  color: white;
+  padding: 8rem 2rem 4rem;
+  text-align: center;
+  position: relative;
+}
+
+.pageHeader::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: linear-gradient(to bottom right, transparent 49%, #f8fafc 50%);
+}
+
+.headerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pageTitle {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.pageDescription {
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto 1rem;
+  opacity: 0.9;
+}
+
+.contactInfo {
+  font-size: 1.1rem;
+  max-width: 800px;
+  margin: 0 auto;
+  opacity: 0.9;
+}
+
+.emailLink {
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: underline;
+  transition: all 0.3s ease;
+}
+
+.emailLink:hover {
+  color: #f0f0f0;
+}
+
+.contentContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Filter Section */
+.filterSection {
+  margin-bottom: 2rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  direction: rtl;
+}
+
+.searchBox {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 1rem 3rem 1rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  direction: rtl;
+}
+
+.searchInput:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.searchIcon {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  color: #64748b;
+}
+
+.filterControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex: 1;
+  min-width: 200px;
+}
+
+.filterLabel {
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+}
+
+.filterSelect {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  background-color: white;
+  color: #1e293b;
+  cursor: pointer;
+  direction: rtl;
+}
+
+.filterSelect:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Resources Grid */
+.resourcesGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  direction: rtl;
+}
+
+/* Resource Card */
+.resourceCard {
+  display: flex;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  padding: 1.5rem;
+  gap: 1.5rem;
+}
+
+.resourceCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.resourceIcon {
+  flex: 0 0 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #003366 0%, #004080 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.typeIcon {
+  font-size: 2.5rem;
+}
+
+.resourceInfo {
+  flex: 1;
+}
+
+.resourceTitle {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.8rem;
+}
+
+.resourceDescription {
+  color: #64748b;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.resourceMeta {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.resourceType {
+  background: #e2e8f0;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: #1e293b;
+  display: inline-flex;
+  align-items: center;
+}
+
+.resourceSize {
+  color: #64748b;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.resourceActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  justify-content: center;
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  min-width: 120px;
+}
+
+.viewButton {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+.viewButton:hover {
+  background: #e2e8f0;
+}
+
+.downloadButton {
+  background: #003366;
+  color: white;
+}
+
+.downloadButton:hover {
+  background: #004080;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.2);
+}
+
+.actionIcon {
+  font-size: 1rem;
+}
+
+/* No Results */
+.noResults {
+  text-align: center;
+  padding: 3rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.noResults h3 {
+  font-size: 1.5rem;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.noResults p {
+  color: #64748b;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .resourceCard {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .resourceIcon {
+    margin-bottom: 1rem;
+  }
+  
+  .resourceMeta {
+    justify-content: center;
+  }
+  
+  .resourceActions {
+    flex-direction: row;
+    width: 100%;
+    margin-top: 1rem;
+  }
+  
+  .actionButton {
+    flex: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .pageTitle {
+    font-size: 2.5rem;
+  }
+  
+  .filterControls {
+    flex-direction: column;
+  }
+  
+  .filterGroup {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .resourceMeta {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  
+  .resourceActions {
+    flex-direction: column;
+  }
+}

@@ -49,7 +49,7 @@ const MapBoundsAdjuster = ({ bounds }: { bounds: L.LatLngBoundsExpression | null
   
   useEffect(() => {
     if (bounds) {
-      map.fitBounds(bounds);
+      map.fitBounds(bounds as L.LatLngBoundsExpression);
     }
   }, [bounds, map]);
   
@@ -197,13 +197,10 @@ const BishaMap: React.FC<BishaMapProps> = ({ onRegionSelect }) => {
   return (
     <div className={styles.mapWrapper}>
       <MapContainer
-        center={[19.0, 42.5]}
+        center={[19.0, 42.5] as L.LatLngExpression}
         zoom={8}
         style={{ height: '600px', width: '100%', direction: 'ltr' }}
         zoomControl={false}
-        zoomAnimation={true}
-        fadeAnimation={true}
-        markerZoomAnimation={true}
       >
         <MapBoundsAdjuster bounds={bounds} />
         <ZoomControl position="bottomright" />
@@ -251,7 +248,7 @@ const BishaMap: React.FC<BishaMapProps> = ({ onRegionSelect }) => {
         {cityMarkers.map((city) => (
           <Marker 
             key={city.id} 
-            position={city.position}
+            position={city.position as L.LatLngExpression}
             icon={city.name === selectedRegion ? SelectedIcon : DefaultIcon}
             eventHandlers={{
               click: () => handleMarkerClick(city.name)
@@ -285,7 +282,7 @@ const BishaMap: React.FC<BishaMapProps> = ({ onRegionSelect }) => {
         {cityMarkers.map((city) => (
           <Circle
             key={`circle-${city.id}`}
-            center={city.position}
+            center={city.position as L.LatLngExpression}
             radius={city.population > 400000 ? 5000 : city.population > 100000 ? 3000 : 2000}
             pathOptions={{
               fillColor: city.name === selectedRegion ? '#2196F3' : '#3F51B5',

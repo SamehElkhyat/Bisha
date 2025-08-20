@@ -320,7 +320,7 @@ const HomePage = () => {
         <div className={styles.buttonGrid}>
           <button className={styles.gridButton}>بوابة عسير الاقتصادية</button>
           <button className={styles.gridButton}>التدريب الالكتروني</button>
-          <button className={styles.gridButton}>التصديق الالكتروني</button>
+          <button onClick={() => window.open('https://eservices.bishacci.org.sa/#/Login', '_blank')} className={styles.gridButton}>التصديق الالكتروني</button>
           <button className={styles.gridButton}>منصة تحديات رجال الاعمال</button>
           <button className={styles.gridButton}>الخدمات الالكترونية</button>
         </div>

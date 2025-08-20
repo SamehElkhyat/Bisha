@@ -14,7 +14,10 @@ const VideoBackground = () => {
           quality={100}
           style={{
             objectFit: 'cover',
-            objectPosition: 'center'
+            objectPosition: 'center',
+            imageRendering: 'crisp-edges', // Prevent browser blur
+            WebkitBackfaceVisibility: 'hidden', // Prevent blur on some browsers
+            backfaceVisibility: 'hidden'
           }}
         />
       </div>

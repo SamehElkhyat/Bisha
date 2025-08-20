@@ -20,7 +20,8 @@
 }
 
 body {
-  background: var(--background);
+  background-color: #003366; /* Explicit solid background color */
+  background: #003366; /* Fallback */
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }

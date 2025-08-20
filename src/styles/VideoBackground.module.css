@@ -6,6 +6,7 @@
   height: 100vh;
   z-index: -1;
   overflow: hidden;
+  background-color: #003366; /* Solid background color for the container */
 }
 
 .video {
@@ -27,10 +28,6 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    135deg,
-    rgba(0, 30, 60, 0.7) 0%,
-    rgba(0, 50, 100, 0.6) 50%,
-    rgba(0, 30, 60, 0.7) 100%
-  );
+  background-color: rgba(0, 40, 80, 0.65);
+  /* Solid background color instead of gradient to prevent blur */
 }

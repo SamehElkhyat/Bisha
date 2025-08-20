@@ -315,7 +315,14 @@ const HomePage = () => {
       <main className={styles.main}>
         <div className={styles.logoContainer}>
           {/* Add your logo.png to the /public folder */}
-          <Image src="/bisha-chamber-logo.png" alt="Bisha Chamber Logo" className={styles.logo} width={200} height={200} />
+          <Image 
+            src="/bisha-chamber-logo.png" 
+            alt="Bisha Chamber Logo" 
+            className={styles.logo} 
+            width={250} 
+            height={250} 
+            priority
+          />
         </div>
         <div className={styles.buttonGrid}>
           <button className={styles.gridButton}>بوابة عسير الاقتصادية</button>

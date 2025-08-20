@@ -7,10 +7,18 @@
   min-height: 100vh;
   padding: 2rem;
   color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .logoContainer {
   margin-bottom: 3rem;
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 2rem;
 }
 
 .logoPlaceholder {
@@ -18,6 +26,12 @@
   font-weight: bold;
   color: white;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.logo {
+  width: 250px !important;
+  height: auto !important;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
 }
 
 .buttonGrid {
@@ -29,8 +43,8 @@
 }
 
 .gridButton {
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
   padding: 1.5rem;
   border-radius: 30px;
@@ -40,6 +54,8 @@
   transition: all 0.3s ease;
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .gridButton:hover {
@@ -291,6 +307,16 @@
   .buttonGrid > *:nth-child(4),
   .buttonGrid > *:nth-child(5) {
     grid-column: auto;
+  }
+
+  .logoContainer {
+    justify-content: center;
+    padding-left: 0;
+    margin-bottom: 2rem;
+  }
+
+  .logo {
+    width: 200px !important;
   }
 
   .newsSection {

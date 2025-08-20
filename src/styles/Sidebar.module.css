@@ -1,0 +1,91 @@
+.sidebar {
+  background-color: transparent;
+  width: 280px;
+  background-color: #fff;
+  border-left: 1px solid #e7e7e7;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: fixed;
+  right: 0;
+  top: 0;
+  transition: transform 0.3s ease-in-out;
+}
+
+.logoContainer {
+  padding: 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid #e7e7e7;
+}
+
+.logo {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  color: #555;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+  font-size: 1rem;
+}
+
+.navLink:hover,
+.navLink.active {
+  background-color: #f4f4f4;
+  color: #000;
+}
+
+.navLink svg {
+  margin-left: 1rem;
+  font-size: 1.2rem;
+}
+
+.logoutContainer {
+  margin-top: auto;
+  padding: 1.5rem;
+  border-top: 1px solid #e7e7e7;
+}
+
+.logoutButton {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 1rem;
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #555;
+  font-size: 1rem;
+  text-align: right;
+}
+
+.logoutButton:hover {
+  background-color: #f4f4f4;
+}
+
+.logoutButton svg {
+  margin-left: 0.5rem;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(100%);
+    z-index: 1000;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+}

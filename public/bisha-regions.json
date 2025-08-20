@@ -1,0 +1,175 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "بيشة",
+        "id": "bisha",
+        "males": 85000,
+        "females": 82000,
+        "schools": 250,
+        "houses": 35000,
+        "subscribers": 20000,
+        "factories": 45
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[42.5, 20.0], [42.65, 20.05], [42.75, 19.95], [42.7, 19.85], [42.55, 19.8], [42.45, 19.9], [42.5, 20.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "بلقرن",
+        "id": "balqarn",
+        "males": 45000,
+        "females": 42000,
+        "schools": 120,
+        "houses": 15000,
+        "subscribers": 8500,
+        "factories": 25
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[42.0, 19.8], [42.15, 19.85], [42.25, 19.75], [42.2, 19.65], [42.05, 19.6], [41.95, 19.7], [42.0, 19.8]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "تثليث",
+        "id": "tathlith",
+        "males": 25000,
+        "females": 23000,
+        "schools": 80,
+        "houses": 8000,
+        "subscribers": 5000,
+        "factories": 15
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[43.0, 19.6], [43.15, 19.65], [43.25, 19.55], [43.2, 19.45], [43.05, 19.4], [42.95, 19.5], [43.0, 19.6]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "الشقيق",
+        "id": "alshaqiq",
+        "males": 18000,
+        "females": 17500,
+        "schools": 60,
+        "houses": 6000,
+        "subscribers": 4000,
+        "factories": 10
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[42.3, 19.3], [42.45, 19.35], [42.55, 19.25], [42.5, 19.15], [42.35, 19.1], [42.25, 19.2], [42.3, 19.3]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "النماص",
+        "id": "alnamas",
+        "males": 30000,
+        "females": 28000,
+        "schools": 90,
+        "houses": 10000,
+        "subscribers": 7000,
+        "factories": 20
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[41.8, 19.4], [41.95, 19.45], [42.05, 19.35], [42.0, 19.25], [41.85, 19.2], [41.75, 19.3], [41.8, 19.4]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "طريب",
+        "id": "tarib",
+        "males": 22000,
+        "females": 21000,
+        "schools": 70,
+        "houses": 7500,
+        "subscribers": 4500,
+        "factories": 12
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[42.7, 20.2], [42.85, 20.25], [42.95, 20.15], [42.9, 20.05], [42.75, 20.0], [42.65, 20.1], [42.7, 20.2]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "الخرمة",
+        "id": "alkhurmah",
+        "males": 15000,
+        "females": 14000,
+        "schools": 50,
+        "houses": 5000,
+        "subscribers": 3000,
+        "factories": 8
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[42.9, 20.4], [43.05, 20.45], [43.15, 20.35], [43.1, 20.25], [42.95, 20.2], [42.85, 20.3], [42.9, 20.4]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "سبت العلايا",
+        "id": "sabt",
+        "males": 12000,
+        "females": 11500,
+        "schools": 40,
+        "houses": 4000,
+        "subscribers": 2500,
+        "factories": 6
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[42.6, 19.0], [42.75, 19.05], [42.85, 18.95], [42.8, 18.85], [42.65, 18.8], [42.55, 18.9], [42.6, 19.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "خميس مشيط",
+        "id": "khamis",
+        "males": 40000,
+        "females": 38000,
+        "schools": 150,
+        "houses": 18000,
+        "subscribers": 12000,
+        "factories": 30
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[42.4, 18.6], [42.55, 18.65], [42.65, 18.55], [42.6, 18.45], [42.45, 18.4], [42.35, 18.5], [42.4, 18.6]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "أبها",
+        "id": "abha",
+        "males": 60000,
+        "females": 58000,
+        "schools": 200,
+        "houses": 25000,
+        "subscribers": 15000,
+        "factories": 35
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[42.1, 18.4], [42.25, 18.45], [42.35, 18.35], [42.3, 18.25], [42.15, 18.2], [42.05, 18.3], [42.1, 18.4]]]
+      }
+    }
+  ]
+}

@@ -5,9 +5,10 @@ const VideoBackground = () => {
   return (
     <div className={styles.videoContainer}>
 
-      <video autoPlay loop muted className={styles.video}>
-        <source src="/Intro.mp4" type="video/mp4" />
-      </video>
+      <div className={styles.video} style={{
+        background: `url('https://cnn-arabic-images.cnn.io/cloudinary/image/upload/w_1920,c_scale,q_auto/cnnarabic/2023/09/18/images/249868.jpg') no-repeat center center`,
+        backgroundSize: 'cover'
+      }}></div>
       
       <div className={styles.overlay}></div>
     </div>

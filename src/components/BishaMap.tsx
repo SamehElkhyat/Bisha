@@ -1,19 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
-import { 
-  MapContainer, 
-  TileLayer, 
-  GeoJSON, 
-  ZoomControl, 
-  ScaleControl, 
-  LayersControl, 
-  Marker, 
-  Popup, 
-  Tooltip, 
-  Circle, 
-  useMap 
-} from 'react-leaflet';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import styles from '../styles/Map.module.css';
@@ -30,9 +17,7 @@ const DefaultIcon = L.icon({
   shadowSize: [41, 41]
 });
 
-L.Marker.prototype.options.icon = DefaultIcon;
-
-// Custom icon for selected cities
+// Selected icon for cities
 const SelectedIcon = L.icon({
   iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
@@ -43,38 +28,32 @@ const SelectedIcon = L.icon({
   shadowSize: [41, 41]
 });
 
-// Map bounds adjuster component
-const MapBoundsAdjuster = ({ bounds }: { bounds: L.LatLngBoundsExpression | null }) => {
-  const map = useMap();
-  
-  useEffect(() => {
-    if (bounds) {
-      map.fitBounds(bounds as L.LatLngBoundsExpression);
-    }
-  }, [bounds, map]);
-  
-  return null;
-};
-
 interface BishaMapProps {
   onRegionSelect: (regionName: string) => void;
+  onError?: () => void;
 }
 
-const BishaMap: React.FC<BishaMapProps> = ({ onRegionSelect }) => {
-  const [geoJsonData, setGeoJsonData] = useState<any>(null);
+const BishaMap: React.FC<BishaMapProps> = ({ onRegionSelect, onError }) => {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
-  const [bounds, setBounds] = useState<L.LatLngBoundsExpression | null>(null);
-  const geoJsonLayerRef = useRef<any>(null);
+  const [geoJsonData, setGeoJsonData] = useState<any>(null);
   const [cityMarkers, setCityMarkers] = useState<any[]>([]);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<L.Map | null>(null);
+  const geoJsonLayerRef = useRef<L.GeoJSON | null>(null);
   
+  // Generate a unique ID for this map instance
+  const mapId = useRef(`map-${Math.random().toString(36).substr(2, 9)}`).current;
+
+  // Initialize map when component mounts
   useEffect(() => {
     // Fetch GeoJSON data
-    fetch('/saudi-regions.json')
-      .then(response => response.json())
-      .then(data => {
+    const fetchGeoJsonData = async () => {
+      try {
+        const response = await fetch('/saudi-regions.json');
+        const data = await response.json();
         setGeoJsonData(data);
         
-        // Create city markers from the GeoJSON data
+        // Extract city markers from GeoJSON
         const markers = data.features.map((feature: any) => {
           const coordinates = feature.geometry.coordinates[0];
           // Calculate center point of polygon
@@ -87,212 +66,306 @@ const BishaMap: React.FC<BishaMapProps> = ({ onRegionSelect }) => {
             nameEn: feature.properties.nameEn,
             position: [lat, lng],
             population: feature.properties.population,
-            description: feature.properties.description
+            description: feature.properties.description || 'No description available'
           };
         });
         
         setCityMarkers(markers);
-      })
-      .catch(error => console.error('Error loading GeoJSON:', error));
-  }, []);
+      } catch (error) {
+        console.error('Error loading GeoJSON:', error);
+        if (onError) onError();
+      }
+    };
+    
+    fetchGeoJsonData();
+  }, [onError]);
 
-  const onEachFeature = (feature: any, layer: any) => {
-    if (feature.properties && feature.properties.name) {
-      // Add tooltip with region name
-      layer.bindTooltip(feature.properties.name, { 
-        permanent: false, 
-        direction: 'center',
-        className: styles.regionLabel
+  // Initialize map after data is loaded
+  useEffect(() => {
+    if (!geoJsonData || !mapContainerRef.current) return;
+    
+    try {
+      // Cleanup any existing map instance
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+      
+      // Make sure the container is empty
+      if (mapContainerRef.current) {
+        mapContainerRef.current.innerHTML = '';
+      }
+      
+      // Create map instance
+      const map = L.map(mapId, {
+        center: [19.0, 42.5],
+        zoom: 8,
+        zoomControl: false,
+        attributionControl: true
       });
       
-      // Add click handler
-      layer.on({
-        click: () => {
-          setSelectedRegion(feature.properties.name);
-          onRegionSelect(feature.properties.name);
+      mapInstanceRef.current = map;
+      
+      // Add tile layers
+      const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: '&copy; Esri'
+      }).addTo(map);
+      
+      const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      });
+      
+      const terrainLayer = L.tileLayer('https://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=6170aad10dfd42a38d4d8c709a536f38', {
+        attribution: '&copy; Thunderforest'
+      });
+      
+      // Add overlay layer
+      const labelsLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        opacity: 0.3
+      });
+      
+      // Add layer controls
+      const baseLayers = {
+        'صور الأقمار الصناعية': satelliteLayer,
+        'خريطة الشوارع': streetLayer,
+        'التضاريس': terrainLayer
+      };
+      
+      const overlays = {
+        'أسماء المناطق': labelsLayer
+      };
+      
+      L.control.layers(baseLayers, overlays).addTo(map);
+      
+      // Add zoom control
+      L.control.zoom({
+        position: 'bottomright'
+      }).addTo(map);
+      
+      // Add scale control
+      L.control.scale({
+        position: 'bottomleft',
+        imperial: false
+      }).addTo(map);
+      
+      // Style function for GeoJSON
+      const styleFeature = (feature: any) => {
+        return {
+          fillColor: feature.properties.name === selectedRegion ? '#2196F3' : '#0A3B5C',
+          weight: feature.properties.name === selectedRegion ? 3 : 2,
+          opacity: 1,
+          color: 'rgba(255, 255, 255, 0.8)',
+          dashArray: feature.properties.name === selectedRegion ? '' : '3',
+          fillOpacity: feature.properties.name === selectedRegion ? 0.6 : 0.4,
+          smoothFactor: 0.5
+        };
+      };
+      
+      // Function to handle feature interactions
+      const onEachFeature = (feature: any, layer: L.Layer) => {
+        if (feature.properties?.name) {
+          // Type guard for layers with bindTooltip method
+          const hasBindTooltip = (layer: any): layer is L.Layer & { bindTooltip: Function } => {
+            return 'bindTooltip' in layer;
+          };
           
-          // Set bounds to zoom to the selected feature
-          setBounds(layer.getBounds());
+          // Type guard for layers with getBounds method
+          const hasGetBounds = (layer: any): layer is L.Layer & { getBounds: () => L.LatLngBounds } => {
+            return 'getBounds' in layer;
+          };
           
-          // Reset style for all layers
-          if (geoJsonLayerRef.current) {
-            geoJsonLayerRef.current.resetStyle();
-          }
+          // Type guard for layers with setStyle method
+          const hasSetStyle = (layer: any): layer is L.Layer & { setStyle: Function } => {
+            return 'setStyle' in layer;
+          };
           
-          // Highlight the selected layer
-          layer.setStyle({
-            fillColor: '#2196F3',
-            weight: 3,
-            color: '#FFFFFF',
-            fillOpacity: 0.6,
-            dashArray: ''
-          });
-        },
-        mouseover: (e: any) => {
-          if (feature.properties.name !== selectedRegion) {
-            layer.setStyle({
-              fillColor: '#1976D2',
-              fillOpacity: 0.5,
-              weight: 3
+          // Type guard for layers with bringToFront method
+          const hasBringToFront = (layer: any): layer is L.Layer & { bringToFront: Function } => {
+            return 'bringToFront' in layer;
+          };
+          
+          // Add tooltip with region name
+          if (hasBindTooltip(layer)) {
+            layer.bindTooltip(feature.properties.name, {
+              permanent: false,
+              direction: 'center',
+              className: styles.regionLabel
             });
           }
-          layer.bringToFront();
-        },
-        mouseout: (e: any) => {
-          if (feature.properties.name !== selectedRegion) {
-            if (geoJsonLayerRef.current) {
-              geoJsonLayerRef.current.resetStyle(layer);
+          
+          // Add click handler
+          layer.on({
+            click: () => {
+              setSelectedRegion(feature.properties.name);
+              onRegionSelect(feature.properties.name);
+              
+              // Fit bounds to the selected feature
+              if (hasGetBounds(layer)) {
+                map.fitBounds(layer.getBounds());
+              }
+              
+              // Reset style for all layers
+              if (geoJsonLayerRef.current) {
+                geoJsonLayerRef.current.resetStyle();
+              }
+              
+              // Highlight the selected layer
+              if (hasSetStyle(layer)) {
+                layer.setStyle({
+                  fillColor: '#2196F3',
+                  weight: 3,
+                  color: '#FFFFFF',
+                  fillOpacity: 0.6,
+                  dashArray: ''
+                });
+              }
+            },
+            mouseover: () => {
+              if (feature.properties.name !== selectedRegion && hasSetStyle(layer)) {
+                layer.setStyle({
+                  fillColor: '#1976D2',
+                  fillOpacity: 0.5,
+                  weight: 3
+                });
+              }
+              if (hasBringToFront(layer)) {
+                layer.bringToFront();
+              }
+            },
+            mouseout: () => {
+              if (feature.properties.name !== selectedRegion) {
+                if (geoJsonLayerRef.current) {
+                  geoJsonLayerRef.current.resetStyle(layer);
+                }
+              }
+            }
+          });
+        }
+      };
+      
+      // Add GeoJSON layer
+      geoJsonLayerRef.current = L.geoJSON(geoJsonData, {
+        style: styleFeature,
+        onEachFeature: onEachFeature
+      }).addTo(map);
+      
+      // Add city markers
+      cityMarkers.forEach(city => {
+        const marker = L.marker(city.position as L.LatLngExpression, {
+          icon: city.name === selectedRegion ? SelectedIcon : DefaultIcon
+        }).addTo(map);
+        
+        // Add tooltip
+        marker.bindTooltip(city.name, {
+          direction: 'top',
+          offset: [0, -20] as L.PointExpression,
+          opacity: 1,
+          permanent: true,
+          className: styles.cityTooltip
+        });
+        
+        // Add popup
+        const popupContent = document.createElement('div');
+        popupContent.className = styles.cityPopup;
+        popupContent.innerHTML = `
+          <h3>${city.name} <span>(${city.nameEn})</span></h3>
+          <p class="${styles.cityDescription}">${city.description}</p>
+          <div class="${styles.cityStats}">
+            <div class="${styles.cityStat}">
+              <span class="${styles.cityStatLabel}">عدد السكان:</span>
+              <span class="${styles.cityStatValue}">${city.population.toLocaleString()}</span>
+            </div>
+          </div>
+        `;
+        
+        const button = document.createElement('button');
+        button.className = styles.selectCityButton;
+        button.innerText = 'عرض الإحصائيات';
+        button.onclick = () => {
+          setSelectedRegion(city.name);
+          onRegionSelect(city.name);
+          
+          // Find the corresponding feature to set bounds
+          if (geoJsonLayerRef.current) {
+            const layers = geoJsonLayerRef.current.getLayers();
+            const layer = layers.find((l: any) => 
+              l.feature?.properties?.name === city.name
+            );
+            
+            // Type guard for layers with getBounds method
+            const hasGetBounds = (layer: any): layer is L.Layer & { getBounds: () => L.LatLngBounds } => {
+              return layer && 'getBounds' in layer;
+            };
+            
+            // Type guard for layers with setStyle method
+            const hasSetStyle = (layer: any): layer is L.Layer & { setStyle: Function } => {
+              return layer && 'setStyle' in layer;
+            };
+            
+            if (layer && hasGetBounds(layer)) {
+              map.fitBounds(layer.getBounds());
+              
+              // Reset style for all layers
+              geoJsonLayerRef.current.resetStyle();
+              
+              // Highlight the selected layer
+              if (hasSetStyle(layer)) {
+                layer.setStyle({
+                  fillColor: '#2196F3',
+                  weight: 3,
+                  color: '#FFFFFF',
+                  fillOpacity: 0.6,
+                  dashArray: ''
+                });
+              }
             }
           }
-        }
+        };
+        
+        popupContent.appendChild(button);
+        marker.bindPopup(popupContent);
+        
+        // Add circle for population visualization
+        L.circle(city.position as L.LatLngExpression, {
+          radius: city.population > 400000 ? 5000 : city.population > 100000 ? 3000 : 2000,
+          fillColor: city.name === selectedRegion ? '#2196F3' : '#3F51B5',
+          fillOpacity: 0.2,
+          weight: 1,
+          color: 'white'
+        }).addTo(map);
       });
-    }
-  };
-
-  const styleFeature = (feature: any) => {
-    return {
-      fillColor: feature.properties.name === selectedRegion ? '#2196F3' : '#0A3B5C',
-      weight: feature.properties.name === selectedRegion ? 3 : 2,
-      opacity: 1,
-      color: 'rgba(255, 255, 255, 0.8)',
-      dashArray: feature.properties.name === selectedRegion ? '' : '3',
-      fillOpacity: feature.properties.name === selectedRegion ? 0.6 : 0.4,
-      smoothFactor: 0.5
-    };
-  };
-
-  const handleMarkerClick = (name: string) => {
-    setSelectedRegion(name);
-    onRegionSelect(name);
-    
-    // Find the corresponding feature to set bounds
-    if (geoJsonLayerRef.current && geoJsonData) {
-      const layers = geoJsonLayerRef.current.getLayers();
-      const layer = layers.find((l: any) => 
-        l.feature.properties.name === name
-      );
       
-      if (layer) {
-        setBounds(layer.getBounds());
-        
-        // Reset style for all layers
-        geoJsonLayerRef.current.resetStyle();
-        
-        // Highlight the selected layer
-        layer.setStyle({
-          fillColor: '#2196F3',
-          weight: 3,
-          color: '#FFFFFF',
-          fillOpacity: 0.6,
-          dashArray: ''
-        });
-      }
+      // Invalidate size to ensure proper rendering
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 0);
+      
+    } catch (error) {
+      console.error('Error initializing map:', error);
+      if (onError) onError();
     }
-  };
-
-  if (!geoJsonData) {
-    return <div className={styles.mapLoading}>جاري تحميل الخريطة...</div>;
-  }
-
+    
+    // Cleanup function
+    return () => {
+      try {
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.remove();
+          mapInstanceRef.current = null;
+        }
+      } catch (error) {
+        console.error('Error cleaning up map:', error);
+      }
+    };
+  }, [geoJsonData, cityMarkers, mapId, onRegionSelect, selectedRegion, onError]);
+  
   return (
     <div className={styles.mapWrapper}>
-      <MapContainer
-        center={[19.0, 42.5] as L.LatLngExpression}
-        zoom={8}
+      <div 
+        id={mapId}
+        ref={mapContainerRef}
         style={{ height: '600px', width: '100%', direction: 'ltr' }}
-        zoomControl={false}
-      >
-        <MapBoundsAdjuster bounds={bounds} />
-        <ZoomControl position="bottomright" />
-        <ScaleControl position="bottomleft" imperial={false} />
-        
-        <LayersControl position="topright">
-          <LayersControl.BaseLayer name="صور الأقمار الصناعية" checked>
-            <TileLayer
-              attribution='&copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-            />
-          </LayersControl.BaseLayer>
-          
-          <LayersControl.BaseLayer name="خريطة الشوارع">
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-          </LayersControl.BaseLayer>
-          
-          <LayersControl.BaseLayer name="التضاريس">
-            <TileLayer
-              attribution='&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>'
-              url="https://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=6170aad10dfd42a38d4d8c709a536f38"
-            />
-          </LayersControl.BaseLayer>
-          
-          <LayersControl.Overlay name="أسماء المناطق" checked>
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              className={styles.overlayTiles}
-            />
-          </LayersControl.Overlay>
-        </LayersControl>
-        
-        <GeoJSON
-          data={geoJsonData}
-          style={styleFeature}
-          onEachFeature={onEachFeature}
-          ref={geoJsonLayerRef}
-        />
-        
-        {/* Add markers for cities */}
-        {cityMarkers.map((city) => (
-          <Marker 
-            key={city.id} 
-            position={city.position as L.LatLngExpression}
-            icon={city.name === selectedRegion ? SelectedIcon : DefaultIcon}
-            eventHandlers={{
-              click: () => handleMarkerClick(city.name)
-            }}
-          >
-            <Tooltip className={styles.cityTooltip} direction="top" offset={[0, -20]} opacity={1} permanent>
-              {city.name}
-            </Tooltip>
-            <Popup>
-              <div className={styles.cityPopup}>
-                <h3>{city.name} <span>({city.nameEn})</span></h3>
-                <p className={styles.cityDescription}>{city.description}</p>
-                <div className={styles.cityStats}>
-                  <div className={styles.cityStat}>
-                    <span className={styles.cityStatLabel}>عدد السكان:</span>
-                    <span className={styles.cityStatValue}>{city.population.toLocaleString()}</span>
-                  </div>
-                </div>
-                <button 
-                  className={styles.selectCityButton}
-                  onClick={() => handleMarkerClick(city.name)}
-                >
-                  عرض الإحصائيات
-                </button>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
-        
-        {/* Add circles to highlight main cities */}
-        {cityMarkers.map((city) => (
-          <Circle
-            key={`circle-${city.id}`}
-            center={city.position as L.LatLngExpression}
-            radius={city.population > 400000 ? 5000 : city.population > 100000 ? 3000 : 2000}
-            pathOptions={{
-              fillColor: city.name === selectedRegion ? '#2196F3' : '#3F51B5',
-              fillOpacity: 0.2,
-              weight: 1,
-              color: 'white'
-            }}
-          />
-        ))}
-      </MapContainer>
+      />
     </div>
   );
 };

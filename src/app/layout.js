@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Abha Chamber",
-  description: "Abha Chamber of Commerce",
+  title: "Bisha Chamber",
+  description: "Bisha Chamber of Commerce",
 };
 
 export default function RootLayout({ children }) {

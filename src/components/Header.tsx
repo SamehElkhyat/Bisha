@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import styles from '../styles/Header.module.css';
-import { FaTiktok, FaTelegramPlane, FaSnapchatGhost, FaYoutube, FaFacebookF, FaInstagram, FaTimes, FaChevronDown } from 'react-icons/fa';
+import { FaTiktok, FaTelegramPlane, FaSnapchatGhost, FaYoutube, FaFacebookF, FaInstagram, FaTimes, FaChevronDown, FaUserShield } from 'react-icons/fa';
+import { useAuth } from '../contexts/AuthContext';
 
 interface NavLink {
   href: string;
@@ -18,7 +19,7 @@ interface NavLink {
 const Header = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
-
+  const { isAdmin } = useAuth();
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -76,6 +77,7 @@ const Header = () => {
     { href: 'https://eservices.bishacci.org.sa/#/Login', label: 'التدريب', external: true },
     { href: '/initiatives', label: 'المبادرات' },
     { href: '/contact', label: 'اتصل بنا' },
+    { href: '/admin', label: 'لوحة التحكم', id: 'admin' }  
   ];
 
   const socialLinks = [

@@ -357,122 +357,65 @@ const HomePage = () => {
             src="/bisha-chamber-logo.png" 
             alt="Bisha Chamber Logo" 
             className={styles.logo} 
-            width={200} 
-            height={200} 
+            width={320} 
+            height={320} 
             priority
           />
         </div>
         <div className={styles.buttonGrid}>
           <button className={styles.gridButton}>
-            <div className={styles.buttonIcon}>
-              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
-                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-              </svg>
-            </div>
+
             طباعة شهادة العضوية
           </button>
           <button className={styles.gridButton}>
-            <div className={styles.buttonIcon}>
-              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-              </svg>
-            </div>
+
             تحديث البيانات
           </button>
           <button className={styles.gridButton}>
-            <div className={styles.buttonIcon}>
-              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
-                <path d="M7 4V2C7 1.45 7.45 1 8 1S9 1.45 9 2V4H15V2C15 1.45 15.45 1 16 1S17 1.45 17 2V4H20C21.1 4 22 4.9 22 6V20C22 21.1 21.1 22 20 22H4C2.9 22 2 21.1 2 20V6C2 4.9 2.9 4 4 4H7ZM4 8V20H20V8H4Z"/>
-              </svg>
-            </div>
+
             التحقق من الوثائق
           </button>
           <button className={styles.gridButton}>
-            <div className={styles.buttonIcon}>
-              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
-                <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z"/>
-              </svg>
-            </div>
+
             الصندوق الإلكتروني
           </button>
           <button className={styles.gridButton}>
-            <div className={styles.buttonIcon}>
-              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
-                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-              </svg>
-            </div>
+
             اشتراك جديد
           </button>
           <button className={styles.gridButton}>
-            <div className={styles.buttonIcon}>
-              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
-            </div>
+
             الاستعلام عن رقم العضوية
           </button>
           <button className={styles.gridButton}>
-            <div className={styles.buttonIcon}>
-              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
-                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h8c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-              </svg>
-            </div>
+
             تجديد الاشتراك
           </button>
           <button className={styles.gridButton}>
-            <div className={styles.buttonIcon}>
-              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
-                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-              </svg>
-            </div>
+
             الدليل التجاري
           </button>
           <button className={styles.gridButton}>
-            <div className={styles.buttonIcon}>
-              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
-                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h8c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-              </svg>
-            </div>
+
             السجل التجاري
           </button>
           <button className={styles.gridButton}>
-            <div className={styles.buttonIcon}>
-              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
-                <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/>
-              </svg>
-            </div>
+
             قوائم التمويل
           </button>
           <button className={styles.gridButton}>
-            <div className={styles.buttonIcon}>
-              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
-                <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/>
-              </svg>
-            </div>
+
             التدريب الإلكتروني
           </button>
           <button className={styles.gridButton}>
-            <div className={styles.buttonIcon}>
-              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-              </svg>
-            </div>
+ 
             المكتبة الإلكترونية
           </button>
           <button className={styles.gridButton}>
-            <div className={styles.buttonIcon}>
-              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
-            </div>
             الشكاوى والمقترحات
           </button>
           <button className={styles.gridButton}>
-            <div className={styles.buttonIcon}>
-              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
-                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-              </svg>
-            </div>
+
             الاتحاد والتحكيم
           </button>
         </div>

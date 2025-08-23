@@ -2,31 +2,37 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   min-height: 100vh;
   padding: 2rem;
   color: white;
+  padding-top: 3rem;
 
   /* backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px); */
 }
 
 .logoContainer {
-  background: rgba(0, 0, 0, 0.4); /* شفافية داكنة */
+  margin-top: 60px;
   border-radius: 12px;
-  padding: 10px 20px;
-  display: inline-block;
-  backdrop-filter: blur(4px);
-  margin-bottom: 1rem;
-  position: absolute;
-  top: 120px;
-  right: 2rem;
+  padding: 15px 20px;
   display: flex;
   justify-content: flex-start;
+  margin-bottom: 2rem;
+  width: 100%;
   z-index: 10;
 }
 
+.logoContainer img {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 16px;
+  padding: 20px 25px;
+  display: block;
+  margin-right: 2rem;
+  width: auto;
+  z-index: 10;
+}
 .logoPlaceholder {
   font-size: 6rem;
   font-weight: bold;
@@ -35,7 +41,7 @@
 }
 
 .logo {
-  width: 200px !important;
+  width: 250px !important;
   height: auto !important;
   transition: transform 0.3s ease;
 }
@@ -45,22 +51,23 @@
 }
 
 .buttonGrid {
-  margin-right: 100px;
-  margin-top: 100px;
+  margin-left: auto;
+  margin-right: auto;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.25rem;
-  max-width: 1000px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  max-width: 800px;
   width: 100%;
+  clear: both;
 }
 
 .gridButton {
   background-color: rgba(255, 255, 255, 0.18);
   border: 1px solid rgba(255, 255, 255, 0.4);
   color: white;
-  padding: 1rem 0.6rem;
+  padding: 1.2rem 0.8rem;
   border-radius: 16px;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   cursor: pointer;
@@ -366,6 +373,7 @@
   .buttonGrid {
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
+    max-width: 700px;
   }
 }
 
@@ -374,6 +382,7 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
     padding: 0 0.5rem;
+    max-width: 500px;
   }
 
   .gridButton {
@@ -398,6 +407,7 @@
   .buttonGrid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.6rem;
+    max-width: 100%;
   }
 
   .gridButton {
@@ -411,18 +421,17 @@
   }
 
   .logoContainer {
-
-
-    position: relative;
-    top: 0;
-    right: 0;
+    margin-bottom: 1.5rem;
+    padding: 10px;
     justify-content: center;
-    width: 100%;
-    margin-bottom: 2rem;
+  }
+  
+  .logoContainer img {
+    margin-right: 0;
   }
 
   .logo {
-    width: 160px !important;
+    width: 200px !important;
   }
 
   .newsSection {

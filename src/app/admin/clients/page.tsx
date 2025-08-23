@@ -16,10 +16,9 @@ interface User {
 
 // Pagination response interface
 interface PaginatedResponse {
-  items: User[];
+  newsPaper: User[];
   totalCount: number;
-  pageSize: number;
-  currentPage: number;
+  pageNumber: number;
   totalPages: number;
 }
 

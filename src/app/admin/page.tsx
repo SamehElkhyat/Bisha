@@ -67,9 +67,9 @@ const AdminDashboard = () => {
             <FaUsers className={styles.navIcon} />
             <span>إدارة العملاء</span>
           </Link>
-          <Link href="/admin/circulars" className={styles.navLink}>
-            <FaBullhorn className={styles.navIcon} />
-            <span>إدارة التعاميم</span>
+          <Link href="/admin/users" className={styles.navLink}>
+            <FaUserPlus className={styles.navIcon} />
+            <span>إدارة المستخدمين</span>
           </Link>
           <button onClick={handleLogout} className={styles.logoutButton}>
             <FaSignOutAlt className={styles.navIcon} />
@@ -129,6 +129,12 @@ const AdminDashboard = () => {
               <FaUserPlus className={styles.actionIcon} />
               <h3>إضافة عميل جديد</h3>
               <p>أضف عميل جديد للنظام</p>
+            </Link>
+            
+            <Link href="/admin/users/add" className={styles.actionCard}>
+              <FaUserPlus className={styles.actionIcon} />
+              <h3>إضافة مستخدم جديد</h3>
+              <p>أضف مستخدم جديد للنظام</p>
             </Link>
           </div>
         </div>

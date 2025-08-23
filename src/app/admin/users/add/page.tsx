@@ -4,11 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../../contexts/AuthContext';
 import styles from '../../../../styles/AdminForms.module.css';
-import { FaUsers, FaSave, FaArrowRight, FaIdCard, FaEnvelope, FaPhone, FaLock, FaCheckCircle } from 'react-icons/fa';
+import { FaUser, FaSave, FaArrowRight, FaEnvelope, FaPhone, FaLock, FaCheckCircle } from 'react-icons/fa';
 import Link from 'next/link';
-import { clientsAPI } from '../../../../services/api';
 
-const AddClientPage = () => {
+const AddUserPage = () => {
   const router = useRouter();
   const { user, isAdmin } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -26,17 +25,15 @@ const AddClientPage = () => {
   useEffect(() => {
     // Check if user is authenticated and is admin
     if (!user) {
-      // router.push('/login');
-      setLoading(false);
+      router.push('/login');
     } else if (!isAdmin()) {
-        // router.push('/');
       setLoading(false);
     } else {
       setLoading(false);
     }
   }, [user, isAdmin, router]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -44,43 +41,48 @@ const AddClientPage = () => {
     }));
   };
 
+  const validateForm = () => {
+    // Check required fields
+    if (!formData.fullName || !formData.email || !formData.phoneNumber || !formData.passwordHash || !formData.confirmPassword) {
+      setError('يرجى تعبئة جميع الحقول المطلوبة');
+      return false;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError('يرجى إدخال بريد إلكتروني صحيح');
+      return false;
+    }
+
+    // Validate password match
+    if (formData.passwordHash !== formData.confirmPassword) {
+      setError('كلمة المرور وتأكيد كلمة المرور غير متطابقين');
+      return false;
+    }
+
+    // Validate password strength
+    if (formData.passwordHash.length < 6) {
+      setError('كلمة المرور يجب أن تكون على الأقل 6 أحرف');
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
+    
+    if (!validateForm()) {
+      return;
+    }
+    
     setIsSubmitting(true);
 
     try {
-      // Validate form
-      if (!formData.fullName || !formData.email || !formData.phoneNumber || !formData.passwordHash || !formData.confirmPassword) {
-        setError('يرجى تعبئة جميع الحقول المطلوبة');
-        setIsSubmitting(false);
-        return;
-      }
-
-      // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.email)) {
-        setError('يرجى إدخال بريد إلكتروني صحيح');
-        setIsSubmitting(false);
-        return;
-      }
-      
-      // Validate password match
-      if (formData.passwordHash !== formData.confirmPassword) {
-        setError('كلمة المرور وتأكيد كلمة المرور غير متطابقين');
-        setIsSubmitting(false);
-        return;
-      }
-
-      // Validate password strength
-      if (formData.passwordHash.length < 6) {
-        setError('كلمة المرور يجب أن تكون على الأقل 6 أحرف');
-        setIsSubmitting(false);
-        return;
-      }
-
-      // Prepare user data for API
+      // Create user data object for API
       const userData = {
         fullName: formData.fullName,
         email: formData.email,
@@ -89,9 +91,9 @@ const AddClientPage = () => {
         confirmPassword: formData.confirmPassword
       };
 
-      // Send to API
+      // API call to register user
       const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://bisha.runasp.net';
-      const url = `${API_BASE_URL}/api/Register/User`;
+      const url = `${API_BASE_URL}/api/Users/Register`;
       
       // Get auth token
       const token = localStorage.getItem('auth_token');
@@ -156,7 +158,7 @@ const AddClientPage = () => {
         <Link href="/admin/users" className={styles.backButton}>
           <FaArrowRight /> العودة
         </Link>
-        <h1><FaUsers className={styles.headerIcon} /> إضافة مستخدم جديد</h1>
+        <h1><FaUser className={styles.headerIcon} /> إضافة مستخدم جديد</h1>
       </div>
 
       {error && <div className={styles.errorMessage}>{error}</div>}
@@ -166,7 +168,7 @@ const AddClientPage = () => {
         <div className={styles.formGroup}>
           <label htmlFor="fullName">الاسم الكامل *</label>
           <div className={styles.inputWithIcon}>
-            <FaIdCard className={styles.inputIcon} />
+            <FaUser className={styles.inputIcon} />
             <input
               type="text"
               id="fullName"
@@ -244,6 +246,7 @@ const AddClientPage = () => {
             />
           </div>
         </div>
+
         <div className={styles.formActions}>
           <button 
             type="submit" 
@@ -269,4 +272,4 @@ const AddClientPage = () => {
   );
 };
 
-export default AddClientPage;
+export default AddUserPage;

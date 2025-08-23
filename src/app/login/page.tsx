@@ -4,14 +4,15 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import styles from '../../styles/Login.module.css';
-import { FaUserShield, FaLock } from 'react-icons/fa';
+import { FaUserShield, FaLock, FaSpinner } from 'react-icons/fa';
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
+  const [email, setemail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { login, user } = useAuth();
+  const { login, user, error: authError } = useAuth();
 
   // Redirect if already logged in
   useEffect(() => {
@@ -20,21 +21,35 @@ const LoginPage = () => {
     }
   }, [user, router]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Update error message from auth context
+  useEffect(() => {
+    if (authError) {
+      setError(authError);
+    }
+  }, [authError]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     
-    if (!username || !password) {
-      setError('يرجى إدخال اسم المستخدم وكلمة المرور');
+    if (!email || !password) {
+      setError('يرجى إدخال اسم البريد الإلكتروني وكلمة المرور');
       return;
     }
-    
-    const success = login(username, password);
-    
-    if (success) {
-      router.push('/admin');
-    } else {
-      setError('اسم المستخدم أو كلمة المرور غير صحيحة');
+    setIsLoading(true);
+    try {
+      const success = await login(email, password);
+      
+      if (success) {
+        router.push('/admin');
+      } else {
+        setError('اسم البريد الإلكتروني أو كلمة المرور غير صحيحة');
+      }
+    } catch (error) {
+      setError('حدث خطأ أثناء تسجيل الدخول. يرجى المحاولة مرة أخرى.');
+      console.error('Login error:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -50,15 +65,16 @@ const LoginPage = () => {
         
         <form onSubmit={handleSubmit} className={styles.loginForm}>
           <div className={styles.inputGroup}>
-            <label htmlFor="username">اسم المستخدم</label>
+            <label htmlFor="email">اسم البريد الإلكتروني</label>
             <div className={styles.inputWithIcon}>
               <FaUserShield className={styles.inputIcon} />
               <input
+                className="text-black"
                 type="text"
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="أدخل اسم المستخدم"
+                id="email"
+                value={email}
+                onChange={(e) => setemail(e.target.value)}
+                placeholder="أدخل اسم البريد الإلكتروني"
               />
             </div>
           </div>
@@ -68,6 +84,7 @@ const LoginPage = () => {
             <div className={styles.inputWithIcon}>
               <FaLock className={styles.inputIcon} />
               <input
+                className="text-black"
                 type="password"
                 id="password"
                 value={password}
@@ -77,8 +94,18 @@ const LoginPage = () => {
             </div>
           </div>
           
-          <button type="submit" className={styles.loginButton}>
-            تسجيل الدخول
+          <button 
+            type="submit" 
+            className={styles.loginButton}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <FaSpinner className={styles.spinner} /> جاري تسجيل الدخول...
+              </>
+            ) : (
+              'تسجيل الدخول'
+            )}
           </button>
         </form>
       </div>

@@ -1,56 +1,66 @@
-# Next.js RTL Dashboard Replication
+# Bisha Chamber of Commerce Website
 
-This project is a replication of the dashboard UI from the Abha Chamber of Commerce e-services portal, built with Next.js and TypeScript. It is designed to be fully responsive and supports Right-to-Left (RTL) for Arabic localization.
+This is the official website for the Bisha Chamber of Commerce, built with Next.js.
 
-## Features
+## API Integration
 
-- **Next.js 14 App Router**: Utilizes the latest features of Next.js for optimal performance and developer experience.
-- **TypeScript**: Ensures type safety and improves code quality.
-- **RTL Support**: The layout is designed to work seamlessly with Arabic and other RTL languages.
-- **Responsive Design**: A mobile-first approach ensures the dashboard looks great on all devices.
-- **Modular Components**: The UI is broken down into reusable components for the Header, Sidebar, and Layout.
-- **CSS Modules**: Scoped CSS for styling components without conflicts.
-- **React Icons**: Includes a rich set of icons for the UI elements.
+The website is integrated with the Bisha Chamber API at http://bisha.runasp.net/swagger/index.html.
+
+### API Services
+
+The API integration is structured in the following way:
+
+- `src/services/api.js` - Main API service that handles all API requests
+- `src/services/fileService.js` - Service for handling file uploads
+
+### Authentication
+
+Authentication is handled through the AuthContext:
+
+- `src/contexts/AuthContext.js` - Manages user authentication state and API calls
+
+### Admin Features
+
+The admin section includes:
+
+- News management
+- Client management
+- Authentication
 
 ## Getting Started
 
-### Prerequisites
+First, install dependencies:
 
-- Node.js (v18.x or later)
-- npm, yarn, or pnpm
+```bash
+npm install
+# or
+yarn install
+```
 
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   ```
-2. Navigate to the project directory:
-   ```bash
-   cd my-app
-   ```
-3. Install the dependencies:
-   ```bash
-   npm install
-   ```
-
-### Running the Development Server
-
-To start the development server, run:
+Then, run the development server:
 
 ```bash
 npm run dev
+# or
+yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Project Structure
+## Environment Variables
 
-- `src/app/`: Contains the pages and layouts of the application.
-- `src/components/`: Reusable React components (Header, Sidebar, etc.).
-- `src/styles/`: Global styles and CSS modules for components.
-- `public/`: Static assets like images and fonts.
+Create a `.env.local` file in the root directory with the following variables:
 
-## Deployment
+```
+NEXT_PUBLIC_API_URL=http://bisha.runasp.net
+```
 
-This application is ready to be deployed on any platform that supports Next.js, such as Vercel or Netlify. For more information, see the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying).
+## Features
+
+- Arabic language support
+- Responsive design
+- Admin dashboard
+- News management
+- Client management
+- Interactive map
+- Media center

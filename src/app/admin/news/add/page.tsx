@@ -4,30 +4,29 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../../contexts/AuthContext';
 import styles from '../../../../styles/AdminForms.module.css';
-import { FaNewspaper, FaSave, FaArrowRight, FaImage } from 'react-icons/fa';
+import { FaNewspaper, FaSave, FaArrowRight, FaImage, FaSpinner } from 'react-icons/fa';
 import Link from 'next/link';
-import { newsData } from '../../../../data/newsData';
-
+import Image from 'next/image';
 const AddNewsPage = () => {
   const router = useRouter();
   const { user, isAdmin } = useAuth();
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     title: '',
-    content: '',
-    category: 'الأخبار',
+    description: '',
+    type: 'News',
     image: null,
     imagePreview: ''
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   useEffect(() => {
     // Check if user is authenticated and is admin
     if (!user) {
       router.push('/login');
     } else if (!isAdmin()) {
-      router.push('/');
+      setLoading(false);
     } else {
       setLoading(false);
     }
@@ -52,54 +51,120 @@ const AddNewsPage = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Function to validate file
+  const validateFile = (file) => {
+    // Maximum file size in bytes (5MB)
+    const MAX_FILE_SIZE = 5 * 1024 * 1024;
+    // Allowed image types
+    const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    
+    if (!file) {
+      return { isValid: false, error: 'No file provided' };
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      return { 
+        isValid: false, 
+        error: `File size exceeds the maximum limit of ${Math.round(MAX_FILE_SIZE / (1024 * 1024))}MB` 
+      };
+    }
+
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      return { 
+        isValid: false, 
+        error: `File type not supported. Allowed types: ${ALLOWED_IMAGE_TYPES.map(type => type.split('/')[1]).join(', ')}` 
+      };
+    }
+
+    return { isValid: true, error: null };
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
+    setIsSubmitting(true);
 
-    // Validate form
-    if (!formData.title || !formData.content || !formData.category) {
-      setError('يرجى تعبئة جميع الحقول المطلوبة');
-      return;
+    try {
+      // Validate form
+      if (!formData.title || !formData.description || !formData.type) {
+        setError('يرجى تعبئة جميع الحقول المطلوبة');
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Create FormData object for API request
+      const apiFormData = new FormData();
+      apiFormData.append('Title', formData.title);
+      apiFormData.append('Description', formData.description);
+      apiFormData.append('Type', formData.type);
+      
+      // Add image if provided
+      if (formData.image) {
+        // Validate the image file
+        const validation = validateFile(formData.image);
+        if (!validation.isValid) {
+          setError(validation.error);
+          setIsSubmitting(false);
+          return;
+        }
+        
+        // Append the file to the form data
+        apiFormData.append('ImageUrl', formData.image);
+      }
+
+      // Custom API call to handle FormData with file upload
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://bisha.runasp.net';
+      const url = `${API_BASE_URL}/api/NewsPaper/Add`;
+      
+      // Get auth token
+      const token = localStorage.getItem('auth_token');
+      const headers = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
+      console.log('Submitting news with data:', {
+        title: formData.title,
+        description: formData.description,
+        type: formData.type,
+        hasImage: !!formData.image
+      });
+      
+      // Make the API request
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: apiFormData,
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `API error: ${response.status}`);
+      }
+      
+      // Show success message
+      setSuccess('تم إضافة الخبر بنجاح');
+      
+      // Reset form after success
+      setFormData({
+        title: '',
+        description: '',
+        type: 'News',
+        image: null,
+        imagePreview: ''
+      });
+      
+      // Redirect after 2 seconds
+      setTimeout(() => {
+        router.push('/admin/news');
+      }, 2000);
+    } catch (error) {
+      console.error('Failed to add news:', error);
+      setError(`فشل إضافة الخبر: ${error.message || 'خطأ غير معروف'}`);
+    } finally {
+      setIsSubmitting(false);
     }
-
-    // In a real application, we would make an API call to save the news
-    // For this demo, we'll simulate adding to the newsData array
-    const today = new Date();
-    const day = String(today.getDate()).padStart(2, '0');
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const year = today.getFullYear();
-    const formattedDate = `${day}/${month}/${year}`;
-
-    const newNews = {
-      id: newsData.length + 1,
-      title: formData.title,
-      content: formData.content,
-      category: formData.category,
-      date: formattedDate,
-      type: 'IT',
-      image: formData.imagePreview || '/news-placeholder.jpg'
-    };
-
-    // In a real app, we would update the database
-    console.log('Adding news:', newNews);
-    
-    // Show success message
-    setSuccess('تم إضافة الخبر بنجاح');
-    
-    // Reset form after success
-    setFormData({
-      title: '',
-      content: '',
-      category: 'الأخبار',
-      image: null,
-      imagePreview: ''
-    });
-    
-    // Redirect after 2 seconds
-    setTimeout(() => {
-      router.push('/admin/news');
-    }, 2000);
   };
 
   if (loading) {
@@ -138,26 +203,26 @@ const AddNewsPage = () => {
         </div>
 
         <div className={styles.formGroup}>
-          <label htmlFor="category">تصنيف الخبر *</label>
+          <label htmlFor="type">نوع الخبر *</label>
           <select
-            id="category"
-            name="category"
-            value={formData.category}
+            id="type"
+            name="type"
+            value={formData.type}
             onChange={handleChange}
             required
           >
-            <option value="الأخبار">الأخبار</option>
-            <option value="التعاميم">التعاميم</option>
-            <option value="الأخبار التعاميم">الأخبار التعاميم</option>
+            <option value="News">الأخبار</option>
+            <option value="Circular">التعاميم</option>
+            <option value="Article">مقال</option>
           </select>
         </div>
 
         <div className={styles.formGroup}>
-          <label htmlFor="content">محتوى الخبر *</label>
+          <label htmlFor="description">محتوى الخبر *</label>
           <textarea
-            id="content"
-            name="content"
-            value={formData.content}
+            id="description"
+            name="description"
+            value={formData.description}
             onChange={handleChange}
             placeholder="أدخل محتوى الخبر"
             rows={10}
@@ -181,10 +246,12 @@ const AddNewsPage = () => {
             </label>
             {formData.imagePreview && (
               <div className={styles.imagePreviewContainer}>
-                <img
+                <Image
                   src={formData.imagePreview}
                   alt="معاينة"
                   className={styles.imagePreview}
+                  width={300}
+                  height={200}
                 />
               </div>
             )}
@@ -192,8 +259,20 @@ const AddNewsPage = () => {
         </div>
 
         <div className={styles.formActions}>
-          <button type="submit" className={styles.submitButton}>
-            <FaSave /> حفظ الخبر
+          <button 
+            type="submit" 
+            className={styles.submitButton}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <FaSpinner className={styles.spinner} /> جاري الحفظ...
+              </>
+            ) : (
+              <>
+                <FaSave /> حفظ الخبر
+              </>
+            )}
           </button>
           <Link href="/admin/news" className={styles.cancelButton}>
             إلغاء

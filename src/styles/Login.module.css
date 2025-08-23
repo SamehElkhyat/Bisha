@@ -110,6 +110,21 @@
   background-color: #004494;
 }
 
+.loginButton:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  margin-left: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

@@ -1,17 +1,37 @@
 
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import styles from '../styles/Home.module.css';
 import mapStyles from '../styles/Map.module.css';
+import { newsAPI } from '../services/api';
 
 // Dynamically import the MapClient component with no SSR
 const MapClient = dynamic(() => import('../components/MapClient'), {
   ssr: false
 });
+
+// Define types for API responses
+interface NewsItem {
+  id: number;
+  title: string;
+  date: string;
+  category: string;
+  content: string;
+  image: string;
+  type?: string;
+}
+
+interface PaginatedResponse {
+  newsPaper: NewsItem[];
+  pageNumber: number;
+  totalPages: number;
+  totalCount: number;
+}
 
 const HomePage = () => {
   const [activeTab, setActiveTab] = useState('news');
@@ -22,85 +42,103 @@ const HomePage = () => {
   const [isAnnouncementAnimating, setIsAnnouncementAnimating] = useState(false);
   const [currentCommitteeIndex, setCurrentCommitteeIndex] = useState(0);
   const [isCommitteeAnimating, setIsCommitteeAnimating] = useState(false);
-    const [selectedRegion, setSelectedRegion] = useState(null);
+  const [selectedRegion, setSelectedRegion] = useState(null);
+  
+  // State for news and events data from API
+  const [newsData, setNewsData] = useState<NewsItem[]>([]);
+  const [eventsData, setEventsData] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState({news: true, events: true});
+  const [error, setError] = useState({news: '', events: ''});
 
-  // News data from the provided content
-  const newsData = [
-    {
-      id: 1,
-      title: "لجنة سيدات الأعمال ب غرفة بيشة",
-      date: "13/05/2025",
-      category: "الأخبار",
-      type: "IT"
-    },
-    {
-      id: 2,
-      title: "اختتمت غرفة بيشة مشاركتها في المعرض الدولي الأول العالمي للامتياز التجاري",
-      date: "13/05/2025",
-      category: "الأخبار",
-      type: "IT"
-    },
-    {
-      id: 3,
-      title: "غرفة بيشة تعقد اجتماع الجمعية العمومية العادية",
-      date: "13/05/2025",
-      category: "الأخبار",
-      type: "IT"
-    },
-    {
-      id: 4,
-      title: "اجتماع تنسيقي بين غرفة بيشة وبنك التنمية الاجتماعية لدعم رواد الأعمال",
-      date: "04/05/2025",
-      category: "الأخبار التعاميم",
-      type: "IT"
-    },
-    {
-      id: 5,
-      title: "التقى النائب الأول لرئيس مجلس إدارة غرفة بيشة الأستاذ مسفر المساعد اليوم الخميس بسعادة رئيس غرفة الخرج",
-      date: "04/05/2025",
-      category: "الأخبار",
-      type: "IT"
-    }
-  ];
+  // Fetch news data from API
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        setLoading(prev => ({...prev, news: true}));
+        setError(prev => ({...prev, news: ''}));
+        const data: PaginatedResponse = await newsAPI.getAll();
+        
+        if (data && data.newsPaper) {
+          setNewsData(data.newsPaper.slice(0, 5)); // Limit to 5 items for homepage
+        } else {
+          setError(prev => ({...prev, news: 'لا توجد بيانات متاحة'}));
+        }
+      } catch (err) {
+        console.error('Error fetching news:', err);
+        setError(prev => ({...prev, news: 'حدث خطأ أثناء تحميل البيانات'}));
+        // Use fallback data if API fails
+        setNewsData([
+          {
+            id: 1,
+            title: "لجنة سيدات الأعمال ب غرفة بيشة",
+            date: "13/05/2025",
+            category: "الأخبار",
+            content: "محتوى الخبر",
+            image: "/news-placeholder.jpg",
+            type: "IT"
+          },
+          {
+            id: 2,
+            title: "اختتمت غرفة بيشة مشاركتها في المعرض الدولي الأول العالمي للامتياز التجاري",
+            date: "13/05/2025",
+            category: "الأخبار",
+            content: "محتوى الخبر",
+            image: "/news-placeholder.jpg",
+            type: "IT"
+          }
+        ]);
+      } finally {
+        setLoading(prev => ({...prev, news: false}));
+      }
+    };
 
-  // Events data from the provided content
-  const eventsData = [
-    {
-      id: 1,
-      title: "دعوة للمشاركة في منتدى الاستثمار في الزراعة المستدامة مركز باكو للمعارض، أذربيجان، 10-14 مايو ج",
-      date: "13/05/2025",
-      category: "التعاميم",
-      type: "IT"
-    },
-    {
-      id: 2,
-      title: "بشأن حظر على استيراد لحوم الدواجن وبيض المائدة ومنتجاتها بمملكة الدنمارك",
-      date: "13/05/2025",
-      category: "التعاميم",
-      type: "IT"
-    },
-    {
-      id: 3,
-      title: "اجتماع تنسيقي بين غرفة بيشة وبنك التنمية الاجتماعية لدعم رواد الأعمال",
-      date: "04/05/2025",
-      category: "الأخبار التعاميم",
-      type: "IT"
-    },
-    {
-      id: 4,
-      title: "غرفة بيشة تنظم اللقاء الأول لرجال ورائدات الأعمال تحت شعار \"غرفة بيشة التي نريد\"",
-      date: "04/05/2025",
-      category: "الأخبار التعاميم",
-      type: "IT"
-    },
-    {
-      id: 5,
-      title: "بشأن مبادرة دعم الفحص الدوري للمنتجات الزراعية",
-      date: "04/05/2025",
-      category: "التعاميم",
-      type: "IT"
-    }
-  ];
+    fetchNews();
+  }, []);
+
+  // Fetch events data from API
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        setLoading(prev => ({...prev, events: true}));
+        setError(prev => ({...prev, events: ''}));
+        const data: PaginatedResponse = await newsAPI.getAllCirculars(1);
+        
+        if (data && data.newsPaper) {
+          setEventsData(data.newsPaper.slice(0, 5)); // Limit to 5 items for homepage
+        } else {
+          setError(prev => ({...prev, events: 'لا توجد بيانات متاحة'}));
+        }
+      } catch (err) {
+        console.error('Error fetching events:', err);
+        setError(prev => ({...prev, events: 'حدث خطأ أثناء تحميل البيانات'}));
+        // Use fallback data if API fails
+        setEventsData([
+          {
+            id: 1,
+            title: "دعوة للمشاركة في منتدى الاستثمار في الزراعة المستدامة",
+            date: "13/05/2025",
+            category: "التعاميم",
+            content: "محتوى التعميم",
+            image: "/news-placeholder.jpg",
+            type: "IT"
+          },
+          {
+            id: 2,
+            title: "بشأن حظر على استيراد لحوم الدواجن وبيض المائدة ومنتجاتها",
+            date: "13/05/2025",
+            category: "التعاميم",
+            content: "محتوى التعميم",
+            image: "/news-placeholder.jpg",
+            type: "IT"
+          }
+        ]);
+      } finally {
+        setLoading(prev => ({...prev, events: false}));
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   // All services data with multiple sets
   const allServicesData = [
@@ -319,17 +357,124 @@ const HomePage = () => {
             src="/bisha-chamber-logo.png" 
             alt="Bisha Chamber Logo" 
             className={styles.logo} 
-            width={250} 
-            height={250} 
+            width={200} 
+            height={200} 
             priority
           />
         </div>
         <div className={styles.buttonGrid}>
-          <button className={styles.gridButton}>بوابة عسير الاقتصادية</button>
-          <button className={styles.gridButton}>التدريب الالكتروني</button>
-          <button onClick={() => window.open('https://eservices.bishacci.org.sa/#/Login', '_blank')} className={styles.gridButton}>التصديق الالكتروني</button>
-          <button className={styles.gridButton}>منصة تحديات رجال الاعمال</button>
-          <button className={styles.gridButton}>الخدمات الالكترونية</button>
+          <button className={styles.gridButton}>
+            <div className={styles.buttonIcon}>
+              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+              </svg>
+            </div>
+            طباعة شهادة العضوية
+          </button>
+          <button className={styles.gridButton}>
+            <div className={styles.buttonIcon}>
+              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+            </div>
+            تحديث البيانات
+          </button>
+          <button className={styles.gridButton}>
+            <div className={styles.buttonIcon}>
+              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
+                <path d="M7 4V2C7 1.45 7.45 1 8 1S9 1.45 9 2V4H15V2C15 1.45 15.45 1 16 1S17 1.45 17 2V4H20C21.1 4 22 4.9 22 6V20C22 21.1 21.1 22 20 22H4C2.9 22 2 21.1 2 20V6C2 4.9 2.9 4 4 4H7ZM4 8V20H20V8H4Z"/>
+              </svg>
+            </div>
+            التحقق من الوثائق
+          </button>
+          <button className={styles.gridButton}>
+            <div className={styles.buttonIcon}>
+              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
+                <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z"/>
+              </svg>
+            </div>
+            الصندوق الإلكتروني
+          </button>
+          <button className={styles.gridButton}>
+            <div className={styles.buttonIcon}>
+              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+              </svg>
+            </div>
+            اشتراك جديد
+          </button>
+          <button className={styles.gridButton}>
+            <div className={styles.buttonIcon}>
+              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </div>
+            الاستعلام عن رقم العضوية
+          </button>
+          <button className={styles.gridButton}>
+            <div className={styles.buttonIcon}>
+              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
+                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h8c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+              </svg>
+            </div>
+            تجديد الاشتراك
+          </button>
+          <button className={styles.gridButton}>
+            <div className={styles.buttonIcon}>
+              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+              </svg>
+            </div>
+            الدليل التجاري
+          </button>
+          <button className={styles.gridButton}>
+            <div className={styles.buttonIcon}>
+              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
+                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h8c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+              </svg>
+            </div>
+            السجل التجاري
+          </button>
+          <button className={styles.gridButton}>
+            <div className={styles.buttonIcon}>
+              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
+                <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/>
+              </svg>
+            </div>
+            قوائم التمويل
+          </button>
+          <button className={styles.gridButton}>
+            <div className={styles.buttonIcon}>
+              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
+                <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/>
+              </svg>
+            </div>
+            التدريب الإلكتروني
+          </button>
+          <button className={styles.gridButton}>
+            <div className={styles.buttonIcon}>
+              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+            </div>
+            المكتبة الإلكترونية
+          </button>
+          <button className={styles.gridButton}>
+            <div className={styles.buttonIcon}>
+              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </div>
+            الشكاوى والمقترحات
+          </button>
+          <button className={styles.gridButton}>
+            <div className={styles.buttonIcon}>
+              <svg viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+              </svg>
+            </div>
+            الاتحاد والتحكيم
+          </button>
         </div>
       </main>
 
@@ -358,59 +503,139 @@ const HomePage = () => {
           <div className={styles.contentContainer}>
             {activeTab === 'news' && (
               <div className={`${styles.newsGrid} ${styles.fadeIn}`}>
-                {newsData.map((news) => {
-                  const [day, month, year] = news.date.split('/');
-                  const monthNames = {
-                    '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
-                    '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
-                    '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
-                  };
+                {loading.news ? (
+                  <div className={styles.loadingContainer}>
+                    <div className={styles.spinner}></div>
+                    <p>جاري تحميل الأخبار...</p>
+                  </div>
+                ) : error.news ? (
+                  <div className={styles.errorContainer}>
+                    <p className={styles.errorMessage}>{error.news}</p>
+                  </div>
+                ) : newsData.length === 0 ? (
+                  <div className={styles.noResults}>
+                    <h3>لا توجد أخبار متاحة</h3>
+                  </div>
+                ) : (
+                  newsData.map((news) => {
+                    // Format date based on the format
+                    let day, month, year, monthName;
+                    
+                    try {
+                      if (news.date.includes('T')) {
+                        // ISO format
+                        const date = new Date(news.date);
+                        day = date.getDate().toString().padStart(2, '0');
+                        month = (date.getMonth() + 1).toString().padStart(2, '0');
+                        year = date.getFullYear();
+                        
+                        const monthNames = {
+                          '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
+                          '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
+                          '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
+                        };
+                        monthName = monthNames[month];
+                      } else {
+                        // DD/MM/YYYY format
+                        [day, month, year] = news.date.split('/');
+                        const monthNames = {
+                          '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
+                          '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
+                          '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
+                        };
+                        monthName = monthNames[month];
+                      }
+                    } catch (error) {
+                      console.error('Error formatting date:', error);
+                      [day, monthName, year] = ['', '', ''];
+                    }
 
-                  return (
-                    <div key={news.id} className={styles.newsCard}>
-                      <div className={styles.newsImage}>
-                        <Image src="/news-placeholder.jpg" alt="News" width={400} height={250} />
-                      </div>
-                      <div className={styles.newsContent}>
-                        <div className={styles.newsDate}>
-                          <span className={styles.dateNumber}>{day}</span>
-                          <span className={styles.dateMonth}>{monthNames[month]} {year}</span>
+                    return (
+                      <Link href={`/media-center/news/${news.id}`} key={news.id} className={styles.newsCard}>
+                        <div className={styles.newsImage}>
+                          <Image src={news.image || "/news-placeholder.jpg"} alt="News" width={400} height={250} />
                         </div>
-                        <h3 className={styles.newsTitle}>{news.title}</h3>
-                        <span className={styles.newsCategory}>{news.category}</span>
-                      </div>
-                    </div>
-                  );
-                })}
+                        <div className={styles.newsContent}>
+                          <div className={styles.newsDate}>
+                            <span className={styles.dateNumber}>{day}</span>
+                            <span className={styles.dateMonth}>{monthName} {year}</span>
+                          </div>
+                          <h3 className={styles.newsTitle}>{news.title}</h3>
+                          <span className={styles.newsCategory}>{news.category}</span>
+                        </div>
+                      </Link>
+                    );
+                  })
+                )}
               </div>
             )}
 
             {activeTab === 'events' && (
               <div className={`${styles.newsGrid} ${styles.fadeIn}`}>
-                {eventsData.map((event) => {
-                  const [day, month, year] = event.date.split('/');
-                  const monthNames = {
-                    '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
-                    '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
-                    '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
-                  };
+                {loading.events ? (
+                  <div className={styles.loadingContainer}>
+                    <div className={styles.spinner}></div>
+                    <p>جاري تحميل التعاميم...</p>
+                  </div>
+                ) : error.events ? (
+                  <div className={styles.errorContainer}>
+                    <p className={styles.errorMessage}>{error.events}</p>
+                  </div>
+                ) : eventsData.length === 0 ? (
+                  <div className={styles.noResults}>
+                    <h3>لا توجد تعاميم متاحة</h3>
+                  </div>
+                ) : (
+                  eventsData.map((event) => {
+                    // Format date based on the format
+                    let day, month, year, monthName;
+                    
+                    try {
+                      if (event.date.includes('T')) {
+                        // ISO format
+                        const date = new Date(event.date);
+                        day = date.getDate().toString().padStart(2, '0');
+                        month = (date.getMonth() + 1).toString().padStart(2, '0');
+                        year = date.getFullYear();
+                        
+                        const monthNames = {
+                          '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
+                          '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
+                          '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
+                        };
+                        monthName = monthNames[month];
+                      } else {
+                        // DD/MM/YYYY format
+                        [day, month, year] = event.date.split('/');
+                        const monthNames = {
+                          '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
+                          '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
+                          '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
+                        };
+                        monthName = monthNames[month];
+                      }
+                    } catch (error) {
+                      console.error('Error formatting date:', error);
+                      [day, monthName, year] = ['', '', ''];
+                    }
 
-                  return (
-                    <div key={event.id} className={styles.newsCard}>
-                      <div className={styles.newsImage}>
-                        <Image src="/news-placeholder.jpg" alt="Event" width={400} height={250} />
-                      </div>
-                      <div className={styles.newsContent}>
-                        <div className={styles.newsDate}>
-                          <span className={styles.dateNumber}>{day}</span>
-                          <span className={styles.dateMonth}>{monthNames[month]} {year}</span>
+                    return (
+                      <Link href={`/media-center/circulars/${event.id}`} key={event.id} className={styles.newsCard}>
+                        <div className={styles.newsImage}>
+                          <Image src={event.image || "/news-placeholder.jpg"} alt="Event" width={400} height={250} />
                         </div>
-                        <h3 className={styles.newsTitle}>{event.title}</h3>
-                        <span className={styles.newsCategory}>{event.category}</span>
-                      </div>
-                    </div>
-                  );
-                })}
+                        <div className={styles.newsContent}>
+                          <div className={styles.newsDate}>
+                            <span className={styles.dateNumber}>{day}</span>
+                            <span className={styles.dateMonth}>{monthName} {year}</span>
+                          </div>
+                          <h3 className={styles.newsTitle}>{event.title}</h3>
+                          <span className={styles.newsCategory}>{event.category}</span>
+                        </div>
+                      </Link>
+                    );
+                  })
+                )}
               </div>
             )}
           </div>

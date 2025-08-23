@@ -1,44 +1,133 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { FaCalendarAlt, FaTag, FaArrowRight } from 'react-icons/fa';
-import { eventsData } from '../../../../data/newsData';
 import styles from '../../../../styles/CircularDetail.module.css';
+import { newsAPI } from '../../../../services/api';
+
+// Define types for API responses
+interface CircularItem {
+  id: number;
+  title: string;
+  date: string;
+  category: string;
+  content: string;
+  image: string;
+}
+
+interface PaginatedResponse {
+  newsPaper: CircularItem[];
+  pageNumber: number;
+  totalPages: number;
+  totalCount: number;
+}
 
 const CircularDetailPage = () => {
   const params = useParams();
   const router = useRouter();
   const id = Number(params.id);
+  const [circularItem, setCircularItem] = useState<CircularItem | null>(null);
+  const [relatedCirculars, setRelatedCirculars] = useState<CircularItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  // Find the event item
-  const eventItem = eventsData.find(item => item.id === id);
+  // Fetch circular item from API
+  useEffect(() => {
+    const fetchCircularItem = async () => {
+      try {
+        setLoading(true);
+        setError('');
+        const data = await newsAPI.getById(id);
+        
+        if (data) {
+          setCircularItem(data);
+          
+          // Fetch related circulars (we'll get all circulars and filter)
+          try {
+            const allCircularsData: PaginatedResponse = await newsAPI.getAllCirculars(1);
+            if (allCircularsData && allCircularsData.newsPaper) {
+              // Filter related circulars (same category, excluding current)
+              const related = allCircularsData.newsPaper
+                .filter(item => item.category === data.category && item.id !== id)
+                .slice(0, 3);
+              
+              setRelatedCirculars(related);
+            }
+          } catch (err) {
+            console.error('Error fetching related circulars:', err);
+            setRelatedCirculars([]);
+          }
+        } else {
+          setError('التعميم غير موجود');
+          setCircularItem(null);
+        }
+      } catch (err) {
+        console.error('Error fetching circular item:', err);
+        setError('حدث خطأ أثناء تحميل البيانات');
+        setCircularItem(null);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Find related events (same category, excluding current)
-  const relatedEvents = eventsData
-    .filter(item => item.category === eventItem?.category && item.id !== id)
-    .slice(0, 3);
+    if (id) {
+      fetchCircularItem();
+    }
+  }, [id]);
 
   // Format date function
   const formatDate = (dateString: string) => {
-    const [day, month, year] = dateString.split('/');
-    const monthNames: { [key: string]: string } = {
-      '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
-      '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
-      '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
-    };
-    
-    return `${day} ${monthNames[month]} ${year}`;
+    try {
+      // Check if the date is in ISO format
+      if (dateString.includes('T')) {
+        const date = new Date(dateString);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+        
+        const monthNames: { [key: string]: string } = {
+          '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
+          '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
+          '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
+        };
+        
+        return `${day} ${monthNames[month]} ${year}`;
+      } else {
+        // Handle the format DD/MM/YYYY
+        const [day, month, year] = dateString.split('/');
+        const monthNames: { [key: string]: string } = {
+          '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
+          '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
+          '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
+        };
+        
+        return `${day} ${monthNames[month]} ${year}`;
+      }
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return dateString; // Return original string if there's an error
+    }
   };
 
-  // If event item not found
-  if (!eventItem) {
+  // Show loading state
+  if (loading) {
+    return (
+      <div className={styles.loadingContainer}>
+        <div className={styles.spinner}></div>
+        <p>جاري تحميل التعميم...</p>
+      </div>
+    );
+  }
+  
+  // Show error state
+  if (error || !circularItem) {
     return (
       <div className={styles.notFound}>
         <h1>التعميم غير موجود</h1>
-        <p>عذراً، التعميم الذي تبحث عنه غير موجود.</p>
+        <p>{error || 'عذراً، التعميم الذي تبحث عنه غير موجود.'}</p>
         <Link href="/media-center/circulars" className={styles.backButton}>
           <FaArrowRight className={styles.backIcon} /> العودة إلى التعاميم
         </Link>
@@ -56,23 +145,23 @@ const CircularDetailPage = () => {
 
       <div className={styles.circularDetailContent}>
         <div className={styles.circularHeader}>
-          <h1 className={styles.circularTitle}>{eventItem.title}</h1>
+          <h1 className={styles.circularTitle}>{circularItem.title}</h1>
           <div className={styles.circularMetadata}>
             <span className={styles.circularDate}>
               <FaCalendarAlt className={styles.metaIcon} />
-              {formatDate(eventItem.date)}
+              {formatDate(circularItem.date)}
             </span>
             <span className={styles.circularCategory}>
               <FaTag className={styles.metaIcon} />
-              {eventItem.category}
+              {circularItem.category}
             </span>
           </div>
         </div>
 
         <div className={styles.circularImageContainer}>
           <Image
-            src={eventItem.image}
-            alt={eventItem.title}
+            src={circularItem.image || "/news-placeholder.jpg"}
+            alt={circularItem.title}
             width={800}
             height={500}
             className={styles.circularImage}
@@ -81,27 +170,27 @@ const CircularDetailPage = () => {
         </div>
 
         <div className={styles.circularBody}>
-          <p className={styles.circularContent}>{eventItem.content}</p>
+          <p className={styles.circularContent}>{circularItem.content}</p>
         </div>
 
-        {relatedEvents.length > 0 && (
+        {relatedCirculars.length > 0 && (
           <div className={styles.relatedCirculars}>
             <h2 className={styles.relatedTitle}>تعاميم ذات صلة</h2>
             <div className={styles.relatedGrid}>
-              {relatedEvents.map((event) => (
-                <div key={event.id} className={styles.relatedCard}>
+              {relatedCirculars.map((circular) => (
+                <div key={circular.id} className={styles.relatedCard}>
                   <div className={styles.relatedImageContainer}>
                     <Image
-                      src={event.image}
-                      alt={event.title}
+                      src={circular.image || "/news-placeholder.jpg"}
+                      alt={circular.title}
                       width={300}
                       height={200}
                       className={styles.relatedImage}
                     />
                   </div>
                   <div className={styles.relatedContent}>
-                    <h3 className={styles.relatedCircularTitle}>{event.title}</h3>
-                    <Link href={`/media-center/circulars/${event.id}`} className={styles.relatedLink}>
+                    <h3 className={styles.relatedCircularTitle}>{circular.title}</h3>
+                    <Link href={`/media-center/circulars/${circular.id}`} className={styles.relatedLink}>
                       اقرأ المزيد
                     </Link>
                   </div>

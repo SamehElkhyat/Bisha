@@ -62,7 +62,7 @@ const UsersPage = () => {
         throw new Error(errorData.message || `API error: ${response.status}`);
       }
 
-      const data: PaginatedResponse = await response.json();
+      const data = await response.json();
       console.log(data);
       setUsers(data.newsPaper);
       setFilteredUsers(data.newsPaper);

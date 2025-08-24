@@ -1,7 +1,7 @@
 // API service for connecting to Bisha Chamber backend
 // Base URL for the API
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://bisha.runasp.net";
+  process.env.NEXT_PUBLIC_API_URL || "https://bisha.runasp.net";
 
 // Helper function for making API requests
 async function fetchAPI(endpoint, options = {}) {

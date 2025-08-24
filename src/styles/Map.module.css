@@ -38,6 +38,49 @@
   background-image: linear-gradient(135deg, rgba(0, 43, 78, 0.9) 0%, rgba(0, 43, 78, 0.7) 100%);
 }
 
+.mapError {
+  height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  border-radius: 12px;
+  color: white;
+}
+
+.mapErrorContent {
+  text-align: center;
+  padding: 2rem;
+}
+
+.mapErrorContent h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.mapErrorContent p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.mapRetryButton {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.8rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mapRetryButton:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
 /* Leaflet specific styles */
 .overlayTiles {
   filter: opacity(0.3) brightness(1.2) contrast(0.8) saturate(0.5);

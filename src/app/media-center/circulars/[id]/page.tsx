@@ -78,34 +78,32 @@ const CircularDetailPage = () => {
     }
   }, [id]);
 
-  // Format date function
+  // Format date function to show day, month and year
   const formatDate = (dateString: string) => {
     try {
-      // Check if the date is in ISO format
-      if (dateString.includes('T')) {
-        const date = new Date(dateString);
-        const day = date.getDate().toString().padStart(2, '0');
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const year = date.getFullYear();
-        
-        const monthNames: { [key: string]: string } = {
-          '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
-          '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
-          '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
-        };
-        
-        return `${day} ${monthNames[month]} ${year}`;
-      } else {
-        // Handle the format DD/MM/YYYY
+      let date;
+      if (dateString && dateString.includes('T')) {
+        // ISO format
+        date = new Date(dateString);
+      } else if (dateString) {
+        // DD/MM/YYYY format
         const [day, month, year] = dateString.split('/');
-        const monthNames: { [key: string]: string } = {
-          '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
-          '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
-          '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
-        };
-        
-        return `${day} ${monthNames[month]} ${year}`;
+        date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      } else {
+        return '';
       }
+      
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      
+      const monthNames: { [key: string]: string } = {
+        '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
+        '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
+        '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
+      };
+      
+      return `${day} ${monthNames[month]} ${year}`;
     } catch (error) {
       console.error('Error formatting date:', error);
       return dateString; // Return original string if there's an error

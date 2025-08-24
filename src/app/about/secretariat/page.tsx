@@ -24,7 +24,7 @@ const SecretariatPage = () => {
               <div className={styles.secretaryImageContainer}>
                 <div className={styles.secretaryImageWrapper}>
                   <Image 
-                    src="/secretary-placeholder.jpg" 
+                    src="/محمد بن إبراهيم بن مشوط.jpg" 
                     alt="محمد بن إبراهيم بن مشوط" 
                     width={300} 
                     height={400} 
@@ -56,39 +56,18 @@ const SecretariatPage = () => {
           <div className={styles.contactCard}>
             <div className={styles.contactHeader}>
               <FaEnvelope className={styles.contactIcon} />
-              <h3>للتواصل مباشرة مع الأمين العام</h3>
+              <h3>للتواصل</h3>
             </div>
             
-            <div className={styles.contactForm}>
-              <div className={styles.formGroup}>
-                <label htmlFor="name">الاسم</label>
-                <input type="text" id="name" className={styles.formInput} placeholder="الاسم الكامل" />
+            <div className={styles.contactInfo}>
+              <div className={styles.emailContact}>
+                <div className={styles.emailLabel}>البريد الإلكتروني:</div>
+                <a href="mailto:malmawi@bishacci.org" className={styles.emailLink}>
+                malmawi@bishacci.org                </a>
               </div>
-              
-              <div className={styles.formGroup}>
-                <label htmlFor="email">البريد الإلكتروني</label>
-                <input type="email" id="email" className={styles.formInput} placeholder="البريد الإلكتروني" />
-              </div>
-              
-              <div className={styles.formGroup}>
-                <label htmlFor="phone">رقم الجوال</label>
-                <input type="tel" id="phone" className={styles.formInput} placeholder="رقم الجوال" />
-              </div>
-              
-              <div className={styles.formGroup}>
-                <label htmlFor="subject">الموضوع</label>
-                <input type="text" id="subject" className={styles.formInput} placeholder="موضوع الرسالة" />
-              </div>
-              
-              <div className={styles.formGroup}>
-                <label htmlFor="message">الرسالة</label>
-                <textarea id="message" className={styles.formTextarea} placeholder="نص الرسالة" rows={5}></textarea>
-              </div>
-              
-              <button type="submit" className={styles.submitButton}>
-                إرسال الرسالة
-              </button>
             </div>
+            
+         
           </div>
         </div>
 

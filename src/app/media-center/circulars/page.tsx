@@ -4,14 +4,44 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaCalendarAlt, FaTag, FaSearch } from 'react-icons/fa';
-import { eventsData } from '../../../data/newsData';
 import styles from '../../../styles/CircularsPage.module.css';
+import { newsAPI } from '../../../services/api';
 
 const CircularsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredEvents, setFilteredEvents] = useState(eventsData);
+  const [filteredEvents, setFilteredEvents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [eventsData, setEventsData] = useState([]);
   const itemsPerPage = 6;
+
+  // Fetch events data from API
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        setLoading(true);
+        setError('');
+        const data = await newsAPI.getAllCirculars(1);
+
+        console.log(data);
+        if (data && data.newsPaper) {
+          setEventsData(data.newsPaper); // Show all events data
+          setFilteredEvents(data.newsPaper); // Initialize filtered events with all data
+        } else {
+          setError('لا توجد بيانات متاحة');
+        }
+      } catch (err) {
+        console.error('Error fetching events:', err);
+        setError('حدث خطأ أثناء تحميل البيانات');
+        // Use fallback data if API fails
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   // Filter events based on search term
   useEffect(() => {
@@ -19,14 +49,15 @@ const CircularsPage = () => {
     
     if (searchTerm) {
       result = result.filter(item => 
-        item.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-        item.content.toLowerCase().includes(searchTerm.toLowerCase())
+        item.title?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        item.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.content?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
     
     setFilteredEvents(result);
     setCurrentPage(1); // Reset to first page when filters change
-  }, [searchTerm]);
+  }, [searchTerm, eventsData]);
 
   // Calculate pagination
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -39,14 +70,34 @@ const CircularsPage = () => {
 
   // Format date function
   const formatDate = (dateString: string) => {
-    const [day, month, year] = dateString.split('/');
-    const monthNames: { [key: string]: string } = {
-      '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
-      '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
-      '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
-    };
-    
-    return `${day} ${monthNames[month]} ${year}`;
+    try {
+      let date;
+      if (dateString && dateString.includes('T')) {
+        // ISO format
+        date = new Date(dateString);
+      } else if (dateString) {
+        // DD/MM/YYYY format
+        const [day, month, year] = dateString.split('/');
+        date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      } else {
+        return '';
+      }
+      
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      
+      const monthNames: { [key: string]: string } = {
+        '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
+        '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
+        '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
+      };
+      
+      return `${day} ${monthNames[month]} ${year}`;
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return dateString;
+    }
   };
 
   return (
@@ -75,12 +126,21 @@ const CircularsPage = () => {
         </div>
 
         <div className={styles.eventsGrid}>
-          {currentItems.length > 0 ? (
+          {loading ? (
+            <div className={styles.loadingContainer}>
+              <div className={styles.spinner}></div>
+              <p>جاري تحميل التعاميم...</p>
+            </div>
+          ) : error ? (
+            <div className={styles.errorContainer}>
+              <p>{error}</p>
+            </div>
+          ) : currentItems.length > 0 ? (
             currentItems.map((event) => (
               <div key={event.id} className={styles.eventCard}>
                 <div className={styles.eventImageContainer}>
                   <Image
-                    src={event.image}
+                    src={event.imageUrl || event.imageURL || event.image || '/news-placeholder.jpg'}
                     alt={event.title}
                     width={400}
                     height={250}
@@ -96,16 +156,16 @@ const CircularsPage = () => {
                   <div className={styles.eventMetadata}>
                     <span className={styles.eventDate}>
                       <FaCalendarAlt className={styles.metaIcon} />
-                      {formatDate(event.date)}
+                      {formatDate(event.createdAt || event.date)}
                     </span>
                     <span className={styles.eventCategory}>
                       <FaTag className={styles.metaIcon} />
-                      {event.category}
+                      {event.type || event.category || 'تعاميم'}
                     </span>
                   </div>
                   <h2 className={styles.eventTitle}>{event.title}</h2>
                   <p className={styles.eventExcerpt}>
-                    {event.content.substring(0, 150)}...
+                    {(event.description || event.content || '').substring(0, 150)}...
                   </p>
                 </div>
               </div>

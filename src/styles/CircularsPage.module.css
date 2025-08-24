@@ -121,11 +121,12 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transform: scale(0.9);
   transition: transform 0.5s ease;
 }
 
 .eventCard:hover .eventImage {
-  transform: scale(1.05);
+  transform: scale(0.95);
 }
 
 .eventOverlay {

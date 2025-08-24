@@ -6,6 +6,7 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import AppWrapper from '../components/AppWrapper';
 import styles from '../styles/Home.module.css';
 import mapStyles from '../styles/Map.module.css';
 import { newsAPI } from '../services/api';
@@ -17,12 +18,14 @@ const MapClient = dynamic(() => import('../components/MapClient'), {
 
 // Define types for API responses
 interface NewsItem {
+  [x: string]: any;
   id: number;
+  createdAt: string;
   title: string;
   date: string;
   category: string;
   content: string;
-  image: string;
+  imageUrl: string;
   type?: string;
 }
 
@@ -40,14 +43,44 @@ const HomePage = () => {
   const [slideDirection, setSlideDirection] = useState('');
   const [currentAnnouncementIndex, setCurrentAnnouncementIndex] = useState(0);
   const [isAnnouncementAnimating, setIsAnnouncementAnimating] = useState(false);
-  const [currentCommitteeIndex, setCurrentCommitteeIndex] = useState(0);
-  const [isCommitteeAnimating, setIsCommitteeAnimating] = useState(false);
-  const [selectedRegion, setSelectedRegion] = useState(null);
+
 
   // State for news and events data from API
   const [newsData, setNewsData] = useState<NewsItem[]>([]);
   const [eventsData, setEventsData] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState({ news: true, events: true });
+
+  // Format date to show day, month and year
+  const formatDate = (dateString: string) => {
+    try {
+      let date;
+      if (dateString && dateString.includes('T')) {
+        // ISO format
+        date = new Date(dateString);
+      } else if (dateString) {
+        // DD/MM/YYYY format
+        const [day, month, year] = dateString.split('/');
+        date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      } else {
+        return '';
+      }
+      
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      
+      const monthNames = {
+        '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
+        '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
+        '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
+      };
+      
+      return `${day} ${monthNames[month]} ${year}`;
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return '';
+    }
+  };
   const [error, setError] = useState({ news: '', events: '' });
 
   // Fetch news data from API
@@ -56,7 +89,7 @@ const HomePage = () => {
       try {
         setLoading(prev => ({ ...prev, news: true }));
         setError(prev => ({ ...prev, news: '' }));
-        const data: PaginatedResponse = await newsAPI.getAll();
+        const data = await newsAPI.getAll();
         console.log(data);
 
         if (data && data.newsPaper) {
@@ -68,26 +101,6 @@ const HomePage = () => {
         console.error('Error fetching news:', err);
         setError(prev => ({ ...prev, news: 'حدث خطأ أثناء تحميل البيانات' }));
         // Use fallback data if API fails
-        setNewsData([
-          {
-            id: 1,
-            title: "لجنة سيدات الأعمال ب غرفة بيشة",
-            date: "13/05/2025",
-            category: "الأخبار",
-            content: "محتوى الخبر",
-            image: "/news-placeholder.jpg",
-            type: "IT"
-          },
-          {
-            id: 2,
-            title: "اختتمت غرفة بيشة مشاركتها في المعرض الدولي الأول العالمي للامتياز التجاري",
-            date: "13/05/2025",
-            category: "الأخبار",
-            content: "محتوى الخبر",
-            image: "/news-placeholder.jpg",
-            type: "IT"
-          }
-        ]);
       } finally {
         setLoading(prev => ({ ...prev, news: false }));
       }
@@ -102,7 +115,7 @@ const HomePage = () => {
       try {
         setLoading(prev => ({ ...prev, events: true }));
         setError(prev => ({ ...prev, events: '' }));
-        const data: PaginatedResponse = await newsAPI.getAllCirculars(1);
+        const data = await newsAPI.getAllCirculars(1);
 
         console.log(data);
         if (data && data.newsPaper) {
@@ -114,26 +127,6 @@ const HomePage = () => {
         console.error('Error fetching events:', err);
         setError(prev => ({ ...prev, events: 'حدث خطأ أثناء تحميل البيانات' }));
         // Use fallback data if API fails
-        setEventsData([
-          {
-            id: 1,
-            title: "دعوة للمشاركة في منتدى الاستثمار في الزراعة المستدامة",
-            date: "13/05/2025",
-            category: "التعاميم",
-            content: "محتوى التعميم",
-            image: "/news-placeholder.jpg",
-            type: "IT"
-          },
-          {
-            id: 2,
-            title: "بشأن حظر على استيراد لحوم الدواجن وبيض المائدة ومنتجاتها",
-            date: "13/05/2025",
-            category: "التعاميم",
-            content: "محتوى التعميم",
-            image: "/news-placeholder.jpg",
-            type: "IT"
-          }
-        ]);
       } finally {
         setLoading(prev => ({ ...prev, events: false }));
       }
@@ -289,7 +282,6 @@ const HomePage = () => {
 
   const currentServices = allServicesData[currentServiceIndex];
   const currentAnnouncements = allAnnouncementsData[currentAnnouncementIndex];
-  const currentCommittee = allCommitteeData[currentCommitteeIndex];
 
   const handleServiceNavigation = (direction) => {
     if (isAnimating) return; // Prevent multiple clicks during animation
@@ -332,27 +324,13 @@ const HomePage = () => {
     }, 300);
   };
 
-  const handleCommitteeNavigation = (direction) => {
-    if (isCommitteeAnimating) return;
 
-    setIsCommitteeAnimating(true);
-
-    setTimeout(() => {
-      if (direction === 'up') {
-        setCurrentCommitteeIndex((prev) => prev > 0 ? prev - 1 : allCommitteeData.length - 1);
-      } else {
-        setCurrentCommitteeIndex((prev) => prev < allCommitteeData.length - 1 ? prev + 1 : 0);
-      }
-      setTimeout(() => {
-        setIsCommitteeAnimating(false);
-      }, 50);
-    }, 300);
-  };
 
   return (
-    <div>
-      <Header />
-      <main className={styles.main}>
+    <AppWrapper>
+      <div>
+        <Header />
+        <main className={styles.main}>
         <div className={styles.logoContainer}>
           {/* Add your logo.png to the /public folder */}
           <Image
@@ -463,47 +441,28 @@ const HomePage = () => {
                   </div>
                 ) : (
                   newsData.map((news) => {
-                    // Format date based on the format
-                    let day, month, year, monthName;
-
-                    try {
-                      if (news.date.includes('T')) {
-                        // ISO format
-                        const date = new Date(news.date);
-                        day = date.getDate().toString().padStart(2, '0');
-                        month = (date.getMonth() + 1).toString().padStart(2, '0');
-                        year = date.getFullYear();
-
-                        const monthNames = {
-                          '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
-                          '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
-                          '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
-                        };
-                        monthName = monthNames[month];
-                      } else {
-                        // DD/MM/YYYY format
-                        [day, month, year] = news.date.split('/');
-                        const monthNames = {
-                          '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
-                          '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
-                          '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
-                        };
-                        monthName = monthNames[month];
-                      }
-                    } catch (error) {
-                      console.error('Error formatting date:', error);
-                      [day, monthName, year] = ['', '', ''];
-                    }
-
                     return (
                       <Link href={`/media-center/news/${news.id}`} key={news.id} className={styles.newsCard}>
                         <div className={styles.newsImage}>
-                          <Image src={news.image || "/news-placeholder.jpg"} alt="News" width={400} height={250} />
+                          <Image src={news.imageUrl} alt="News" width={400} height={250} />
                         </div>
                         <div className={styles.newsContent}>
                           <div className={styles.newsDate}>
-                            <span className={styles.dateNumber}>{day}</span>
-                            <span className={styles.dateMonth}>{monthName} {year}</span>
+                            {(() => {
+                              const formattedDate = formatDate(news.createdAt || news.date);
+                              const parts = formattedDate.split(' ');
+                              if (parts.length >= 3) {
+                                const day = parts[0];
+                                const monthYear = parts.slice(1).join(' ');
+                                return (
+                                  <>
+                                    <span className={styles.dateNumber}>{day}</span>
+                                    <span className={styles.dateMonth}>{monthYear}</span>
+                                  </>
+                                );
+                              }
+                              return <span className={styles.dateMonth}>{formattedDate}</span>;
+                            })()}
                           </div>
                           <h3 className={styles.newsTitle}>{news.title}</h3>
                           <span className={styles.newsCategory}>{news.category}</span>
@@ -536,9 +495,10 @@ const HomePage = () => {
                     let day, month, year, monthName;
 
                     try {
-                      if (event.date.includes('T')) {
+                      console.log(event);
+                      if (event.createdAt.includes('T')) {
                         // ISO format
-                        const date = new Date(event.date);
+                        const date = new Date(event.createdAt);
                         day = date.getDate().toString().padStart(2, '0');
                         month = (date.getMonth() + 1).toString().padStart(2, '0');
                         year = date.getFullYear();
@@ -551,7 +511,7 @@ const HomePage = () => {
                         monthName = monthNames[month];
                       } else {
                         // DD/MM/YYYY format
-                        [day, month, year] = event.date.split('/');
+                        [day, month, year] = event.createdAt.split('/');
                         const monthNames = {
                           '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
                           '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
@@ -567,7 +527,7 @@ const HomePage = () => {
                     return (
                       <Link href={`/media-center/circulars/${event.id}`} key={event.id} className={styles.newsCard}>
                         <div className={styles.newsImage}>
-                          <Image src={event.image || "/news-placeholder.jpg"} alt="Event" width={400} height={250} />
+                          <Image src={event.imageUrl} alt="Event" width={400} height={250} />
                         </div>
                         <div className={styles.newsContent}>
                           <div className={styles.newsDate}>
@@ -655,142 +615,46 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Announcements Section */}
-      <section className={styles.announcementsSection}>
-        <div className={styles.announcementsContainer}>
-          <div className={styles.announcementsHeader}>
-            <h2 className={styles.announcementsTitle}>إعلانات الغرفة</h2>
-            <p className={styles.announcementsSubtitle}>تعرف على آخر أخبارنا</p>
-          </div>
 
-          <div className={styles.announcementsContent}>
-            <div className={`${styles.announcementsGrid} ${isAnnouncementAnimating ? styles.slideOut : styles.slideIn}`}>
-              {currentAnnouncements.map((announcement, index) => (
-                <div key={announcement.id} className={styles.announcementCard}>
-                  <div className={styles.announcementImageContainer}>
-                    <div className={styles.announcementImage}>
-                      <div className={styles.imageOverlay}>
-                        <div className={styles.overlayContent}>
-                          <div className={styles.logoSection}>
-                            <Image src="/bisha-chamber-logo.png" alt="Logo" width={60} height={60} className={styles.overlayLogo} />
-                          </div>
-                          <div className={styles.textSection}>
-                            <h4 className={styles.overlayTitle}>{announcement.title}</h4>
-                            {announcement.details.subtitle && (
-                              <p className={styles.overlaySubtitle}>{announcement.details.subtitle}</p>
-                            )}
-                            {announcement.details.description && (
-                              <p className={styles.overlayDetails}>{announcement.details.description}</p>
-                            )}
-                            {announcement.details.dateRange && (
-                              <div className={styles.dateInfo}>
-                                <span className={styles.dateRange}>{announcement.details.dateRange}</span>
-                                <span className={styles.month}>{announcement.details.month}</span>
-                                <span className={styles.year}>{announcement.details.year}</span>
-                              </div>
-                            )}
-                            {announcement.details.time && (
-                              <p className={styles.timeInfo}>{announcement.details.time}</p>
-                            )}
-                            {announcement.details.trainer && (
-                              <p className={styles.venue}>{announcement.details.trainer}</p>
-                            )}
-                          </div>
-                          <div className={styles.qrSection}>
-                            <div className={styles.qrCode}>
-                              <div className={styles.qrPlaceholder}></div>
-                            </div>
-                          </div>
-                          {announcement.details.phone && (
-                            <div className={styles.contactInfo}>
-                              <p className={styles.phone}>جوال: {announcement.details.phone}</p>
-                              <p className={styles.location}>{announcement.details.location}</p>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className={styles.announcementContent}>
-                    <div className={styles.announcementDate}>
-                      <span className={styles.dateDay}>{announcement.date.split(' ')[0]}</span>
-                      <span className={styles.dateMonth}>{announcement.date.split(' ')[1]} {announcement.date.split(' ')[2]}</span>
-                    </div>
-                    <h3 className={styles.announcementTitle}>{announcement.title}</h3>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className={styles.announcementsNavigation}>
-              <button
-                className={styles.announcementNavButton}
-                onClick={() => handleAnnouncementNavigation('left')}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-              <button
-                className={styles.announcementNavButton}
-                onClick={() => handleAnnouncementNavigation('right')}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-            </div>
-
-            <div className={styles.announcementsButton}>
-              <button className={styles.viewAllButton}>الإعلانات</button>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Committee Section */}
       <section className={styles.committeeSection}>
         <div className={styles.committeeContainer}>
-          <div className={styles.committeeNavigation}>
-            <button
-              className={styles.committeeNavButton}
-              onClick={() => handleCommitteeNavigation('up')}
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M7 14l5-5 5 5z" fill="currentColor" />
-              </svg>
-            </button>
-            <button
-              className={styles.committeeNavButton}
-              onClick={() => handleCommitteeNavigation('down')}
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M7 10l5 5 5-5z" fill="currentColor" />
-              </svg>
-            </button>
+          <div className={styles.committeeSectionHeader}>
+            <h2 className={styles.committeeSectionTitle}>اللجان القطاعية</h2>
+            <p className={styles.committeeSectionDescription}>
+              تعرف على اللجان القطاعية المختلفة وخدماتها المتنوعة
+            </p>
           </div>
-
-          <div className={`${styles.committeeContent} ${isCommitteeAnimating ? styles.committeeSlideOut : styles.committeeSlideIn}`}>
-            <div className={styles.committeeImageContainer}>
-              <div className={styles.committeeImage}>
-                <Image src="/committee-bg.jpg" alt="Committee Background" width={600} height={400} />
-                <div className={styles.committeeOverlay}>
-                  <div className={styles.committeeOverlayContent}>
-                    <h3 className={styles.committeeOverlayTitle}>اللجنة الصناعية</h3>
-                    <p className={styles.committeeOverlayDescription}>
-                      أن تصبح منطقة عسير من المناطق المتقدمة صناعياً خلال الأعوام
-                      القادمة عن طريق الاستفادة بطاقة مستمرة في تطوير القطاع
-                      الصناعي السعودي في مجالات: التقنية، التصدير
-                    </p>
+          
+          <div className={styles.committeeCardsGrid}>
+            {allCommitteeData.map((committee, index) => (
+              <div key={committee.id} className={styles.committeeCard}>
+                <div className={styles.committeeCardHeader}>
+                  <div className={styles.committeeCardIcon}>
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
                   </div>
+                  <h3 className={styles.committeeCardTitle}>{committee.subtitle}</h3>
+                </div>
+                
+                <div className={styles.committeeCardContent}>
+                  <p className={styles.committeeCardDescription}>
+                    {committee.description}
+                  </p>
+                </div>
+                
+                <div className={styles.committeeCardFooter}>
+                  <button className={styles.committeeCardButton}>
+                    تفاصيل أكثر
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                      <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
                 </div>
               </div>
-            </div>
-
-            <div className={styles.committeeTextContent}>
-              <h2 className={styles.committeeTitle}>{currentCommittee.title}</h2>
-              <div className={styles.committeeSubtitle}>{currentCommittee.subtitle}</div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -802,8 +666,10 @@ const HomePage = () => {
 
       {/* Footer Section */}
       <Footer />
-    </div>
+      </div>
+    </AppWrapper>
   );
 };
 
 export default HomePage;
+

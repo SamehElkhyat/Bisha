@@ -24,9 +24,9 @@ const Header = () => {
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       const target = event.target as Node;
-      if (activeDropdown && 
-          dropdownRefs.current[activeDropdown] && 
-          !dropdownRefs.current[activeDropdown]?.contains(target)) {
+      if (activeDropdown &&
+        dropdownRefs.current[activeDropdown] &&
+        !dropdownRefs.current[activeDropdown]?.contains(target)) {
         setActiveDropdown(null);
       }
     }
@@ -41,11 +41,12 @@ const Header = () => {
     setActiveDropdown(activeDropdown === dropdownId ? null : dropdownId);
   };
 
-  const navLinks: NavLink[] = [
+  // Base navigation links (always visible)
+  const baseNavLinks: NavLink[] = [
     { href: '/', label: 'الرئيسية' },
-    { 
+    {
       id: 'about',
-      href: '#', 
+      href: '#',
       label: 'عن الغرفة',
       hasDropdown: true,
       dropdownItems: [
@@ -64,9 +65,9 @@ const Header = () => {
         { href: '/about/surveys', label: 'الاستبيانات' }
       ]
     },
-    { 
+    {
       id: 'media',
-      href: '#', 
+      href: '#',
       label: 'المركز الاعلامي',
       hasDropdown: true,
       dropdownItems: [
@@ -75,10 +76,35 @@ const Header = () => {
       ]
     },
     { href: 'https://eservices.bishacci.org.sa/#/Login', label: 'التدريب', external: true },
-    { href: '/initiatives', label: 'المبادرات' },
-    { href: '/contact', label: 'اتصل بنا' },
-    { href: '/admin', label: 'لوحة التحكم', id: 'admin' }  
+    { href: '/', label: 'المبادرات' },
+    { href: '/contact', label: 'اتصل بنا' }
   ];
+
+
+  // Admin link (only visible to admins)
+  const adminLink: NavLink = { href: '/admin', label: '🔧 لوحة التحكم', id: 'admin' };
+
+  // Get user from auth context
+  const { user } = useAuth();
+  
+  // Login link
+  const authLink: NavLink = { href: '/login', label: '🔐 تسجيل الدخول', id: 'auth' };
+
+  // Combine base links with conditional links
+  let navLinks: NavLink[] = [...baseNavLinks];
+  
+  // Add admin link ONLY if user is admin
+  if (isAdmin()) {
+    console.log('Admin user detected, showing admin panel link');
+    navLinks.push(adminLink);
+  } else {
+    console.log('Non-admin user, hiding admin panel link');
+  }
+  
+  // Add login link ONLY if user is not logged in
+  if (!user) {
+    navLinks.push(authLink);
+  }
 
   const socialLinks = [
     { href: '#', icon: <FaTiktok /> },
@@ -96,8 +122,8 @@ const Header = () => {
         <nav className={styles.nav}>
           {navLinks.map((link, index) => (
             link.hasDropdown ? (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className={styles.dropdownContainer}
                 ref={(el) => {
                   if (link.id) {
@@ -105,7 +131,7 @@ const Header = () => {
                   }
                 }}
               >
-                <div 
+                <div
                   className={`${styles.navLink} ${styles.dropdownTrigger} ${activeDropdown === link.id ? styles.activeDropdown : ''}`}
                   onClick={() => link.id && toggleDropdown(link.id)}
                 >

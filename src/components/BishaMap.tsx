@@ -34,7 +34,7 @@ interface BishaMapProps {
 }
 
 const BishaMap: React.FC<BishaMapProps> = ({ onRegionSelect, onError }) => {
-  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+  const [selectedRegion, setSelectedRegion] = useState<string | null>("بيشة");
   const [geoJsonData, setGeoJsonData] = useState<any>(null);
   const [cityMarkers, setCityMarkers] = useState<any[]>([]);
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -84,17 +84,36 @@ const BishaMap: React.FC<BishaMapProps> = ({ onRegionSelect, onError }) => {
   useEffect(() => {
     if (!geoJsonData || !mapContainerRef.current) return;
     
+    // Capture the container reference for cleanup
+    const containerElement = mapContainerRef.current;
+    
     try {
-      // Cleanup any existing map instance
+      // Cleanup any existing map instance more thoroughly
       if (mapInstanceRef.current) {
-        mapInstanceRef.current.remove();
+        try {
+          mapInstanceRef.current.off();
+          mapInstanceRef.current.remove();
+        } catch (cleanupError) {
+          console.warn('Error during map cleanup:', cleanupError);
+        }
         mapInstanceRef.current = null;
       }
       
-      // Make sure the container is empty
+      // Clear any existing geoJSON layer
+      if (geoJsonLayerRef.current) {
+        geoJsonLayerRef.current = null;
+      }
+      
+      // Make sure the container is empty and ready
       if (mapContainerRef.current) {
         mapContainerRef.current.innerHTML = '';
+        // Reset any Leaflet-specific properties
+        (mapContainerRef.current as any)._leaflet_id = undefined;
       }
+      
+      // Small delay to ensure DOM is ready
+      setTimeout(() => {
+        if (!mapContainerRef.current) return;
       
       // Create map instance
       const map = L.map(mapId, {
@@ -339,7 +358,47 @@ const BishaMap: React.FC<BishaMapProps> = ({ onRegionSelect, onError }) => {
       // Invalidate size to ensure proper rendering
       setTimeout(() => {
         map.invalidateSize();
-      }, 0);
+        
+        // Auto-select بيشة region on map load
+        if (selectedRegion === "بيشة" && geoJsonLayerRef.current) {
+          onRegionSelect("بيشة");
+          
+          // Find the بيشة layer and highlight it
+          const layers = geoJsonLayerRef.current.getLayers();
+          const bishaLayer = layers.find((l: any) => 
+            l.feature?.properties?.name === "بيشة"
+          );
+          
+          // Type guards for layer methods
+          const hasGetBounds = (layer: any): layer is L.Layer & { getBounds: () => L.LatLngBounds } => {
+            return layer && 'getBounds' in layer;
+          };
+          
+          const hasSetStyle = (layer: any): layer is L.Layer & { setStyle: Function } => {
+            return layer && 'setStyle' in layer;
+          };
+          
+          if (bishaLayer) {
+            // Fit bounds to بيشة
+            if (hasGetBounds(bishaLayer)) {
+              map.fitBounds(bishaLayer.getBounds());
+            }
+            
+            // Highlight بيشة region
+            if (hasSetStyle(bishaLayer)) {
+              bishaLayer.setStyle({
+                fillColor: '#2196F3',
+                weight: 3,
+                color: '#FFFFFF',
+                fillOpacity: 0.6,
+                dashArray: ''
+              });
+            }
+          }
+        }
+      }, 100);
+      
+      }, 50); // Close the setTimeout we opened earlier
       
     } catch (error) {
       console.error('Error initializing map:', error);
@@ -350,8 +409,21 @@ const BishaMap: React.FC<BishaMapProps> = ({ onRegionSelect, onError }) => {
     return () => {
       try {
         if (mapInstanceRef.current) {
+          // Remove all event listeners
+          mapInstanceRef.current.off();
+          // Remove the map
           mapInstanceRef.current.remove();
           mapInstanceRef.current = null;
+        }
+        
+        // Clear geoJSON layer reference
+        if (geoJsonLayerRef.current) {
+          geoJsonLayerRef.current = null;
+        }
+        
+        // Clear container Leaflet properties using captured reference
+        if (containerElement) {
+          (containerElement as any)._leaflet_id = undefined;
         }
       } catch (error) {
         console.error('Error cleaning up map:', error);

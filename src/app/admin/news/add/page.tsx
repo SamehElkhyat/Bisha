@@ -14,7 +14,7 @@ const AddNewsPage = () => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    type: 'News',
+    type: 'أخبار',
     image: null,
     imagePreview: ''
   });

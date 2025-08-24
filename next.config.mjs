@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['cnn-arabic-images.cnn.io'],
+    domains: ['cnn-arabic-images.cnn.io', 'bisha.runasp.net'],
   },
   webpack: (config) => {
     config.module.rules.push({

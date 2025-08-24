@@ -1,8 +1,8 @@
 "use client";
-
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
+import AdminRoute from '../../components/AdminRoute';
 import styles from '../../styles/Admin.module.css';
 import { FaNewspaper, FaUserPlus, FaSignOutAlt, FaChartBar, FaUsers, FaBullhorn } from 'react-icons/fa';
 import Link from 'next/link';
@@ -42,7 +42,8 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className={styles.adminContainer}>
+    <AdminRoute>
+      <div className={styles.adminContainer}>
       <div className={styles.sidebar}>
         <div className={styles.adminProfile}>
           <div className={styles.profileImage}>
@@ -139,7 +140,8 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </AdminRoute>
   );
 };
 

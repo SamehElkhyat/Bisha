@@ -6,6 +6,7 @@ import mapStyles from '../styles/Map.module.css';
 
 // Dynamic import for RegionStats (no SSR issues here)
 import RegionStats from './RegionStats';
+import MapErrorBoundary from './MapErrorBoundary';
 
 // Create a unique key for the map component to force remounting
 const getMapKey = () => `map-${Date.now()}`;
@@ -17,7 +18,7 @@ const BishaMap = dynamic(() => import('./BishaMap'), {
 });
 
 const MapClient = () => {
-  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+  const [selectedRegion, setSelectedRegion] = useState<string | null>("بيشة");
   const [regionData, setRegionData] = useState<Record<string, any>>({});
   const [shouldRenderMap, setShouldRenderMap] = useState(false);
   const [mapKey, setMapKey] = useState(getMapKey());
@@ -69,24 +70,29 @@ const MapClient = () => {
     console.log('Map error detected, remounting map component');
     setShouldRenderMap(false);
     
+    // Reset selected region to avoid state issues
+    setSelectedRegion("بيشة");
+    
     // Force remount by changing the key
     setMapKey(getMapKey());
     
-    // Re-render after a short delay
+    // Re-render after a longer delay to ensure cleanup
     setTimeout(() => {
       setShouldRenderMap(true);
-    }, 500);
+    }, 1000);
   };
 
   return (
     <div className={mapStyles.mapContainer}>
       {shouldRenderMap ? (
-        <div key={mapKey} className={mapStyles.mapWrapper}>
-          <BishaMap 
-            onRegionSelect={setSelectedRegion} 
-            onError={handleMapError}
-          />
-        </div>
+        <MapErrorBoundary onError={handleMapError}>
+          <div key={mapKey} className={mapStyles.mapWrapper}>
+            <BishaMap 
+              onRegionSelect={setSelectedRegion} 
+              onError={handleMapError}
+            />
+          </div>
+        </MapErrorBoundary>
       ) : (
         <div className={mapStyles.mapLoading}>جاري تحميل الخريطة...</div>
       )}

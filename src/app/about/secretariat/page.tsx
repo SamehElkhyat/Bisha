@@ -1,11 +1,16 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
-import { FaUserTie, FaQuoteRight, FaQuoteLeft, FaEnvelope } from 'react-icons/fa';
+import { FaUserTie, FaQuoteRight, FaQuoteLeft, FaEnvelope, FaTimes, FaExpand } from 'react-icons/fa';
 import styles from '../../../styles/Secretariat.module.css';
 
 const SecretariatPage = () => {
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+
+  const openImageModal = () => setIsImageModalOpen(true);
+  const closeImageModal = () => setIsImageModalOpen(false);
+
   return (
     <div className={styles.secretariatContainer}>
       <div className={styles.pageHeader}>
@@ -22,7 +27,7 @@ const SecretariatPage = () => {
           <div className={styles.secretaryCard}>
             <div className={styles.cardContent}>
               <div className={styles.secretaryImageContainer}>
-                <div className={styles.secretaryImageWrapper}>
+                <div className={styles.secretaryImageWrapper} onClick={openImageModal}>
                   <Image 
                     src="/محمد بن إبراهيم بن مشوط.jpg" 
                     alt="محمد بن إبراهيم بن مشوط" 
@@ -30,6 +35,10 @@ const SecretariatPage = () => {
                     height={400} 
                     className={styles.secretaryImage}
                   />
+                  <div className={styles.imageOverlay}>
+                    <FaExpand className={styles.expandIcon} />
+                    <span className={styles.expandText}>اضغط للتكبير</span>
+                  </div>
                 </div>
               </div>
 
@@ -91,6 +100,30 @@ const SecretariatPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Image Modal */}
+      {isImageModalOpen && (
+        <div className={styles.imageModal} onClick={closeImageModal}>
+          <div className={styles.imageModalContent} onClick={(e) => e.stopPropagation()}>
+            <button className={styles.closeButton} onClick={closeImageModal}>
+              <FaTimes />
+            </button>
+            <div className={styles.modalImageContainer}>
+              <Image 
+                src="/محمد بن إبراهيم بن مشوط.jpg" 
+                alt="محمد بن إبراهيم بن مشوط" 
+                width={600} 
+                height={800} 
+                className={styles.modalImage}
+              />
+            </div>
+            <div className={styles.modalImageInfo}>
+              <h3>محمد بن إبراهيم بن مشوط</h3>
+              <p>الأمين العام - غرفة بيشة التجارية</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

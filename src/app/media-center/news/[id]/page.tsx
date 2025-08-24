@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { FaCalendarAlt, FaTag, FaArrowRight } from 'react-icons/fa';
+import { FaCalendarAlt, FaTag, FaArrowRight, FaShare, FaFacebookF, FaTwitter, FaWhatsapp, FaCopy, FaEye, FaHome, FaNewspaper, FaTimes, FaExpand, FaDownload, FaSearchPlus } from 'react-icons/fa';
 import styles from '../../../../styles/NewsDetail.module.css';
 import { newsAPI } from '../../../../services/api';
 
@@ -13,9 +13,9 @@ interface NewsItem {
   id: number;
   title: string;
   date: string;
-  category: string;
-  content: string;
-  image: string;
+  type: string;
+  description: string;
+  imageUrl: string;
 }
 
 interface PaginatedResponse {
@@ -33,6 +33,10 @@ const NewsDetailPage = () => {
   const [relatedNews, setRelatedNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showShareMenu, setShowShareMenu] = useState(false);
+  const [viewCount, setViewCount] = useState(0);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [imageZoom, setImageZoom] = useState(1);
 
   // Fetch news item from API
   useEffect(() => {
@@ -51,7 +55,7 @@ const NewsDetailPage = () => {
             if (allNewsData && allNewsData.newsPaper) {
               // Filter related news (same category, excluding current)
               const related = allNewsData.newsPaper
-                .filter(item => item.category === data.category && item.id !== id)
+                .filter(item => item.type === data.type && item.id !== id)
                 .slice(0, 3);
               
               setRelatedNews(related);
@@ -110,6 +114,103 @@ const NewsDetailPage = () => {
     }
   };
 
+  // Share functions
+  const shareOnFacebook = () => {
+    const url = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(newsItem?.title || '');
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${title}`, '_blank');
+  };
+
+  const shareOnTwitter = () => {
+    const url = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(newsItem?.title || '');
+    window.open(`https://twitter.com/intent/tweet?url=${url}&text=${title}`, '_blank');
+  };
+
+  const shareOnWhatsApp = () => {
+    const url = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(newsItem?.title || '');
+    window.open(`https://wa.me/?text=${title}%20${url}`, '_blank');
+  };
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      alert('تم نسخ الرابط بنجاح!');
+      setShowShareMenu(false);
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+      alert('فشل في نسخ الرابط');
+    }
+  };
+
+  // Simulate view count (in real app, this would be from API)
+  useEffect(() => {
+    if (newsItem) {
+      setViewCount(Math.floor(Math.random() * 1000) + 100);
+    }
+  }, [newsItem]);
+
+  // Image modal functions
+  const openImageModal = () => {
+    setIsImageModalOpen(true);
+    setImageZoom(1);
+  };
+
+  const closeImageModal = () => {
+    setIsImageModalOpen(false);
+    setImageZoom(1);
+  };
+
+  const zoomIn = () => {
+    setImageZoom(prev => Math.min(prev + 0.5, 3));
+  };
+
+  const zoomOut = () => {
+    setImageZoom(prev => Math.max(prev - 0.5, 0.5));
+  };
+
+  const resetZoom = () => {
+    setImageZoom(1);
+  };
+
+  const downloadImage = () => {
+    if (newsItem?.imageUrl) {
+      const link = document.createElement('a');
+      link.href = newsItem.imageUrl;
+      link.download = `${newsItem.title}-image.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
+  // Handle keyboard events for image modal
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (isImageModalOpen) {
+        switch (e.key) {
+          case 'Escape':
+            closeImageModal();
+            break;
+          case '+':
+          case '=':
+            zoomIn();
+            break;
+          case '-':
+            zoomOut();
+            break;
+          case '0':
+            resetZoom();
+            break;
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [isImageModalOpen]);
+
   // Show loading state
   if (loading) {
     return (
@@ -135,6 +236,21 @@ const NewsDetailPage = () => {
 
   return (
     <div className={styles.newsDetailContainer}>
+      {/* Breadcrumbs */}
+      <div className={styles.breadcrumbs}>
+        <Link href="/" className={styles.breadcrumbLink}>
+          <FaHome className={styles.breadcrumbIcon} />
+          الرئيسية
+        </Link>
+        <span className={styles.breadcrumbSeparator}>/</span>
+        <Link href="/media-center/news" className={styles.breadcrumbLink}>
+          <FaNewspaper className={styles.breadcrumbIcon} />
+          الأخبار
+        </Link>
+        <span className={styles.breadcrumbSeparator}>/</span>
+        <span className={styles.breadcrumbCurrent}>تفاصيل الخبر</span>
+      </div>
+
       <div className={styles.backLink}>
         <Link href="/media-center/news" className={styles.backButton}>
           <FaArrowRight className={styles.backIcon} /> العودة إلى الأخبار
@@ -145,30 +261,73 @@ const NewsDetailPage = () => {
         <div className={styles.newsHeader}>
           <h1 className={styles.newsTitle}>{newsItem.title}</h1>
           <div className={styles.newsMetadata}>
-            <span className={styles.newsDate}>
-              <FaCalendarAlt className={styles.metaIcon} />
-              {formatDate(newsItem.date)}
-            </span>
-            <span className={styles.newsCategory}>
-              <FaTag className={styles.metaIcon} />
-              {newsItem.category}
-            </span>
+            <div className={styles.metadataLeft}>
+              <span className={styles.newsDate}>
+                <FaCalendarAlt className={styles.metaIcon} />
+                {formatDate(newsItem.date)}
+              </span>
+              <span className={styles.newsCategory}>
+                <FaTag className={styles.metaIcon} />
+                {newsItem.type}
+              </span>
+              <span className={styles.viewCount}>
+                <FaEye className={styles.metaIcon} />
+                {viewCount} مشاهدة
+              </span>
+            </div>
+            <div className={styles.metadataRight}>
+              <div className={styles.shareContainer}>
+                <button 
+                  className={styles.shareButton}
+                  onClick={() => setShowShareMenu(!showShareMenu)}
+                >
+                  <FaShare className={styles.shareIcon} />
+                  مشاركة
+                </button>
+                {showShareMenu && (
+                  <div className={styles.shareMenu}>
+                    <button onClick={shareOnFacebook} className={styles.shareOption}>
+                      <FaFacebookF className={styles.shareOptionIcon} />
+                      فيسبوك
+                    </button>
+                    <button onClick={shareOnTwitter} className={styles.shareOption}>
+                      <FaTwitter className={styles.shareOptionIcon} />
+                      تويتر
+                    </button>
+                    <button onClick={shareOnWhatsApp} className={styles.shareOption}>
+                      <FaWhatsapp className={styles.shareOptionIcon} />
+                      واتساب
+                    </button>
+                    <button onClick={copyToClipboard} className={styles.shareOption}>
+                      <FaCopy className={styles.shareOptionIcon} />
+                      نسخ الرابط
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className={styles.newsImageContainer}>
+        <div className={styles.newsImageContainer} onClick={openImageModal}>
           <Image
-            src={newsItem.image || "/news-placeholder.jpg"}
+            src={newsItem.imageUrl || "/news-placeholder.jpg"}
             alt={newsItem.title}
             width={800}
             height={500}
             className={styles.newsImage}
             priority
           />
+          <div className={styles.imageOverlay}>
+            <div className={styles.imageOverlayContent}>
+              <FaSearchPlus className={styles.overlayIcon} />
+              <span className={styles.overlayText}>اضغط لعرض الصورة بالحجم الكامل</span>
+            </div>
+          </div>
         </div>
 
         <div className={styles.newsBody}>
-          <p className={styles.newsContent}>{newsItem.content}</p>
+          <p className={styles.newsContent}>{newsItem.description}</p>
         </div>
 
         {relatedNews.length > 0 && (
@@ -179,7 +338,7 @@ const NewsDetailPage = () => {
                 <div key={news.id} className={styles.relatedCard}>
                   <div className={styles.relatedImageContainer}>
                     <Image
-                      src={news.image || "/news-placeholder.jpg"}
+                      src={news.imageUrl || "/news-placeholder.jpg"}
                       alt={news.title}
                       width={300}
                       height={200}
@@ -198,6 +357,72 @@ const NewsDetailPage = () => {
           </div>
         )}
       </div>
+
+      {/* Image Detail Modal */}
+      {isImageModalOpen && (
+        <div className={styles.imageModal} onClick={closeImageModal}>
+          <div className={styles.imageModalContent} onClick={(e) => e.stopPropagation()}>
+            {/* Modal Header */}
+            <div className={styles.imageModalHeader}>
+              <div className={styles.imageModalTitle}>
+                <h3>{newsItem.title}</h3>
+                <p>صورة الخبر - {formatDate(newsItem.date)}</p>
+              </div>
+              <div className={styles.imageModalControls}>
+                <button onClick={zoomOut} className={styles.zoomButton} title="تصغير">
+                  -
+                </button>
+                <span className={styles.zoomLevel}>{Math.round(imageZoom * 100)}%</span>
+                <button onClick={zoomIn} className={styles.zoomButton} title="تكبير">
+                  +
+                </button>
+                <button onClick={resetZoom} className={styles.resetButton} title="إعادة تعيين">
+                  1:1
+                </button>
+                <button onClick={downloadImage} className={styles.downloadButton} title="تحميل">
+                  <FaDownload />
+                </button>
+                <button onClick={closeImageModal} className={styles.closeButton} title="إغلاق">
+                  <FaTimes />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Image */}
+            <div className={styles.imageModalBody}>
+              <div 
+                className={styles.imageWrapper}
+                style={{ transform: `scale(${imageZoom})` }}
+              >
+                <Image
+                  src={newsItem.imageUrl || "/news-placeholder.jpg"}
+                  alt={newsItem.title}
+                  width={1200}
+                  height={800}
+                  className={styles.modalImage}
+                  priority
+                />
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className={styles.imageModalFooter}>
+              <div className={styles.imageInfo}>
+                <div className={styles.imageDetails}>
+                  <span><strong>العنوان:</strong> {newsItem.title}</span>
+                  <span><strong>التاريخ:</strong> {formatDate(newsItem.date)}</span>
+                  <span><strong>الفئة:</strong> {newsItem.type}</span>
+                </div>
+                <div className={styles.imageInstructions}>
+                  <small>
+                    استخدم الأزرار للتحكم أو اضغط: + للتكبير، - للتصغير، 0 للإعادة، Esc للإغلاق
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

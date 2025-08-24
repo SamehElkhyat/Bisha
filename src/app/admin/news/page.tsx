@@ -6,7 +6,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import styles from '../../../styles/AdminList.module.css';
 import { FaNewspaper, FaPlus, FaEdit, FaTrash, FaSearch, FaFilter } from 'react-icons/fa';
 import Link from 'next/link';
-import { newsData } from '../../../data/newsData';
+import { newsAPI } from '../../../services/api';
 
 const AdminNewsPage = () => {
   const router = useRouter();
@@ -14,18 +14,30 @@ const AdminNewsPage = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [news, setNews] = useState(newsData);
-  const [filteredNews, setFilteredNews] = useState(newsData);
-  
+  const [news, setNews] = useState([]);
+  const [filteredNews, setFilteredNews] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
   // Get all unique categories
-  const categories = ['all', ...new Set(newsData.map(item => item.category))];
+  const categories = ['all', ...new Set(news.map(item => item.category))];
 
   useEffect(() => {
+    const fetchNews = async () => {
+      const data = await newsAPI.getAll() ;
+      const eventsData = await newsAPI.getAllCirculars();
+      setNews(data.newsPaper);
+      setFilteredNews(data.newsPaper);
+      setEvents(eventsData.newsPaper);
+      setFilteredEvents(eventsData.newsPaper);
+    };
+    fetchNews();
     // Check if user is authenticated and is admin
     if (!user) {
       router.push('/login');
     } else if (!isAdmin()) {
-      router.push('/');
+      router.push('/admin/news');
+      setLoading(false);
+
     } else {
       setLoading(false);
     }
@@ -34,33 +46,37 @@ const AdminNewsPage = () => {
   // Filter news based on search term and category
   useEffect(() => {
     let result = news;
-    
+
     if (searchTerm) {
-      result = result.filter(item => 
-        item.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      result = result.filter(item =>
+        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.content.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-    
+
     if (selectedCategory !== 'all') {
       result = result.filter(item => item.category === selectedCategory);
     }
-    
+
     setFilteredNews(result);
   }, [searchTerm, selectedCategory, news]);
 
-  // Format date function
-  const formatDate = (dateString: string) => {
-    const [day, month, year] = dateString.split('/');
-    const monthNames: { [key: string]: string } = {
-      '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
-      '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
-      '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
-    };
-    
-    return `${day} ${monthNames[month]} ${year}`;
-  };
+  // Filter events based on search term
+  useEffect(() => {
+    let result = events;
 
+    if (searchTerm) {
+      result = result.filter(item =>
+        item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.content?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.response?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    setFilteredEvents(result);
+  }, [searchTerm, events]);
+
+  // Format date function
   const handleDelete = (id: number) => {
     if (window.confirm('هل أنت متأكد من حذف هذا الخبر؟')) {
       // In a real application, we would make an API call to delete the news
@@ -91,11 +107,11 @@ const AdminNewsPage = () => {
       <div className={styles.filterSection}>
         <div className={styles.searchBox}>
           <input
+          className="text-black"
             type="text"
             placeholder="ابحث هنا..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className={styles.searchInput}
           />
           <FaSearch className={styles.searchIcon} />
         </div>
@@ -103,9 +119,9 @@ const AdminNewsPage = () => {
         <div className={styles.categoryFilter}>
           <FaFilter className={styles.filterIcon} />
           <select
+          className="text-black"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className={styles.filterSelect}
           >
             {categories.map((category, index) => (
               <option key={index} value={category}>
@@ -116,7 +132,9 @@ const AdminNewsPage = () => {
         </div>
       </div>
 
+      {/* News Table */}
       <div className={styles.tableContainer}>
+        <h2 className={styles.sectionTitle}>الأخبار</h2>
         <table className={styles.dataTable}>
           <thead>
             <tr>
@@ -131,10 +149,10 @@ const AdminNewsPage = () => {
             {filteredNews.length > 0 ? (
               filteredNews.map((item, index) => (
                 <tr key={item.id}>
-                  <td>{index + 1}</td>
-                  <td className={styles.titleCell}>{item.title}</td>
-                  <td>{item.category}</td>
-                  <td>{formatDate(item.date)}</td>
+                  <td className="text-black">{index + 1}</td>
+                  <td className="text-black">{item.title}</td>
+                  <td className="text-black">{item.category}</td>
+                  <td className="text-black">{item.date}</td>
                   <td className={styles.actionsCell}>
                     <Link href={`/admin/news/edit/${item.id}`} className={styles.editButton}>
                       <FaEdit />
@@ -153,6 +171,51 @@ const AdminNewsPage = () => {
                 <td colSpan={5} className={styles.noResults}>
                   لا توجد نتائج مطابقة للبحث
                 </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Events/Responses Table */}
+      <div className={styles.tableContainer}>
+        <h2 className={styles.sectionTitle}>التعاميم</h2>
+        <table className={styles.dataTable}>
+          <thead>
+            <tr>
+              <th>الرقم</th>
+              <th>العنوان</th>
+              <th>المحتوى</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredEvents.length > 0 ? (
+              filteredEvents.map((item, index) => (
+                <tr key={item.id}>
+                  <td className="text-black">{index + 1}</td>
+                  <td  className="text-black">{item.title || 'غير محدد'}</td>
+                  <td className="text-black">
+                    {item.content ? item.content.substring(0, 100) + '...' : 'غير محدد'}
+                  </td>
+                  <td className={styles.actionsCell}>
+                    <Link href={`/admin/events/edit/${item.id}`} className={styles.editButton}>
+                      <FaEdit />
+                    </Link>
+                    <button
+                      className={styles.deleteButton}
+                      onClick={() => handleDelete(item.id)}
+                    >
+                      <FaTrash />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={6} className={styles.noResults}>
+ لا توجد تعاميم 
+                 </td>
               </tr>
             )}
           </tbody>

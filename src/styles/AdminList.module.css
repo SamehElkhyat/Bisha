@@ -138,6 +138,22 @@
   font-weight: 500;
 }
 
+.sectionTitle {
+  font-size: 1.25rem;
+  color: #333;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #0056b3;
+}
+
+.contentCell,
+.responseCell {
+  max-width: 200px;
+  word-wrap: break-word;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
 .actionsCell {
   display: flex;
   gap: 0.5rem;

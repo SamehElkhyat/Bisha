@@ -192,6 +192,7 @@ const AddNewsPage = () => {
         <div className={styles.formGroup}>
           <label htmlFor="title">عنوان الخبر *</label>
           <input
+          className="text-black"
             type="text"
             id="title"
             name="title"
@@ -205,21 +206,22 @@ const AddNewsPage = () => {
         <div className={styles.formGroup}>
           <label htmlFor="type">نوع الخبر *</label>
           <select
+          className="text-black"
             id="type"
             name="type"
             value={formData.type}
             onChange={handleChange}
             required
           >
-            <option value="News">الأخبار</option>
-            <option value="Circular">التعاميم</option>
-            <option value="Article">مقال</option>
+            <option value="أخبار">الأخبار</option>
+            <option value="تعاميم">التعاميم</option>
           </select>
         </div>
 
         <div className={styles.formGroup}>
           <label htmlFor="description">محتوى الخبر *</label>
           <textarea
+          className="text-black"
             id="description"
             name="description"
             value={formData.description}

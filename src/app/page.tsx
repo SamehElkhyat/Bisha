@@ -43,29 +43,30 @@ const HomePage = () => {
   const [currentCommitteeIndex, setCurrentCommitteeIndex] = useState(0);
   const [isCommitteeAnimating, setIsCommitteeAnimating] = useState(false);
   const [selectedRegion, setSelectedRegion] = useState(null);
-  
+
   // State for news and events data from API
   const [newsData, setNewsData] = useState<NewsItem[]>([]);
   const [eventsData, setEventsData] = useState<NewsItem[]>([]);
-  const [loading, setLoading] = useState({news: true, events: true});
-  const [error, setError] = useState({news: '', events: ''});
+  const [loading, setLoading] = useState({ news: true, events: true });
+  const [error, setError] = useState({ news: '', events: '' });
 
   // Fetch news data from API
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        setLoading(prev => ({...prev, news: true}));
-        setError(prev => ({...prev, news: ''}));
+        setLoading(prev => ({ ...prev, news: true }));
+        setError(prev => ({ ...prev, news: '' }));
         const data: PaginatedResponse = await newsAPI.getAll();
-        
+        console.log(data);
+
         if (data && data.newsPaper) {
           setNewsData(data.newsPaper.slice(0, 5)); // Limit to 5 items for homepage
         } else {
-          setError(prev => ({...prev, news: 'لا توجد بيانات متاحة'}));
+          setError(prev => ({ ...prev, news: 'لا توجد بيانات متاحة' }));
         }
       } catch (err) {
         console.error('Error fetching news:', err);
-        setError(prev => ({...prev, news: 'حدث خطأ أثناء تحميل البيانات'}));
+        setError(prev => ({ ...prev, news: 'حدث خطأ أثناء تحميل البيانات' }));
         // Use fallback data if API fails
         setNewsData([
           {
@@ -88,7 +89,7 @@ const HomePage = () => {
           }
         ]);
       } finally {
-        setLoading(prev => ({...prev, news: false}));
+        setLoading(prev => ({ ...prev, news: false }));
       }
     };
 
@@ -99,18 +100,19 @@ const HomePage = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        setLoading(prev => ({...prev, events: true}));
-        setError(prev => ({...prev, events: ''}));
+        setLoading(prev => ({ ...prev, events: true }));
+        setError(prev => ({ ...prev, events: '' }));
         const data: PaginatedResponse = await newsAPI.getAllCirculars(1);
-        
+
+        console.log(data);
         if (data && data.newsPaper) {
           setEventsData(data.newsPaper.slice(0, 5)); // Limit to 5 items for homepage
         } else {
-          setError(prev => ({...prev, events: 'لا توجد بيانات متاحة'}));
+          setError(prev => ({ ...prev, events: 'لا توجد بيانات متاحة' }));
         }
       } catch (err) {
         console.error('Error fetching events:', err);
-        setError(prev => ({...prev, events: 'حدث خطأ أثناء تحميل البيانات'}));
+        setError(prev => ({ ...prev, events: 'حدث خطأ أثناء تحميل البيانات' }));
         // Use fallback data if API fails
         setEventsData([
           {
@@ -133,7 +135,7 @@ const HomePage = () => {
           }
         ]);
       } finally {
-        setLoading(prev => ({...prev, events: false}));
+        setLoading(prev => ({ ...prev, events: false }));
       }
     };
 
@@ -353,12 +355,12 @@ const HomePage = () => {
       <main className={styles.main}>
         <div className={styles.logoContainer}>
           {/* Add your logo.png to the /public folder */}
-          <Image 
-            src="/bisha-chamber-logo.png" 
-            alt="Bisha Chamber Logo" 
-            className={styles.logo} 
-            width={320} 
-            height={320} 
+          <Image
+            src="/bisha-chamber-logo.png"
+            alt="Bisha Chamber Logo"
+            className={styles.logo}
+            width={320}
+            height={320}
             priority
           />
         </div>
@@ -408,7 +410,7 @@ const HomePage = () => {
             التدريب الإلكتروني
           </button>
           <button className={styles.gridButton}>
- 
+
             المكتبة الإلكترونية
           </button>
           <button className={styles.gridButton}>
@@ -463,7 +465,7 @@ const HomePage = () => {
                   newsData.map((news) => {
                     // Format date based on the format
                     let day, month, year, monthName;
-                    
+
                     try {
                       if (news.date.includes('T')) {
                         // ISO format
@@ -471,7 +473,7 @@ const HomePage = () => {
                         day = date.getDate().toString().padStart(2, '0');
                         month = (date.getMonth() + 1).toString().padStart(2, '0');
                         year = date.getFullYear();
-                        
+
                         const monthNames = {
                           '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
                           '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
@@ -532,7 +534,7 @@ const HomePage = () => {
                   eventsData.map((event) => {
                     // Format date based on the format
                     let day, month, year, monthName;
-                    
+
                     try {
                       if (event.date.includes('T')) {
                         // ISO format
@@ -540,7 +542,7 @@ const HomePage = () => {
                         day = date.getDate().toString().padStart(2, '0');
                         month = (date.getMonth() + 1).toString().padStart(2, '0');
                         year = date.getFullYear();
-                        
+
                         const monthNames = {
                           '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
                           '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
@@ -604,8 +606,8 @@ const HomePage = () => {
             </div>
 
             <div className={`${styles.servicesCards} ${isAnimating
-                ? slideDirection === 'up' ? styles.slideOutDown : styles.slideOutUp
-                : styles.slideIn
+              ? slideDirection === 'up' ? styles.slideOutDown : styles.slideOutUp
+              : styles.slideIn
               }`}>
               {currentServices.map((service, index) => (
                 <div

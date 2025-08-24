@@ -1,19 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import styles from '../styles/Header.module.css';
-import { 
-  FaTiktok, 
-  FaTelegramPlane, 
-  FaSnapchatGhost, 
-  FaYoutube, 
-  FaFacebookF, 
-  FaInstagram, 
-  FaTimes, 
-  FaChevronDown, 
-  FaUserShield,
-  FaBars,
-  FaSearch
-} from 'react-icons/fa';
+import { FaTiktok, FaTelegramPlane, FaSnapchatGhost, FaYoutube, FaFacebookF, FaInstagram, FaTimes, FaChevronDown, FaUserShield } from 'react-icons/fa';
 import { useAuth } from '../contexts/AuthContext';
 
 interface NavLink {
@@ -30,29 +18,16 @@ interface NavLink {
 
 const Header = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
   const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
-  const mobileMenuRef = useRef<HTMLDivElement>(null);
   const { isAdmin } = useAuth();
-  // Close dropdown and mobile menu when clicking outside
+  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       const target = event.target as Node;
-      
-      // Handle dropdown menu clicks
       if (activeDropdown && 
           dropdownRefs.current[activeDropdown] && 
           !dropdownRefs.current[activeDropdown]?.contains(target)) {
         setActiveDropdown(null);
-      }
-      
-      // Handle mobile menu clicks
-      if (mobileMenuOpen && 
-          mobileMenuRef.current && 
-          !mobileMenuRef.current.contains(target) &&
-          !(target as HTMLElement).closest(`.${styles.mobileMenuButton}`)) {
-        setMobileMenuOpen(false);
       }
     }
 
@@ -60,36 +35,10 @@ const Header = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [activeDropdown, mobileMenuOpen]);
-  
-  // Close mobile menu on window resize (if screen becomes large)
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 992 && mobileMenuOpen) {
-        setMobileMenuOpen(false);
-      }
-    };
-    
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [mobileMenuOpen]);
+  }, [activeDropdown]);
 
   const toggleDropdown = (dropdownId: string) => {
     setActiveDropdown(activeDropdown === dropdownId ? null : dropdownId);
-  };
-  
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-    // Close any open dropdowns when toggling mobile menu
-    if (!mobileMenuOpen) {
-      setActiveDropdown(null);
-    }
-  };
-  
-  const toggleSearch = () => {
-    setSearchOpen(!searchOpen);
   };
 
   const navLinks: NavLink[] = [

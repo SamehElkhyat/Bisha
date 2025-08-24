@@ -8,11 +8,9 @@
   padding: 2rem;
   color: white;
   padding-top: 3rem;
-
   /* backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px); */
 }
-
 .logoContainer {
   margin-top: 60px;
   border-radius: 12px;
@@ -23,11 +21,10 @@
   width: 100%;
   z-index: 10;
 }
-
 .logoContainer img {
   background: rgba(0, 0, 0, 0.5);
-  border-radius: 16px;
-  padding: 20px 25px;
+  border-radius: 12px;
+  padding: 15px 20px;
   display: block;
   margin-right: 2rem;
   width: auto;
@@ -41,7 +38,7 @@
 }
 
 .logo {
-  width: 250px !important;
+  width: 180px !important;
   height: auto !important;
   transition: transform 0.3s ease;
 }
@@ -431,7 +428,7 @@
   }
 
   .logo {
-    width: 200px !important;
+    width: 160px !important;
   }
 
   .newsSection {

@@ -1,29 +1,8 @@
 @import "tailwindcss";
-@import "../styles/responsive.css";
 
 :root {
   --background: #003366;
   --foreground: #ffffff;
-  
-  /* Font sizes */
-  --font-size-xs: 0.75rem;    /* 12px */
-  --font-size-sm: 0.875rem;   /* 14px */
-  --font-size-base: 1rem;     /* 16px */
-  --font-size-lg: 1.125rem;   /* 18px */
-  --font-size-xl: 1.25rem;    /* 20px */
-  --font-size-2xl: 1.5rem;    /* 24px */
-  --font-size-3xl: 1.875rem;  /* 30px */
-  --font-size-4xl: 2.25rem;   /* 36px */
-  
-  /* Spacing */
-  --spacing-1: 0.25rem;       /* 4px */
-  --spacing-2: 0.5rem;        /* 8px */
-  --spacing-3: 0.75rem;       /* 12px */
-  --spacing-4: 1rem;          /* 16px */
-  --spacing-6: 1.5rem;        /* 24px */
-  --spacing-8: 2rem;          /* 32px */
-  --spacing-12: 3rem;         /* 48px */
-  --spacing-16: 4rem;         /* 64px */
 }
 
 @theme inline {
@@ -45,58 +24,4 @@ body {
   background: #003366; /* Fallback */
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  font-size: var(--font-size-base);
-  line-height: 1.5;
-  overflow-x: hidden; /* Prevent horizontal scroll on mobile */
-}
-
-/* Base responsive styles */
-html {
-  box-sizing: border-box;
-  -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape on iOS */
-}
-
-*, *:before, *:after {
-  box-sizing: inherit;
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-/* Container for responsive layouts */
-.container {
-  width: 100%;
-  padding-right: var(--spacing-4);
-  padding-left: var(--spacing-4);
-  margin-right: auto;
-  margin-left: auto;
-}
-
-@media (min-width: 576px) {
-  .container {
-    max-width: 540px;
-  }
-}
-
-@media (min-width: 768px) {
-  .container {
-    max-width: 720px;
-  }
-}
-
-@media (min-width: 992px) {
-  .container {
-    max-width: 960px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .container {
-    max-width: 1140px;
-  }
 }

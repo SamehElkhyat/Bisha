@@ -6,10 +6,9 @@
       "properties": {
         "name": "بيشة",
         "id": "bisha",
-        "nameEn": "Bisha",
         "population": 205346,
-        "males": 85000,
-        "females": 82000,
+        "males": 106182,
+        "females": 99859,
         "schools": 250,
         "houses": 35000,
         "subscribers": 20000,

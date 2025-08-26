@@ -11,21 +11,9 @@ import styles from '../styles/Home.module.css';
 import mapStyles from '../styles/Map.module.css';
 import { newsAPI } from '../services/api';
 
-// Dynamically import the MapSelector component with no SSR
-const MapSelector = dynamic(() => import('../components/MapSelector'), {
-  ssr: false,
-  loading: () => (
-    <div style={{ 
-      height: '600px', 
-      display: 'flex', 
-      alignItems: 'center', 
-      justifyContent: 'center',
-      background: '#f5f5f5',
-      color: '#666'
-    }}>
-      جاري تحميل الخرائط...
-    </div>
-  )
+// Dynamically import the MapClient component with no SSR
+const MapClient = dynamic(() => import('../components/MapClient'), {
+  ssr: false
 });
 
 // Define types for API responses
@@ -340,9 +328,9 @@ const HomePage = () => {
 
   return (
     <AppWrapper>
-      <div>
-        <Header />
-        <main className={styles.main}>
+    <div>
+      <Header />
+      <main className={styles.main}>
         <div className={styles.logoContainer}>
           {/* Add your logo.png to the /public folder */}
           <Image
@@ -638,7 +626,7 @@ const HomePage = () => {
               تعرف على اللجان القطاعية المختلفة وخدماتها المتنوعة
             </p>
           </div>
-          
+
           <div className={styles.committeeCardsGrid}>
             {allCommitteeData.map((committee, index) => (
               <div key={committee.id} className={styles.committeeCard}>
@@ -673,14 +661,12 @@ const HomePage = () => {
 
       {/* Interactive Map Section */}
       <section className={mapStyles.mapSection}>
-        <div className={mapStyles.mapContainer}>
-          <MapSelector />
-        </div>
+        <MapClient />
       </section>
 
       {/* Footer Section */}
       <Footer />
-      </div>
+    </div>
     </AppWrapper>
   );
 };

@@ -119,10 +119,43 @@ const BishaMap: React.FC<BishaMapProps> = ({ onRegionSelect, onError }) => {
         center: [19.0, 42.5],
         zoom: 8,
         zoomControl: false,
-        attributionControl: true
+        attributionControl: true,
+        dragging: true,
+        touchZoom: true,
+        doubleClickZoom: true,
+        scrollWheelZoom: true,
+        boxZoom: true,
+        keyboard: true,
+        inertia: true,
+        zoomAnimation: true,
+        fadeAnimation: true,
+        markerZoomAnimation: true
       });
       
       mapInstanceRef.current = map;
+      
+      // Add drag event handlers for better user feedback
+      map.on('dragstart', () => {
+        if (mapContainerRef.current) {
+          mapContainerRef.current.style.cursor = 'grabbing';
+        }
+      });
+      
+      map.on('dragend', () => {
+        if (mapContainerRef.current) {
+          mapContainerRef.current.style.cursor = 'grab';
+        }
+      });
+      
+      map.on('movestart', () => {
+        // Optional: Add visual feedback when map starts moving
+        console.log('Map movement started');
+      });
+      
+      map.on('moveend', () => {
+        // Optional: Add visual feedback when map stops moving
+        console.log('Map movement ended');
+      });
       
       // Add tile layers
       const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -435,7 +468,7 @@ const BishaMap: React.FC<BishaMapProps> = ({ onRegionSelect, onError }) => {
       <div 
         id={mapId}
         ref={mapContainerRef}
-        style={{ height: '100%', width: '100%', direction: 'ltr' }}
+        style={{ height: '600px', width: '100%', direction: 'ltr' }}
       />
     </div>
   );

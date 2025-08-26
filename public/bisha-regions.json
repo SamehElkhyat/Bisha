@@ -6,12 +6,12 @@
       "properties": {
         "name": "بيشة",
         "id": "bisha",
-        "males": 85000,
-        "females": 82000,
-        "schools": 250,
-        "houses": 35000,
-        "subscribers": 20000,
-        "factories": 45
+        "males": 106182,
+        "females": 99859,
+        "schools": 358,
+        "houses": 37010,
+        "subscribers": 206041,
+        "factories": 68
       },
       "geometry": {
         "type": "Polygon",

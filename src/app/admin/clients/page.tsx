@@ -140,8 +140,8 @@ const AdminClientsPage = () => {
   const handleDelete = async (id: number) => {
     if (window.confirm('هل أنت متأكد من حذف هذا المستخدم؟')) {
       try {
-        const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bisha.runasp.net/api';
-        const url = `${API_BASE_URL}/Register/Delete-User/${id}`;
+        const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://bisha.runasp.net';
+        const url = `${API_BASE_URL}/api/Register/Delete-User/${id}`;
 
         // Get auth token
         const token = localStorage.getItem('auth_token');
@@ -217,8 +217,8 @@ const AdminClientsPage = () => {
     if (!selectedUserId) return;
 
     try {
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bisha.runasp.net/api';
-      const url = `${API_BASE_URL}/Admin/Change-Roles`;
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://bisha.runasp.net';
+      const url = `${API_BASE_URL}/api/Admin/Change-Roles`;
 
       // Get auth token
       const token = localStorage.getItem('auth_token');

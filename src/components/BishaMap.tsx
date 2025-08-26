@@ -435,7 +435,7 @@ const BishaMap: React.FC<BishaMapProps> = ({ onRegionSelect, onError }) => {
       <div 
         id={mapId}
         ref={mapContainerRef}
-        style={{ height: '600px', width: '100%', direction: 'ltr' }}
+        style={{ height: '100%', width: '100%', direction: 'ltr' }}
       />
     </div>
   );

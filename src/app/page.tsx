@@ -11,9 +11,21 @@ import styles from '../styles/Home.module.css';
 import mapStyles from '../styles/Map.module.css';
 import { newsAPI } from '../services/api';
 
-// Dynamically import the MapClient component with no SSR
-const MapClient = dynamic(() => import('../components/MapClient'), {
-  ssr: false
+// Dynamically import the MapSelector component with no SSR
+const MapSelector = dynamic(() => import('../components/MapSelector'), {
+  ssr: false,
+  loading: () => (
+    <div style={{ 
+      height: '600px', 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center',
+      background: '#f5f5f5',
+      color: '#666'
+    }}>
+      جاري تحميل الخرائط...
+    </div>
+  )
 });
 
 // Define types for API responses
@@ -661,7 +673,9 @@ const HomePage = () => {
 
       {/* Interactive Map Section */}
       <section className={mapStyles.mapSection}>
-        <MapClient />
+        <div className={mapStyles.mapContainer}>
+          <MapSelector />
+        </div>
       </section>
 
       {/* Footer Section */}

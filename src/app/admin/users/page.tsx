@@ -39,8 +39,8 @@ const UsersPage = () => {
     setLoading(true);
     setError('');
     try {
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://bisha.runasp.net';
-      const url = `${API_BASE_URL}/api/Register/Get-Users/${page}`;
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bisha.runasp.net/api';
+      const url = `${API_BASE_URL}/Register/Get-Users/${page}`;
       // Get auth token
       const token = localStorage.getItem('auth_token');
       const headers: HeadersInit = {

@@ -66,7 +66,8 @@ const AdminNewsPage = () => {
         title: freshData.title || '',
         description: freshData.description || '',
         imageUrl: freshData.imageUrl || '',
-        type: freshData.type || ''
+        type: freshData.type || '',
+        imageFile: null
       });
 
     } catch (error) {
@@ -77,7 +78,8 @@ const AdminNewsPage = () => {
         title: item.title || '',
         description: item.description || '',
         imageUrl: item.imageUrl || '',
-        type: item.type || ''
+        type: item.type || '',
+        imageFile: null
       });
     } finally {
       setModalLoading(false);

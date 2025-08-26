@@ -168,6 +168,7 @@ const AddClientPage = () => {
           <div className={styles.inputWithIcon}>
             <FaIdCard className={styles.inputIcon} />
             <input
+              className='text-black'
               type="text"
               id="fullName"
               name="fullName"
@@ -185,6 +186,7 @@ const AddClientPage = () => {
             <div className={styles.inputWithIcon}>
               <FaEnvelope className={styles.inputIcon} />
               <input
+                className='text-black'
                 type="email"
                 id="email"
                 name="email"
@@ -201,6 +203,7 @@ const AddClientPage = () => {
             <div className={styles.inputWithIcon}>
               <FaPhone className={styles.inputIcon} />
               <input
+                className='text-black'
                 type="text"
                 id="phoneNumber"
                 name="phoneNumber"
@@ -218,6 +221,7 @@ const AddClientPage = () => {
           <div className={styles.inputWithIcon}>
             <FaLock className={styles.inputIcon} />
             <input
+              className='text-black'
               type="password"
               id="passwordHash"
               name="passwordHash"
@@ -234,6 +238,7 @@ const AddClientPage = () => {
           <div className={styles.inputWithIcon}>
             <FaCheckCircle className={styles.inputIcon} />
             <input
+              className='text-black'
               type="password"
               id="confirmPassword"
               name="confirmPassword"

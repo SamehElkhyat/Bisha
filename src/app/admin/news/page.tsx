@@ -30,7 +30,8 @@ const AdminNewsPage = () => {
     title: '',
     description: '',
     imageUrl: '',
-    type: ''
+    type: '',
+    imageFile: null
   });
 
   // Get all unique categories
@@ -90,16 +91,29 @@ const AdminNewsPage = () => {
       title: '',
       description: '',
       imageUrl: '',
-      type: ''
+      type: '',
+      imageFile: null
     });
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    const { name, value, type, files } = e.target;
+    
+    if (type === 'file') {
+      // Handle file input
+      if (files && files[0]) {
+        setFormData(prev => ({
+          ...prev,
+          [name]: files[0]
+        }));
+      }
+    } else {
+      // Handle regular text inputs
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleSave = async () => {
@@ -388,16 +402,23 @@ const AdminNewsPage = () => {
                   </div>
 
                   <div className={styles.inputGroup}>
-                    <label htmlFor="imageUrl" className={styles.inputLabel}>رابط الصورة</label>
+                    <label htmlFor="imageFile" className={styles.inputLabel}>اختر صورة</label>
                     <input
                       type="file"
-                      id="imageUrl"
-                      name="imageUrl"
-                      value={formData.imageUrl}
+                      id="imageFile"
+                      name="imageFile"
                       onChange={handleInputChange}
                       className={styles.modalInput}
-                      placeholder="أدخل رابط الصورة"
+                      accept="image/*"
                     />
+                    {formData.imageUrl && (
+                      <div className={styles.currentImage}>
+                        <span>الصورة الحالية: </span>
+                        <a href={formData.imageUrl} target="_blank" rel="noopener noreferrer" className={styles.imageLink}>
+                          عرض الصورة
+                        </a>
+                      </div>
+                    )}
                   </div>
 
                   <div className={styles.inputGroup}>

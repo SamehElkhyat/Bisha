@@ -40,6 +40,7 @@ const AdminNewsPage = () => {
 
   const UpdateNews = async (newData, id) => {
     const response = await newsAPI.UpdateNews(newData, id);
+    console.log(response);
 
   }
 
@@ -208,6 +209,7 @@ const AdminNewsPage = () => {
 
   // Format date function
   const handleDelete = async (id: number) => {
+    console.log(id);
     const response = await newsAPI.delete(id);
     if (response.message === "تم حذف الخبر بنجاح") {
       alert('تم الحذف بنجاح');
@@ -290,6 +292,7 @@ const AdminNewsPage = () => {
                     >
                       <FaEdit />
                     </button>
+
                     <button
                       className={styles.deleteButton}
                       onClick={() => handleDelete(item.id)}

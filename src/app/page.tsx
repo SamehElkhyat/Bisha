@@ -64,17 +64,17 @@ const HomePage = () => {
       } else {
         return '';
       }
-      
+
       const day = date.getDate().toString().padStart(2, '0');
       const month = (date.getMonth() + 1).toString().padStart(2, '0');
       const year = date.getFullYear();
-      
+
       const monthNames = {
         '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
         '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
         '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
       };
-      
+
       return `${day} ${monthNames[month]} ${year}`;
     } catch (error) {
       console.error('Error formatting date:', error);
@@ -328,345 +328,345 @@ const HomePage = () => {
 
   return (
     <AppWrapper>
-    <div>
-      <Header />
-      <main className={styles.main}>
-        <div className={styles.logoContainer}>
-          {/* Add your logo.png to the /public folder */}
-          <Image
-            src="/bisha-chamber-logo.png"
-            alt="Bisha Chamber Logo"
-            className={styles.logo}
-            width={320}
-            height={320}
-            priority
-          />
-        </div>
-        <div className={styles.buttonGrid}>
-          <button className={styles.gridButton}>
-
-            طباعة شهادة العضوية
-          </button>
-          <button className={styles.gridButton}>
-
-            تحديث البيانات
-          </button>
-          <button className={styles.gridButton}>
-
-            التحقق من الوثائق
-          </button>
-          <button className={styles.gridButton}>
-
-            الصندوق الإلكتروني
-          </button>
-          <button className={styles.gridButton}>
-
-            اشتراك جديد
-          </button>
-          <button className={styles.gridButton}>
-
-            الاستعلام عن رقم العضوية
-          </button>
-          <button className={styles.gridButton}>
-
-            تجديد الاشتراك
-          </button>
-          <button className={styles.gridButton}>
-
-            الدليل التجاري
-          </button>
-          <button className={styles.gridButton}>
-
-            السجل التجاري
-          </button>
-          <button className={styles.gridButton}>
-
-            قوائم التمويل
-          </button>
-          <button className={styles.gridButton}>
-
-            التدريب الإلكتروني
-          </button>
-          <button className={styles.gridButton}>
-
-            المكتبة الإلكترونية
-          </button>
-          <button className={styles.gridButton}>
-            الشكاوى والمقترحات
-          </button>
-          <button className={styles.gridButton}>
-
-            الاتحاد والتحكيم
-          </button>
-        </div>
-      </main>
-
-      {/* News Section */}
-      <section className={styles.newsSection}>
-        <div className={styles.newsContainer}>
-          <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle}>المركز الإعلامي</h2>
-            <p className={styles.sectionSubtitle}>تعرف على أحدث إصداراتنا</p>
-            <div className={styles.tabs}>
-              <button
-                className={`${styles.tab} ${activeTab === 'news' ? styles.activeTab : ''}`}
-                onClick={() => setActiveTab('news')}
-              >
-                الأخبار
-              </button>
-              <button
-                className={`${styles.tab} ${activeTab === 'events' ? styles.activeTab : ''}`}
-                onClick={() => setActiveTab('events')}
-              >
-                الفعاليات
-              </button>
-            </div>
+      <div>
+        <Header />
+        <main className={styles.main}>
+          <div className={styles.logoContainer}>
+            {/* Add your logo.png to the /public folder */}
+            <Image
+              src="/bisha-chamber-logo.png"
+              alt="Bisha Chamber Logo"
+              className={styles.logo}
+              width={320}
+              height={320}
+              priority
+            />
           </div>
+          <div className={styles.buttonGrid}>
+            <button onClick={() => window.open('https://eservices.bishacci.org.sa/#/Login', '_blank')} className={styles.gridButton}>
 
-          <div className={styles.contentContainer}>
-            {activeTab === 'news' && (
-              <div className={`${styles.newsGrid} ${styles.fadeIn}`}>
-                {loading.news ? (
-                  <div className={styles.loadingContainer}>
-                    <div className={styles.spinner}></div>
-                    <p>جاري تحميل الأخبار...</p>
-                  </div>
-                ) : error.news ? (
-                  <div className={styles.errorContainer}>
-                    <p className={styles.errorMessage}>{error.news}</p>
-                  </div>
-                ) : newsData.length === 0 ? (
-                  <div className={styles.noResults}>
-                    <h3>لا توجد أخبار متاحة</h3>
-                  </div>
-                ) : (
-                  newsData.map((news) => {
-                    return (
-                      <Link href={`/media-center/news/${news.id}`} key={news.id} className={styles.newsCard}>
-                        <div className={styles.newsImage}>
-                          <Image src={news.imageUrl} alt="News" width={400} height={250} />
-                        </div>
-                        <div className={styles.newsContent}>
-                          <div className={styles.newsDate}>
-                            {(() => {
-                              const formattedDate = formatDate(news.createdAt || news.date);
-                              const parts = formattedDate.split(' ');
-                              if (parts.length >= 3) {
-                                const day = parts[0];
-                                const monthYear = parts.slice(1).join(' ');
-                                return (
-                                  <>
-                                    <span className={styles.dateNumber}>{day}</span>
-                                    <span className={styles.dateMonth}>{monthYear}</span>
-                                  </>
-                                );
-                              }
-                              return <span className={styles.dateMonth}>{formattedDate}</span>;
-                            })()}
-                          </div>
-                          <h3 className={styles.newsTitle}>{news.title}</h3>
-                          <span className={styles.newsCategory}>{news.category}</span>
-                        </div>
-                      </Link>
-                    );
-                  })
-                )}
-              </div>
-            )}
+              الصندوق الإلكتروني
+            </button>
+            <button className={styles.gridButton}>
 
-            {activeTab === 'events' && (
-              <div className={`${styles.newsGrid} ${styles.fadeIn}`}>
-                {loading.events ? (
-                  <div className={styles.loadingContainer}>
-                    <div className={styles.spinner}></div>
-                    <p>جاري تحميل التعاميم...</p>
-                  </div>
-                ) : error.events ? (
-                  <div className={styles.errorContainer}>
-                    <p className={styles.errorMessage}>{error.events}</p>
-                  </div>
-                ) : eventsData.length === 0 ? (
-                  <div className={styles.noResults}>
-                    <h3>لا توجد تعاميم متاحة</h3>
-                  </div>
-                ) : (
-                  eventsData.map((event) => {
-                    // Format date based on the format
-                    let day, month, year, monthName;
+              طباعة شهادة العضوية
+            </button>
+            <button className={styles.gridButton}>
 
-                    try {
-                      console.log(event);
-                      if (event.createdAt.includes('T')) {
-                        // ISO format
-                        const date = new Date(event.createdAt);
-                        day = date.getDate().toString().padStart(2, '0');
-                        month = (date.getMonth() + 1).toString().padStart(2, '0');
-                        year = date.getFullYear();
+              تحديث البيانات
+            </button>
+            <button className={styles.gridButton}>
 
-                        const monthNames = {
-                          '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
-                          '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
-                          '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
-                        };
-                        monthName = monthNames[month];
-                      } else {
-                        // DD/MM/YYYY format
-                        [day, month, year] = event.createdAt.split('/');
-                        const monthNames = {
-                          '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
-                          '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
-                          '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
-                        };
-                        monthName = monthNames[month];
-                      }
-                    } catch (error) {
-                      console.error('Error formatting date:', error);
-                      [day, monthName, year] = ['', '', ''];
-                    }
+              التحقق من الوثائق
+            </button>
+            <button className={styles.gridButton}>
 
-                    return (
-                      <Link href={`/media-center/circulars/${event.id}`} key={event.id} className={styles.newsCard}>
-                        <div className={styles.newsImage}>
-                          <Image src={event.imageUrl} alt="Event" width={400} height={250} />
-                        </div>
-                        <div className={styles.newsContent}>
-                          <div className={styles.newsDate}>
-                            <span className={styles.dateNumber}>{day}</span>
-                            <span className={styles.dateMonth}>{monthName} {year}</span>
-                          </div>
-                          <h3 className={styles.newsTitle}>{event.title}</h3>
-                          <span className={styles.newsCategory}>{event.category}</span>
-                        </div>
-                      </Link>
-                    );
-                  })
-                )}
-              </div>
-            )}
+              اشتراك جديد
+            </button>
+            <button className={styles.gridButton}>
+
+              الاستعلام عن رقم العضوية
+            </button>
+            <button className={styles.gridButton}>
+
+              تجديد الاشتراك
+            </button>
+            <button className={styles.gridButton}>
+
+              الدليل التجاري
+            </button>
+            <button className={styles.gridButton}>
+
+              السجل التجاري
+            </button>
+            <button className={styles.gridButton}>
+
+              قوائم التمويل
+            </button>
+            <button className={styles.gridButton}>
+
+              التدريب الإلكتروني
+            </button>
+            <button className={styles.gridButton}>
+
+              المكتبة الإلكترونية
+            </button>
+            <button className={styles.gridButton}>
+              الشكاوى والمقترحات
+            </button>
+            <button className={styles.gridButton}>
+
+              الاتحاد والتحكيم
+            </button>
           </div>
+        </main>
 
-          <div className={styles.newsNavigation}>
-            <button className={styles.navButton}>‹</button>
-            <button className={styles.navButton}>›</button>
-          </div>
-        </div>
-      </section>
-
-      {/* Services Section */}
-      <section className={styles.servicesSection}>
-        <div className={styles.servicesContainer}>
-          <div className={styles.servicesContent}>
-            <div className={styles.servicesText}>
-              <h2 className={styles.servicesTitle}>
-                هنا تجد كل ما يتعلق بإدارات
-                <br />
-                الغرفة المختلفة
-              </h2>
-              <div className={styles.servicesSubtitle}>الإدارات</div>
-            </div>
-
-            <div className={`${styles.servicesCards} ${isAnimating
-              ? slideDirection === 'up' ? styles.slideOutDown : styles.slideOutUp
-              : styles.slideIn
-              }`}>
-              {currentServices.map((service, index) => (
-                <div
-                  key={service.id}
-                  className={styles.serviceCard}
-                  style={{
-                    animationDelay: isAnimating ? '0ms' : `${index * 100}ms`,
-                    opacity: isAnimating ? 0 : 1
-                  }}
+        {/* News Section */}
+        <section className={styles.newsSection}>
+          <div className={styles.newsContainer}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>المركز الإعلامي</h2>
+              <p className={styles.sectionSubtitle}>تعرف على أحدث إصداراتنا</p>
+              <div className={styles.tabs}>
+                <button
+                  className={`${styles.tab} ${activeTab === 'news' ? styles.activeTab : ''}`}
+                  onClick={() => setActiveTab('news')}
                 >
-                  <div className={styles.serviceIcon}>
-                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                      <path d={service.icon} fill="currentColor" />
-                    </svg>
+                  الأخبار
+                </button>
+                <button
+                  className={`${styles.tab} ${activeTab === 'events' ? styles.activeTab : ''}`}
+                  onClick={() => setActiveTab('events')}
+                >
+                  الفعاليات
+                </button>
+              </div>
+            </div>
+
+            <div className={styles.contentContainer}>
+              {activeTab === 'news' && (
+                <div className={`${styles.newsGrid} ${styles.fadeIn}`}>
+                  {loading.news ? (
+                    <div className={styles.loadingContainer}>
+                      <div className={styles.spinner}></div>
+                      <p>جاري تحميل الأخبار...</p>
+                    </div>
+                  ) : error.news ? (
+                    <div className={styles.errorContainer}>
+                      <p className={styles.errorMessage}>{error.news}</p>
+                    </div>
+                  ) : newsData.length === 0 ? (
+                    <div className={styles.noResults}>
+                      <h3>لا توجد أخبار متاحة</h3>
+                    </div>
+                  ) : (
+                    newsData.map((news) => {
+                      return (
+                        <Link href={`/media-center/news/${news.id}`} key={news.id} className={styles.newsCard}>
+                          <div className={styles.newsImage}>
+                            <Image src={news.imageUrl} alt="News" width={400} height={250} />
+                          </div>
+                          <div className={styles.newsContent}>
+                            <div className={styles.newsDate}>
+                              {(() => {
+                                const formattedDate = formatDate(news.createdAt || news.date);
+                                const parts = formattedDate.split(' ');
+                                if (parts.length >= 3) {
+                                  const day = parts[0];
+                                  const monthYear = parts.slice(1).join(' ');
+                                  return (
+                                    <>
+                                      <span className={styles.dateNumber}>{day}</span>
+                                      <span className={styles.dateMonth}>{monthYear}</span>
+                                    </>
+                                  );
+                                }
+                                return <span className={styles.dateMonth}>{formattedDate}</span>;
+                              })()}
+                            </div>
+                            <h3 className={styles.newsTitle}>{news.title}</h3>
+                            <span className={styles.newsCategory}>{news.category}</span>
+                          </div>
+                        </Link>
+                      );
+                    })
+                  )}
+                </div>
+              )}
+
+              {activeTab === 'events' && (
+                <div className={`${styles.newsGrid} ${styles.fadeIn}`}>
+                  {loading.events ? (
+                    <div className={styles.loadingContainer}>
+                      <div className={styles.spinner}></div>
+                      <p>جاري تحميل التعاميم...</p>
+                    </div>
+                  ) : error.events ? (
+                    <div className={styles.errorContainer}>
+                      <p className={styles.errorMessage}>{error.events}</p>
+                    </div>
+                  ) : eventsData.length === 0 ? (
+                    <div className={styles.noResults}>
+                      <h3>لا توجد تعاميم متاحة</h3>
+                    </div>
+                  ) : (
+                    eventsData.map((event) => {
+                      // Format date based on the format
+                      let day, month, year, monthName;
+
+                      try {
+                        console.log(event);
+                        if (event.createdAt.includes('T')) {
+                          // ISO format
+                          const date = new Date(event.createdAt);
+                          day = date.getDate().toString().padStart(2, '0');
+                          month = (date.getMonth() + 1).toString().padStart(2, '0');
+                          year = date.getFullYear();
+
+                          const monthNames = {
+                            '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
+                            '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
+                            '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
+                          };
+                          monthName = monthNames[month];
+                        } else {
+                          // DD/MM/YYYY format
+                          [day, month, year] = event.createdAt.split('/');
+                          const monthNames = {
+                            '01': 'يناير', '02': 'فبراير', '03': 'مارس', '04': 'أبريل',
+                            '05': 'مايو', '06': 'يونيو', '07': 'يوليو', '08': 'أغسطس',
+                            '09': 'سبتمبر', '10': 'أكتوبر', '11': 'نوفمبر', '12': 'ديسمبر'
+                          };
+                          monthName = monthNames[month];
+                        }
+                      } catch (error) {
+                        console.error('Error formatting date:', error);
+                        [day, monthName, year] = ['', '', ''];
+                      }
+
+                      return (
+                        <Link href={`/media-center/circulars/${event.id}`} key={event.id} className={styles.newsCard}>
+                          <div className={styles.newsImage}>
+                            <Image src={event.imageUrl} alt="Event" width={400} height={250} />
+                          </div>
+                          <div className={styles.newsContent}>
+                            <div className={styles.newsDate}>
+                              <span className={styles.dateNumber}>{day}</span>
+                              <span className={styles.dateMonth}>{monthName} {year}</span>
+                            </div>
+                            <h3 className={styles.newsTitle}>{event.title}</h3>
+                            <span className={styles.newsCategory}>{event.category}</span>
+                          </div>
+                        </Link>
+                      );
+                    })
+                  )}
+                </div>
+              )}
+            </div>
+
+            <div className={styles.newsNavigation}>
+              <button className={styles.navButton}>‹</button>
+              <button className={styles.navButton}>›</button>
+            </div>
+          </div>
+        </section>
+
+        {/* Services Section */}
+        <section className={styles.servicesSection}>
+          <div className={styles.servicesContainer}>
+            <div className={styles.servicesContent}>
+              <div className={styles.servicesText}>
+                <h2 className={styles.servicesTitle}>
+                  هنا تجد كل ما يتعلق بإدارات
+                  <br />
+                  الغرفة المختلفة
+                </h2>
+                <div className={styles.servicesSubtitle}>الإدارات</div>
+              </div>
+
+              <div className={`${styles.servicesCards} ${isAnimating
+                ? slideDirection === 'up' ? styles.slideOutDown : styles.slideOutUp
+                : styles.slideIn
+                }`}>
+                {currentServices.map((service, index) => (
+                  <div
+                    key={service.id}
+                    className={styles.serviceCard}
+                    style={{
+                      animationDelay: isAnimating ? '0ms' : `${index * 100}ms`,
+                      opacity: isAnimating ? 0 : 1
+                    }}
+                  >
+                    <div className={styles.serviceIcon}>
+                      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                        <path d={service.icon} fill="currentColor" />
+                      </svg>
+                    </div>
+                    <div className={styles.serviceContent}>
+                      <h3 className={styles.serviceTitle}>{service.title}</h3>
+                      <p className={styles.serviceDescription}>
+                        {service.description}
+                      </p>
+                    </div>
                   </div>
-                  <div className={styles.serviceContent}>
-                    <h3 className={styles.serviceTitle}>{service.title}</h3>
-                    <p className={styles.serviceDescription}>
-                      {service.description}
+                ))}
+              </div>
+            </div>
+
+            <div className={styles.servicesNavigation}>
+              <button
+                className={styles.serviceNavButton}
+                onClick={() => handleServiceNavigation('up')}
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M7 14l5-5 5 5z" fill="currentColor" />
+                </svg>
+              </button>
+              <button
+                className={styles.serviceNavButton}
+                onClick={() => handleServiceNavigation('down')}
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M7 10l5 5 5-5z" fill="currentColor" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </section>
+
+
+
+        {/* Committee Section */}
+        <section className={styles.committeeSection}>
+          <div className={styles.committeeContainer}>
+            <div className={styles.committeeSectionHeader}>
+              <h2 className={styles.committeeSectionTitle}>اللجان القطاعية</h2>
+              <p className={styles.committeeSectionDescription}>
+                تعرف على اللجان القطاعية المختلفة وخدماتها المتنوعة
+              </p>
+            </div>
+
+            <div className={styles.committeeCardsGrid}>
+              {allCommitteeData.map((committee, index) => (
+                <div key={committee.id} className={styles.committeeCard}>
+                  <div className={styles.committeeCardHeader}>
+                    <div className={styles.committeeCardIcon}>
+                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
+                    <h3 className={styles.committeeCardTitle}>{committee.subtitle}</h3>
+                  </div>
+
+                  <div className={styles.committeeCardContent}>
+                    <p className={styles.committeeCardDescription}>
+                      {committee.description}
                     </p>
+                  </div>
+
+                  <div className={styles.committeeCardFooter}>
+                    <button className={styles.committeeCardButton}>
+                      تفاصيل أكثر
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
               ))}
             </div>
           </div>
+        </section>
 
-          <div className={styles.servicesNavigation}>
-            <button
-              className={styles.serviceNavButton}
-              onClick={() => handleServiceNavigation('up')}
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M7 14l5-5 5 5z" fill="currentColor" />
-              </svg>
-            </button>
-            <button
-              className={styles.serviceNavButton}
-              onClick={() => handleServiceNavigation('down')}
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M7 10l5 5 5-5z" fill="currentColor" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </section>
+        {/* Interactive Map Section */}
+        <section className={mapStyles.mapSection}>
+          <MapClient />
+        </section>
 
-
-
-      {/* Committee Section */}
-      <section className={styles.committeeSection}>
-        <div className={styles.committeeContainer}>
-          <div className={styles.committeeSectionHeader}>
-            <h2 className={styles.committeeSectionTitle}>اللجان القطاعية</h2>
-            <p className={styles.committeeSectionDescription}>
-              تعرف على اللجان القطاعية المختلفة وخدماتها المتنوعة
-            </p>
-          </div>
-
-          <div className={styles.committeeCardsGrid}>
-            {allCommitteeData.map((committee, index) => (
-              <div key={committee.id} className={styles.committeeCard}>
-                <div className={styles.committeeCardHeader}>
-                  <div className={styles.committeeCardIcon}>
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-                      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </div>
-                  <h3 className={styles.committeeCardTitle}>{committee.subtitle}</h3>
-                </div>
-                
-                <div className={styles.committeeCardContent}>
-                  <p className={styles.committeeCardDescription}>
-                    {committee.description}
-                  </p>
-                </div>
-                
-                <div className={styles.committeeCardFooter}>
-                  <button className={styles.committeeCardButton}>
-                    تفاصيل أكثر
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                      <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Interactive Map Section */}
-      <section className={mapStyles.mapSection}>
-        <MapClient />
-      </section>
-
-      {/* Footer Section */}
-      <Footer />
-    </div>
+        {/* Footer Section */}
+        <Footer />
+      </div>
     </AppWrapper>
   );
 };

@@ -114,10 +114,9 @@ const AddNewsPage = () => {
       }
 
       // Custom API call to handle FormData with file upload
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://bisha.runasp.net';
-      const url = `${API_BASE_URL}/api/NewsPaper/Add`;
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bisha.runasp.net/api';
+      const url = `${API_BASE_URL}/NewsPaper/Add`;
       
-      // Get auth token
       const token = localStorage.getItem('auth_token');
       const headers = {};
       if (token) {

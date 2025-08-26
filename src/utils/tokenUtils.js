@@ -31,9 +31,11 @@ export const decodeJWTToken = (token) => {
     
     // Decode base64
     const decodedPayload = atob(paddedPayload);
-    
+
     // Parse JSON
     const parsedPayload = JSON.parse(decodedPayload);
+
+    localStorage.setItem('DecodedToken', JSON.stringify(parsedPayload));
     
     return parsedPayload;
   } catch (error) {
@@ -130,7 +132,6 @@ export const getDecodedTokenFromStorage = () => {
 export const validateAndRefreshUserFromToken = () => {
   try {
     const tokenData = getDecodedTokenFromStorage();
-    
     if (!tokenData) {
       return null;
     }

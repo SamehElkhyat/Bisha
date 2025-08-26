@@ -3,12 +3,14 @@
 import React, { useState } from 'react';
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock, FaPaperPlane, FaBuilding } from 'react-icons/fa';
 import styles from '../../styles/Contact.module.css';
+import axios from 'axios';
+import { toast, Toaster } from 'react-hot-toast';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: '',
+    PhoneNumber: '',
     serviceType: '',
     message: ''
   });
@@ -24,19 +26,25 @@ const ContactPage = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Basic validation
-    if (!formData.name || !formData.email || !formData.phone || !formData.message) {
+    if (!formData.name || !formData.email || !formData.PhoneNumber || !formData.message) {
       setFormError(true);
       setTimeout(() => setFormError(false), 3000);
       return;
     }
     
     // Form submission logic would go here
-    console.log('Form submitted:', formData);
-    
+    try {
+      const response = await axios.post('https://bisha.runasp.net/api/Contact/Add', formData);
+      toast.success('تم إرسال رسالتك بنجاح. سنتواصل معك قريباً.');
+      console.log(response);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
+
     // Show success message
     setFormSubmitted(true);
     
@@ -46,7 +54,7 @@ const ContactPage = () => {
       setFormData({
         name: '',
         email: '',
-        phone: '',
+        PhoneNumber : '',
         serviceType: '',
         message: ''
       });
@@ -160,6 +168,7 @@ const ContactPage = () => {
               <div className={styles.formGroup}>
                 <label htmlFor="name">الاسم</label>
                 <input
+                
                   type="text"
                   id="name"
                   name="name"
@@ -186,10 +195,10 @@ const ContactPage = () => {
               <div className={styles.formGroup}>
                 <label htmlFor="phone">رقم الجوال</label>
                 <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
+                  type="text"
+                  id="PhoneNumber"
+                  name="PhoneNumber"
+                  value={formData.PhoneNumber}
                   onChange={handleChange}
                   placeholder="05XXXXXXXX"
                   className={styles.formControl}
@@ -245,6 +254,7 @@ const ContactPage = () => {
           </div>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };

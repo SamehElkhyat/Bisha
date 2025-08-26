@@ -1,6 +1,8 @@
 "use client";
 
 import { createContext, useState, useContext, useEffect } from 'react';
+import { decodeJWTToken } from '../utils/tokenUtils';
+
 import { authAPI } from '../services/api';
 import { 
   getDecodedTokenFromStorage, 
@@ -26,7 +28,10 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     try {
       const token = localStorage.getItem('auth_token');
-      
+      const decodedToken = decodeJWTToken(token);
+      console.log(decodedToken);
+
+
       if (token) {
         // Check if token is expired
         if (isTokenExpired(token)) {

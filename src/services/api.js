@@ -1,7 +1,7 @@
 // API service for connecting to Bisha Chamber backend
 // Base URL for the API
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://bisha.runasp.net";
+  process.env.NEXT_PUBLIC_API_URL || "https://bisha.runasp.net/api";
 
 // Helper function for making API requests
 async function fetchAPI(endpoint, options = {}) {
@@ -50,14 +50,14 @@ async function fetchAPI(endpoint, options = {}) {
 export const authAPI = {
   login: async (credentials) => {
     console.log(credentials);
-    return fetchAPI("/api/Login", {
+    return fetchAPI("/Login", {
       method: "POST",
       body: JSON.stringify(credentials),
     });
   },
 
   register: async (userData) => {
-    return fetchAPI("/api/register", {
+    return fetchAPI("/register", {
       method: "POST",
       body: JSON.stringify(userData),
     });
@@ -67,37 +67,37 @@ export const authAPI = {
 // News APIs
 export const newsAPI = {
   getAll: async (pageNumber = 1) => {
-    return fetchAPI(`/api/NewsPaper/Get-All/${pageNumber}`);
+    return fetchAPI(`/NewsPaper/Get-All/${pageNumber}`);
   },
 
   getById: async (id) => {
-    return fetchAPI(`/api/NewsPaper/Get-All-Circulars-ByID/${id}`);
+    return fetchAPI(`/NewsPaper/Get-All-Circulars-ByID/${id}`);
   },
 
   getAllCirculars: async (pageNumber = 1) => {
-    return fetchAPI(`/api/NewsPaper/Get-All-Circulars/${pageNumber}`);
+    return fetchAPI(`/NewsPaper/Get-All-Circulars/${pageNumber}`);
   },
 
   getCircularById: async (id) => {
-    return fetchAPI(`/api/NewsPaper/Get-All-Circulars-ByID/${id}`);
+    return fetchAPI(`/NewsPaper/Get-All-Circulars-ByID/${id}`);
   },
 
   create: async (newsData) => {
-    return fetchAPI("/api/NewsPaper/Add", {
+    return fetchAPI("/NewsPaper/Add", {
       method: "POST",
       body: JSON.stringify(newsData), 
     });
   },
 
   UpdateNews: async (newData, id) => {
-    return fetchAPI(`/api/NewsPaper/Update/${id}`, {
+    return fetchAPI(`/NewsPaper/Update/${id}`, {
       method: "POST",
       body: JSON.stringify(newData),
     });
   },
 
   delete: async (id) => {
-    return fetchAPI(`/api/NewsPaper/Delete/${id}`, {
+    return fetchAPI(`/NewsPaper/Delete/${id}`, {
       method: "DELETE",
     });
   },
@@ -106,29 +106,29 @@ export const newsAPI = {
 // Clients APIs
 export const clientsAPI = {
   getAll: async () => {
-    return fetchAPI("/api/Clients");
+    return fetchAPI("/Clients");
   },
 
   getById: async (id) => {
-    return fetchAPI(`/api/Clients/${id}`);
+    return fetchAPI(`/Clients/${id}`);
   },
 
   create: async (clientData) => {
-    return fetchAPI("/api/Clients", {
+    return fetchAPI("/Clients", {
       method: "POST",
       body: JSON.stringify(clientData),
     });
   },
 
   update: async (id, clientData) => {
-    return fetchAPI(`/api/Clients/${id}`, {
+    return fetchAPI(`/Clients/${id}`, {
       method: "PUT",
       body: JSON.stringify(clientData),
     });
   },
 
   delete: async (id) => {
-    return fetchAPI(`/api/Clients/${id}`, {
+    return fetchAPI(`/Clients/${id}`, {
       method: "DELETE",
     });
   },
@@ -140,7 +140,7 @@ export const fileAPI = {
     const formData = new FormData();
     formData.append("file", file);
 
-    return fetchAPI(`/api/Files/upload?type=${type}`, {
+    return fetchAPI(`/Files/upload?type=${type}`, {
       method: "POST",
       headers: {}, // Let the browser set the content type for form data
       body: formData,
@@ -151,29 +151,29 @@ export const fileAPI = {
 // Users APIs
 export const usersAPI = {
   getAll: async () => {
-    return fetchAPI("/api/Users");
+    return fetchAPI("/Users");
   },
 
   getById: async (id) => {
-    return fetchAPI(`/api/Users/${id}`);
+    return fetchAPI(`/Users/${id}`);
   },
 
   create: async (userData) => {
-    return fetchAPI("/api/Users", {
+    return fetchAPI("/Users", {
       method: "POST",
       body: JSON.stringify(userData),
     });
   },
 
   update: async (id, userData) => {
-    return fetchAPI(`/api/Users/${id}`, {
+    return fetchAPI(`/Users/${id}`, {
       method: "PUT",
       body: JSON.stringify(userData),
     });
   },
 
   delete: async (id) => {
-    return fetchAPI(`/api/Users/${id}`, {
+    return fetchAPI(`/Users/${id}`, {
       method: "DELETE",
     });
   },

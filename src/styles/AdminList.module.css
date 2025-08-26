@@ -473,3 +473,442 @@
 .imageLink:hover {
   color: #004494;
 }
+
+/* Permission Button Styles */
+.permissionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.permissionButton:hover {
+  background-color: #bbdefb;
+  transform: scale(1.1);
+}
+
+/* Permission Modal Styles */
+.permissionModal {
+  background: white;
+  border-radius: 15px;
+  width: 95%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  direction: rtl;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.permissionModal .modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 2rem;
+  border-bottom: 2px solid #f0f0f0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 15px 15px 0 0;
+  position: relative;
+}
+
+.permissionModal .modalHeader h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.userName {
+  display: block;
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-top: 0.5rem;
+  font-weight: 400;
+}
+
+.closeModalButton {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  font-size: 1.25rem;
+  color: white;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.closeModalButton:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.permissionModal .modalBody {
+  padding: 2rem;
+}
+
+.permissionsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.permissionSection {
+  background: #f8f9ff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid #e3f2fd;
+}
+
+.permissionSection h3 {
+  margin: 0 0 1.5rem 0;
+  color: #1976d2;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #bbdefb;
+}
+
+.permissionItem {
+  margin-bottom: 1rem;
+}
+
+.permissionItem:last-child {
+  margin-bottom: 0;
+}
+
+.permissionItem label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.75rem;
+  border-radius: 8px;
+  transition: all 0.2s;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #333;
+  position: relative;
+}
+
+.permissionItem label:hover {
+  background-color: rgba(25, 118, 210, 0.05);
+}
+
+.permissionItem input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkboxCustom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #1976d2;
+  border-radius: 4px;
+  margin-left: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  background: white;
+  flex-shrink: 0;
+}
+
+.permissionItem input[type="checkbox"]:checked + .checkboxCustom {
+  background: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%);
+  border-color: #1976d2;
+  color: white;
+  transform: scale(1.1);
+}
+
+.permissionItem input[type="checkbox"]:checked + .checkboxCustom svg {
+  font-size: 12px;
+  animation: checkAnimation 0.2s ease-in-out;
+}
+
+@keyframes checkAnimation {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.permissionModal .modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 2rem;
+  border-top: 2px solid #f0f0f0;
+  background-color: #fafafa;
+  border-radius: 0 0 15px 15px;
+}
+
+.permissionModal .saveButton {
+  background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+  color: white;
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.permissionModal .saveButton:hover {
+  background: linear-gradient(135deg, #45a049 0%, #5cb85c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.permissionModal .cancelButton {
+  background: #6c757d;
+  color: white;
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.permissionModal .cancelButton:hover {
+  background: #545b62;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .permissionModal {
+    width: 98%;
+    margin: 1rem;
+  }
+  
+  .permissionsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .permissionModal .modalHeader,
+  .permissionModal .modalBody,
+  .permissionModal .modalFooter {
+    padding: 1.5rem;
+  }
+  
+  .permissionModal .modalFooter {
+    flex-direction: column;
+  }
+  
+  .permissionModal .saveButton,
+  .permissionModal .cancelButton {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Contact/View Button Styles */
+.viewButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.viewButton:hover {
+  background-color: #bbdefb;
+  transform: scale(1.1);
+}
+
+/* Contact Status Styles */
+.readStatus {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 0.25rem 0.5rem;
+  border-radius: 5px;
+  font-size: 0.875rem;
+  display: inline-block;
+}
+
+.unreadStatus {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 0.25rem 0.5rem;
+  border-radius: 5px;
+  font-size: 0.875rem;
+  display: inline-block;
+}
+
+.unreadRow {
+  background-color: #fffbf0;
+  font-weight: 500;
+}
+
+/* Contact Modal Styles */
+.contactModal {
+  background: white;
+  border-radius: 15px;
+  width: 95%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  direction: rtl;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+.contactModal .modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  border-bottom: 2px solid #f0f0f0;
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  color: white;
+  border-radius: 15px 15px 0 0;
+}
+
+.contactModal .modalHeader h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.contactDetails {
+  padding: 1rem 0;
+}
+
+.detailRow {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-right: 4px solid #4CAF50;
+}
+
+.detailRow .label {
+  font-weight: 600;
+  color: #333;
+  min-width: 150px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.detailRow .value {
+  color: #555;
+  flex: 1;
+  word-break: break-word;
+}
+
+.messageSection,
+.replySection {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #f8f9ff;
+  border-radius: 10px;
+  border: 1px solid #e3f2fd;
+}
+
+.messageSection h3,
+.replySection h3 {
+  margin: 0 0 1rem 0;
+  color: #1976d2;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.messageContent,
+.replyContent {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  line-height: 1.6;
+  color: #333;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.replySection {
+  background: #fff8e1;
+  border-color: #ffcc02;
+}
+
+.replySection h3 {
+  color: #f57c00;
+}
+
+/* Responsive Design for Contact Modal */
+@media (max-width: 768px) {
+  .contactModal {
+    width: 98%;
+    margin: 1rem;
+  }
+  
+  .detailRow {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .detailRow .label {
+    min-width: auto;
+  }
+  
+  .contactModal .modalHeader,
+  .contactModal .modalBody,
+  .contactModal .modalFooter {
+    padding: 1.5rem;
+  }
+  
+  .messageSection,
+  .replySection {
+    padding: 1rem;
+  }
+}

@@ -16,9 +16,16 @@ const LoginPage = () => {
 
   // Redirect if already logged in
   useEffect(() => {
-    if (user) {
+
+    const decodedToken = JSON.parse(localStorage.getItem('DecodedToken') || '{}');
+      console.log(decodedToken);
+    if (decodedToken?.Role === 'Admin') {
       router.push('/admin');
     }
+    else {
+      router.push('/login');
+    }
+   
   }, [user, router]);
 
   // Update error message from auth context

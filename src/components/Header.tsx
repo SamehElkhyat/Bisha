@@ -50,6 +50,7 @@ const Header = () => {
       label: 'عن الغرفة',
       hasDropdown: true,
       dropdownItems: [
+        
         { href: '/about/vision', label: 'الرؤية والرسالة' },
         { href: '/about/regulations', label: 'اللوائح والأنظمة' },
         { href: '/about/board', label: 'مجلس الإدارة' },
@@ -79,6 +80,7 @@ const Header = () => {
     { href: '/', label: 'المبادرات' },
     { href: '/contact', label: 'اتصل بنا' }
   ];
+  
 
 
   // Admin link (only visible to admins)
@@ -93,8 +95,9 @@ const Header = () => {
   // Combine base links with conditional links
   let navLinks: NavLink[] = [...baseNavLinks];
   
+  const decodedToken = JSON.parse(localStorage.getItem('DecodedToken') || '{}');
   // Add admin link ONLY if user is admin
-  if (isAdmin()) {
+  if (decodedToken?.Role === 'Admin' ) {
     console.log('Admin user detected, showing admin panel link');
     navLinks.push(adminLink);
   } else {

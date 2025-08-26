@@ -3,6 +3,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from '../styles/Sidebar.module.css';
 import { FaHome, FaUserTie, FaFileContract, FaWallet, FaHandshake, FaBullhorn, FaCertificate, FaQuestionCircle, FaSignOutAlt } from 'react-icons/fa';
+import { useAuth } from '../contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 
 const menuItems = [
   { href: '/', label: 'الرئيسية', icon: <FaHome /> },
@@ -20,6 +22,21 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
+  const router = useRouter();
+
+  const logout = () => {
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('DecodedToken');
+    localStorage.removeItem('user');
+    localStorage.removeItem('isAdmin');
+    localStorage.removeItem('isClient');
+    localStorage.removeItem('isPartner');
+    localStorage.removeItem('isMember');
+    localStorage.removeItem('isNews');
+    localStorage.removeItem('isCircular');
+    localStorage.removeItem('isCertificate');
+    router.push('/login');
+  }
   return (
     <aside className={`${styles.sidebar} ${isOpen ? styles.open : ''}`}>
       <div className={styles.logoContainer}>
@@ -39,7 +56,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
         </ul>
       </nav>
       <div className={styles.logoutContainer}>
-        <button className={styles.logoutButton}>
+        <button onClick={logout} className={styles.logoutButton}>
           <FaSignOutAlt />
           <span>تسجيل الخروج</span>
         </button>

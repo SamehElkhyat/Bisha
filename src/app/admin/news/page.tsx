@@ -390,7 +390,7 @@ const AdminNewsPage = () => {
                   <div className={styles.inputGroup}>
                     <label htmlFor="imageUrl" className={styles.inputLabel}>رابط الصورة</label>
                     <input
-                      type="text"
+                      type="file"
                       id="imageUrl"
                       name="imageUrl"
                       value={formData.imageUrl}

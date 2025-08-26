@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import AdminRoute from '../../components/AdminRoute';
 import styles from '../../styles/Admin.module.css';
-import { FaNewspaper, FaUserPlus, FaSignOutAlt, FaChartBar, FaUsers, FaBullhorn } from 'react-icons/fa';
+import { FaNewspaper, FaUserPlus, FaSignOutAlt, FaChartBar, FaUsers, FaBullhorn, FaBars, FaTimes } from 'react-icons/fa';
 import Link from 'next/link';
 
 const AdminDashboard = () => {
@@ -12,6 +12,7 @@ const AdminDashboard = () => {
   const { user, isAdmin, logout } = useAuth();
   const [loading, setLoading] = useState(true);
   const [decodedToken, setDecodedToken] = useState<any>([]);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   useEffect(() => {
 
@@ -44,6 +45,10 @@ const AdminDashboard = () => {
     router.push('/');
   };
 
+  const toggleMobileSidebar = () => {
+    setIsMobileSidebarOpen(!isMobileSidebarOpen);
+  };
+
   if (loading) {
     return (
       <div className={styles.loadingContainer}>
@@ -56,13 +61,45 @@ const AdminDashboard = () => {
   return (
     <AdminRoute>
       <div className={styles.adminContainer}>
-        <div className={styles.sidebar}>
+        {/* Mobile Header */}
+        <div className={styles.mobileHeader}>
+          <button 
+            className={styles.mobileMenuButton}
+            onClick={toggleMobileSidebar}
+            aria-label="Toggle mobile menu"
+          >
+            <FaBars />
+          </button>
+          <h1>لوحة التحكم</h1>
+          <div className={styles.mobileProfileImage}>
+            <FaUsers size={24} />
+          </div>
+        </div>
+
+        {/* Mobile Sidebar Overlay */}
+        {isMobileSidebarOpen && (
+          <div className={styles.mobileOverlay} onClick={toggleMobileSidebar} />
+        )}
+
+        {/* Sidebar */}
+        <div className={`${styles.sidebar} ${isMobileSidebarOpen ? styles.sidebarOpen : ''}`}>
+          {/* Mobile Close Button */}
+          <div className={styles.mobileCloseContainer}>
+            <button 
+              className={styles.mobileCloseButton}
+              onClick={toggleMobileSidebar}
+              aria-label="Close mobile menu"
+            >
+              <FaTimes />
+            </button>
+          </div>
+
           <div className={styles.adminProfile}>
             <div className={styles.profileImage}>
               <FaUsers size={40} />
             </div>
             <div className={styles.profileInfo}>
-              <h3>{user?.name}</h3>
+              <h3>{user?.name || 'مدير النظام'}</h3>
               <p>مدير النظام</p>
             </div>
           </div>
@@ -72,25 +109,25 @@ const AdminDashboard = () => {
               return (
                 <div key={`nav-${item}-${index}`}>
                 {item === 'GetContact' && (
-                <Link href="/admin" className={`${styles.navLink} ${styles.active}`}>
+                <Link href="/admin" className={`${styles.navLink} ${styles.active}`} onClick={() => setIsMobileSidebarOpen(false)}>
                   <FaChartBar className={styles.navIcon} />
                   <span>لوحة التحكم</span>
                 </Link>
                 )}
                 {item === 'AddNewsPaper' && (
-                  <Link href="/admin/news" className={styles.navLink}>
+                  <Link href="/admin/news" className={styles.navLink} onClick={() => setIsMobileSidebarOpen(false)}>
                     <FaNewspaper className={styles.navIcon} />
                     <span>إدارة الأخبار والتعاميم</span>
                   </Link>
                 )}
                 {item === 'GetAllUsers' && (
-                  <Link href="/admin/clients" className={styles.navLink}>
+                  <Link href="/admin/clients" className={styles.navLink} onClick={() => setIsMobileSidebarOpen(false)}>
                     <FaUsers className={styles.navIcon} />
                     <span>إدارة العملاء</span>
                   </Link>
                 )}
                 {item === 'GetContact' && (
-                  <Link href="/admin/contact" className={styles.navLink}>
+                  <Link href="/admin/contact" className={styles.navLink} onClick={() => setIsMobileSidebarOpen(false)}>
                     <FaUserPlus className={styles.navIcon} />
                     <span>الاطلاع علي الشكاوي</span>
                   </Link>
@@ -153,7 +190,7 @@ const AdminDashboard = () => {
                 return (
                   <div key={`action-${item}-${index}`}>
                     {item === 'AddNewsPaper' && (
-                    <Link href="/admin/news/add" className={styles.actionCard}>
+                    <Link href="/admin/news/add" className={styles.actionCard} onClick={() => setIsMobileSidebarOpen(false)}>
                       <FaNewspaper className={styles.actionIcon} />
                       <h3>إضافة خبر جديد</h3>
                       <p>أضف خبر جديد للموقع</p>
@@ -161,21 +198,21 @@ const AdminDashboard = () => {
                   )}
            
                   {item === 'AddUser' && (
-                    <Link href="/admin/users/add" className={styles.actionCard}>
+                    <Link href="/admin/users/add" className={styles.actionCard} onClick={() => setIsMobileSidebarOpen(false)}>
                       <FaUserPlus className={styles.actionIcon} />
                       <h3>إضافة مستخدم جديد</h3>
                       <p>أضف مستخدم جديد للنظام</p>
                     </Link>
                   )}
                   {item === 'GetContact' && (
-                    <Link href="/admin/contact" className={styles.actionCard}>
+                    <Link href="/admin/contact" className={styles.actionCard} onClick={() => setIsMobileSidebarOpen(false)}>
                       <FaUserPlus className={styles.actionIcon} />
                       <h3>الاطلاع علي الشكاوي</h3>
                       <p>الاطلاع علي الشكاوي</p>
                     </Link>
                   )}
                   {item === 'GetAllUsers' && (
-                    <Link href="/admin/users" className={styles.actionCard}>
+                    <Link href="/admin/users" className={styles.actionCard} onClick={() => setIsMobileSidebarOpen(false)}>
                       <FaUserPlus className={styles.actionIcon} />
                       <h3>عرض واداره المستخدمين</h3>
                       <p>عرض واداره المستخدمين</p>

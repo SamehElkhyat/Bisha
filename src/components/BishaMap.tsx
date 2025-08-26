@@ -463,12 +463,49 @@ const BishaMap: React.FC<BishaMapProps> = ({ onRegionSelect, onError }) => {
     };
   }, [geoJsonData, cityMarkers, mapId, onRegionSelect, selectedRegion, onError]);
   
+  // Get responsive height based on screen size
+  const getMapHeight = () => {
+    if (typeof window !== 'undefined') {
+      const width = window.innerWidth;
+      if (width <= 480) return '350px';
+      if (width <= 768) return '400px';
+      if (width <= 1024) return '500px';
+      return '600px';
+    }
+    return '600px';
+  };
+
+  // State for responsive height
+  const [mapHeight, setMapHeight] = useState('600px');
+
+  // Update height on window resize
+  useEffect(() => {
+    const updateHeight = () => {
+      setMapHeight(getMapHeight());
+    };
+
+    // Set initial height
+    updateHeight();
+
+    // Add resize listener
+    window.addEventListener('resize', updateHeight);
+    
+    return () => {
+      window.removeEventListener('resize', updateHeight);
+    };
+  }, []);
+
   return (
     <div className={styles.mapWrapper}>
       <div 
         id={mapId}
         ref={mapContainerRef}
-        style={{ height: '600px', width: '100%', direction: 'ltr' }}
+        style={{ 
+          height: mapHeight, 
+          width: '100%', 
+          direction: 'ltr',
+          minHeight: '300px'
+        }}
       />
     </div>
   );

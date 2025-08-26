@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import styles from '../styles/Header.module.css';
-import { FaTiktok, FaTelegramPlane, FaSnapchatGhost, FaYoutube, FaFacebookF, FaInstagram, FaTimes, FaChevronDown, FaUserShield } from 'react-icons/fa';
+import { FaTiktok, FaTelegramPlane, FaSnapchatGhost, FaYoutube, FaFacebookF, FaInstagram, FaTimes, FaChevronDown, FaUserShield, FaBars } from 'react-icons/fa';
 import { useAuth } from '../contexts/AuthContext';
 
 interface NavLink {
@@ -18,6 +18,7 @@ interface NavLink {
 
 const Header = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const { isAdmin } = useAuth();
   // Close dropdown when clicking outside
@@ -39,6 +40,12 @@ const Header = () => {
 
   const toggleDropdown = (dropdownId: string) => {
     setActiveDropdown(activeDropdown === dropdownId ? null : dropdownId);
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+    // Close any open dropdowns when toggling mobile menu
+    setActiveDropdown(null);
   };
 
   // Base navigation links (always visible)
@@ -122,7 +129,24 @@ const Header = () => {
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        <nav className={styles.nav}>
+        {/* Logo/Brand section for mobile */}
+        <div className={styles.brandSection}>
+          <Link href="/" className={styles.brandLink}>
+            غرفة بيشة التجارية
+          </Link>
+        </div>
+
+        {/* Mobile hamburger menu button */}
+        <button 
+          className={styles.mobileMenuButton}
+          onClick={toggleMobileMenu}
+          aria-label="Toggle mobile menu"
+        >
+          <FaBars />
+        </button>
+
+        {/* Desktop Navigation */}
+        <nav className={`${styles.nav} ${styles.desktopNav}`}>
           {navLinks.map((link, index) => (
             link.hasDropdown ? (
               <div
@@ -163,13 +187,94 @@ const Header = () => {
             )
           ))}
         </nav>
-        <div className={styles.socialIcons}>
+
+        {/* Desktop Social Icons */}
+        <div className={`${styles.socialIcons} ${styles.desktopSocial}`}>
           {socialLinks.map((social, index) => (
             <a key={index} href={social.href} className={styles.socialIcon} target="_blank" rel="noopener noreferrer">
               {social.icon}
             </a>
           ))}
         </div>
+
+        {/* Mobile Navigation Menu */}
+        {isMobileMenuOpen && (
+          <div className={styles.mobileNav}>
+            <div className={styles.mobileNavContent}>
+              {/* Close button */}
+              <div className={styles.mobileNavHeader}>
+                <button 
+                  className={styles.mobileCloseButton}
+                  onClick={toggleMobileMenu}
+                  aria-label="Close mobile menu"
+                >
+                  <FaTimes />
+                </button>
+              </div>
+
+              {/* Mobile Social Icons */}
+              <div className={styles.mobileSocialIcons}>
+                {socialLinks.map((social, index) => (
+                  <a key={index} href={social.href} className={styles.socialIcon} target="_blank" rel="noopener noreferrer">
+                    {social.icon}
+                  </a>
+                ))}
+              </div>
+
+              {/* Mobile Navigation Links */}
+              <nav className={styles.mobileNavLinks}>
+                {navLinks.map((link, index) => (
+                  link.hasDropdown ? (
+                    <div key={index} className={styles.mobileDropdownContainer}>
+                      <div
+                        className={`${styles.mobileNavLink} ${styles.mobileDropdownTrigger}`}
+                        onClick={() => link.id && toggleDropdown(link.id)}
+                      >
+                        {link.label} <FaChevronDown className={`${styles.dropdownIcon} ${activeDropdown === link.id ? styles.rotateIcon : ''}`} />
+                      </div>
+                      {activeDropdown === link.id && (
+                        <div className={styles.mobileDropdownMenu}>
+                          {link.dropdownItems?.map((item, idx) => (
+                            <Link 
+                              key={idx} 
+                              href={item.href} 
+                              className={styles.mobileDropdownItem}
+                              onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                              {item.label}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    link.external ? (
+                      <a 
+                        key={index} 
+                        href={link.href} 
+                        className={styles.mobileNavLink} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link 
+                        key={index} 
+                        href={link.href} 
+                        className={styles.mobileNavLink}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {link.label}
+                      </Link>
+                    )
+                  )
+                ))}
+              </nav>
+            </div>
+          </div>
+        )}
       </div>
     </header>
   );

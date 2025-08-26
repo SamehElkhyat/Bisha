@@ -346,6 +346,50 @@
   letter-spacing: 0.5px;
 }
 
+/* Tablet styles (768px - 1024px) */
+@media (max-width: 1024px) and (min-width: 768px) {
+  .mapContainer {
+    flex-direction: column;
+    gap: 2rem;
+    align-items: stretch;
+  }
+
+  .mapWrapper {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .mapWrapper > div {
+    height: 500px !important;
+  }
+
+  .statsContainer {
+    max-width: 100%;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .mapSection {
+    padding: 3rem 1.5rem;
+  }
+
+  .statCard {
+    padding: 1.2rem;
+  }
+
+  .statContent h3 {
+    font-size: 0.9rem;
+  }
+
+  .statContent p {
+    font-size: 1.2rem;
+  }
+}
+
+/* Large tablet and small desktop */
 @media (max-width: 1200px) {
   .mapContainer {
     flex-direction: column;
@@ -355,6 +399,112 @@
   .mapWrapper,
   .statsContainer {
     max-width: 100%;
+  }
+}
+
+/* Mobile styles (max-width: 768px) */
+@media (max-width: 768px) {
+  .mapSection {
+    padding: 2rem 1rem;
+    min-height: auto;
+  }
+
+  .mapContainer {
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: stretch;
+  }
+
+  .mapWrapper {
+    max-width: 100%;
+    margin: 0;
+    border-radius: 8px;
+  }
+
+  .mapWrapper > div {
+    height: 400px !important;
+  }
+
+  .statsContainer {
+    max-width: 100%;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .statCard {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .statIcon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .statContent h3 {
+    font-size: 0.85rem;
+  }
+
+  .statContent p {
+    font-size: 1.1rem;
+  }
+
+  .regionTitle h2 {
+    font-size: 1.5rem;
+  }
+
+  .regionMeta {
+    gap: 0.5rem;
+  }
+
+  .regionMetaItem {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.6rem;
+  }
+}
+
+/* Small mobile styles (max-width: 480px) */
+@media (max-width: 480px) {
+  .mapSection {
+    padding: 1.5rem 0.5rem;
+  }
+
+  .mapWrapper {
+    border-radius: 6px;
+    margin: 0 0.5rem;
+  }
+
+  .mapWrapper > div {
+    height: 350px !important;
+  }
+
+  .statsContainer {
+    padding: 0 0.5rem;
+  }
+
+  .statCard {
+    padding: 0.8rem;
+    gap: 0.8rem;
+  }
+
+  .statIcon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .statContent h3 {
+    font-size: 0.8rem;
+  }
+
+  .statContent p {
+    font-size: 1rem;
+  }
+
+  .regionTitle h2 {
+    font-size: 1.3rem;
   }
 }
 

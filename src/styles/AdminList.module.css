@@ -494,6 +494,50 @@
   transform: scale(1.1);
 }
 
+/* Edit Modal Styles */
+.editModal {
+  background: white;
+  border-radius: 15px;
+  width: 95%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  direction: rtl;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+.editForm {
+  padding: 1.5rem;
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.formControl {
+  color: #333;
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.formControl:focus {
+  outline: none;
+  border-color: #0056b3;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
 /* Permission Modal Styles */
 .permissionModal {
   background: white;
@@ -530,7 +574,20 @@
   position: relative;
 }
 
-.permissionModal .modalHeader h2 {
+.editModal .modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 2rem;
+  border-bottom: 2px solid #f0f0f0;
+  background: linear-gradient(135deg, #0056b3 0%, #007bff 100%);
+  color: white;
+  border-radius: 15px 15px 0 0;
+  position: relative;
+}
+
+.permissionModal .modalHeader h2,
+.editModal .modalHeader h2 {
   margin: 0;
   font-size: 1.5rem;
   font-weight: 600;
@@ -662,7 +719,8 @@
   }
 }
 
-.permissionModal .modalFooter {
+.permissionModal .modalFooter,
+.editModal .modalFooter {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
@@ -672,7 +730,8 @@
   border-radius: 0 0 15px 15px;
 }
 
-.permissionModal .saveButton {
+.permissionModal .saveButton,
+.editModal .saveButton {
   background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
   color: white;
   padding: 0.75rem 2rem;
@@ -688,13 +747,15 @@
   box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
 }
 
-.permissionModal .saveButton:hover {
+.permissionModal .saveButton:hover,
+.editModal .saveButton:hover {
   background: linear-gradient(135deg, #45a049 0%, #5cb85c 100%);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
 }
 
-.permissionModal .cancelButton {
+.permissionModal .cancelButton,
+.editModal .cancelButton {
   background: #6c757d;
   color: white;
   padding: 0.75rem 2rem;
@@ -706,14 +767,16 @@
   transition: all 0.2s;
 }
 
-.permissionModal .cancelButton:hover {
+.permissionModal .cancelButton:hover,
+.editModal .cancelButton:hover {
   background: #545b62;
   transform: translateY(-2px);
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .permissionModal {
+  .permissionModal,
+  .editModal {
     width: 98%;
     margin: 1rem;
   }
@@ -725,16 +788,22 @@
   
   .permissionModal .modalHeader,
   .permissionModal .modalBody,
-  .permissionModal .modalFooter {
+  .permissionModal .modalFooter,
+  .editModal .modalHeader,
+  .editModal .modalBody,
+  .editModal .modalFooter {
     padding: 1.5rem;
   }
   
-  .permissionModal .modalFooter {
+  .permissionModal .modalFooter,
+  .editModal .modalFooter {
     flex-direction: column;
   }
   
   .permissionModal .saveButton,
-  .permissionModal .cancelButton {
+  .permissionModal .cancelButton,
+  .editModal .saveButton,
+  .editModal .cancelButton {
     width: 100%;
     justify-content: center;
   }

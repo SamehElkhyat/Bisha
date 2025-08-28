@@ -15,6 +15,15 @@ interface User {
   isActive: boolean;
 }
 
+// User update interface
+interface UserUpdate {
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  passwordHash: string;
+  confirmPassword: string;
+}
+
 // Permissions interface
 interface UserPermissions {
   canDeleteNews: boolean;
@@ -23,6 +32,8 @@ interface UserPermissions {
   canRegisterAndViewComplaints: boolean;
   canViewClients: boolean;
   canChangePermissions: boolean;
+  canUpdateUser: boolean;
+  canDeleteUser: boolean;
 }
 
 // Pagination response interface
@@ -45,6 +56,18 @@ const AdminClientsPage = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [error, setError] = useState('');
 
+  // Edit modal state
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [editFormData, setEditFormData] = useState<UserUpdate>({
+    fullName: '',
+    email: '',
+    phoneNumber: '',
+    passwordHash: '',
+    confirmPassword: ''
+  });
+  const [isUpdating, setIsUpdating] = useState(false);
+
   // Permission modal state
   const [isPermissionModalOpen, setIsPermissionModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
@@ -56,6 +79,8 @@ const AdminClientsPage = () => {
     canRegisterAndViewComplaints: false,
     canViewClients: false,
     canChangePermissions: false,
+    canUpdateUser: false,
+    canDeleteUser: false,
   });
 
   // Function to fetch users from API
@@ -140,8 +165,8 @@ const AdminClientsPage = () => {
   const handleDelete = async (id: number) => {
     if (window.confirm('هل أنت متأكد من حذف هذا المستخدم؟')) {
       try {
-        const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://bisha.runasp.net';
-        const url = `${API_BASE_URL}/api/Register/Delete-User/${id}`;
+        const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bisha.runasp.net/api';
+        const url = `${API_BASE_URL}/Register/Delete/${id}`;
 
         // Get auth token
         const token = localStorage.getItem('auth_token');
@@ -193,6 +218,8 @@ const AdminClientsPage = () => {
       canRegisterAndViewComplaints: false,
       canViewClients: false,
       canChangePermissions: false,
+      canUpdateUser: false,
+      canDeleteUser: false,
     });
     setIsPermissionModalOpen(true);
   };
@@ -203,6 +230,119 @@ const AdminClientsPage = () => {
       ...prev,
       [permission]: !prev[permission]
     }));
+  };
+
+  // Handle edit button click
+  const handleEditClick = (id: number) => {
+    const user = users.find(user => user.id === id);
+    if (!user) return;
+    setEditingUser(user);
+    setEditFormData({
+      fullName: user.fullName,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      passwordHash: '',
+      confirmPassword: ''
+    });
+    setIsEditModalOpen(true);
+  };
+
+  // Close edit modal
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+    setEditingUser(null);
+    setEditFormData({
+      fullName: '',
+      email: '',
+      phoneNumber: '',
+      passwordHash: '',
+      confirmPassword: ''
+    });
+  };
+
+  // Handle form input change
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setEditFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Handle form submission
+  const handleUpdateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUser) return;
+    
+    // Validate form
+    if (!editFormData.fullName.trim()) {
+      toast.error('الرجاء إدخال الاسم الكامل');
+      return;
+    }
+    
+    if (!editFormData.email.trim()) {
+      toast.error('الرجاء إدخال البريد الإلكتروني');
+      return;
+    }
+    
+    if (!editFormData.phoneNumber.trim()) {
+      toast.error('الرجاء إدخال رقم الهاتف');
+      return;
+    }
+    
+    // If password is provided, check if it matches confirmation
+    if (editFormData.passwordHash && editFormData.passwordHash !== editFormData.confirmPassword) {
+      toast.error('كلمة المرور وتأكيدها غير متطابقين');
+      return;
+    }
+    
+    setIsUpdating(true);
+    
+    try {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bisha.runasp.net/api';
+      const url = `${API_BASE_URL}/Register/Update/${editingUser.id}`;
+      
+      // Get auth token
+      const token = localStorage.getItem('auth_token');
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json'
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
+      // Prepare request body
+      const requestBody = {
+        ...editFormData,
+        id: editingUser.id
+      };
+      
+      // Make the API request
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(requestBody)
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `API error: ${response.status}`);
+      }
+      
+      // Close modal and show success message
+      closeEditModal();
+      toast.success('تم تحديث بيانات المستخدم بنجاح');
+      
+      // Refresh the user list
+      fetchUsers(currentPage);
+      
+    } catch (error) {
+      console.error('Failed to update user:', error);
+      toast.error(`فشل في تحديث بيانات المستخدم: ${error.message || 'خطأ غير معروف'}`);
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   // Close permission modal
@@ -217,8 +357,8 @@ const AdminClientsPage = () => {
     if (!selectedUserId) return;
 
     try {
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://bisha.runasp.net';
-      const url = `${API_BASE_URL}/api/Admin/Change-Roles`;
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bisha.runasp.net/api';
+      const url = `${API_BASE_URL}/Admin/Change-Roles`;
 
       // Get auth token
       const token = localStorage.getItem('auth_token');
@@ -239,6 +379,8 @@ const AdminClientsPage = () => {
       if (userPermissions.canRegisterAndViewComplaints) permissionNames.push('تسجيل والاطلاع على الشكاوي');
       if (userPermissions.canViewClients) permissionNames.push('عملاء');
       if (userPermissions.canChangePermissions) permissionNames.push('تغيير صلاحيات');
+      if (userPermissions.canUpdateUser) permissionNames.push('تعديل المستخدم');
+      if (userPermissions.canDeleteUser) permissionNames.push('حذف المستخدم');
 
       // Prepare request body
       const requestBody = {
@@ -331,9 +473,12 @@ const AdminClientsPage = () => {
                   </span>
                 </td>
                 <td className={styles.actionsCell}>
-                  <Link href={`/admin/clients/edit/${user.id}`} className={styles.editButton}>
+                  <button 
+                    className={styles.editButton}
+                    onClick={() => handleEditClick(user.id)}
+                  >
                     <FaEdit />
-                  </Link>
+                  </button>
                   <button
                     className={styles.deleteButton}
                     onClick={() => handleDelete(user.id)}
@@ -490,6 +635,34 @@ const AdminClientsPage = () => {
                       تغيير صلاحيات
                     </label>
                   </div>
+
+                  <div className={styles.permissionItem}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={userPermissions.canUpdateUser}
+                        onChange={() => handlePermissionChange('canUpdateUser')}
+                      />
+                      <span className={styles.checkboxCustom}>
+                        {userPermissions.canUpdateUser && <FaCheck />}
+                      </span>
+                      تعديل المستخدم
+                    </label>
+                  </div>
+
+                  <div className={styles.permissionItem}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={userPermissions.canDeleteUser}
+                        onChange={() => handlePermissionChange('canDeleteUser')}
+                      />
+                      <span className={styles.checkboxCustom}>
+                        {userPermissions.canDeleteUser && <FaCheck />}
+                      </span>
+                      حذف المستخدم
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
@@ -509,6 +682,108 @@ const AdminClientsPage = () => {
               >
                 إلغاء
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Edit User Modal */}
+      {isEditModalOpen && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.editModal}>
+            <div className={styles.modalHeader}>
+              <h2>تعديل بيانات المستخدم</h2>
+              <span className={styles.userName}>{editingUser?.fullName}</span>
+              <button
+                className={styles.closeModalButton}
+                onClick={closeEditModal}
+              >
+                <FaTimes />
+              </button>
+            </div>
+
+            <div className={styles.modalBody}>
+              <form onSubmit={handleUpdateUser} className={styles.editForm}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="fullName">الاسم الكامل</label>
+                  <input
+                    type="text"
+                    id="fullName"
+                    name="fullName"
+                    value={editFormData.fullName}
+                    onChange={handleInputChange}
+                    className={styles.formControl}
+                    required
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="email">البريد الإلكتروني</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={editFormData.email}
+                    onChange={handleInputChange}
+                    className={styles.formControl}
+                    required
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="phoneNumber">رقم الهاتف</label>
+                  <input
+                    type="text"
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    value={editFormData.phoneNumber}
+                    onChange={handleInputChange}
+                    className={styles.formControl}
+                    required
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="passwordHash">كلمة المرور (اتركها فارغة إذا لم ترد تغييرها)</label>
+                  <input
+                    type="password"
+                    id="passwordHash"
+                    name="passwordHash"
+                    value={editFormData.passwordHash}
+                    onChange={handleInputChange}
+                    className={styles.formControl}
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="confirmPassword">تأكيد كلمة المرور</label>
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    value={editFormData.confirmPassword}
+                    onChange={handleInputChange}
+                    className={styles.formControl}
+                  />
+                </div>
+
+                <div className={styles.modalFooter}>
+                  <button
+                    type="submit"
+                    className={styles.saveButton}
+                    disabled={isUpdating}
+                  >
+                    {isUpdating ? <FaSpinner className={styles.spinner} /> : <FaCheck />} حفظ التغييرات
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.cancelButton}
+                    onClick={closeEditModal}
+                  >
+                    إلغاء
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

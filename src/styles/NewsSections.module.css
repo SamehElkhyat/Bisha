@@ -1,0 +1,472 @@
+.newsSection {
+  padding: 6rem 0;
+  background: linear-gradient(to bottom, #f8f9fa, #edf2f7);
+  position: relative;
+  overflow: hidden;
+}
+
+.newsSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232b9af3' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.newsContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 4rem;
+  position: relative;
+}
+
+.sectionHeader::after {
+  content: '';
+  position: absolute;
+  bottom: -1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #2b9af3, #3182ce);
+  border-radius: 2px;
+}
+
+.sectionTitle {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #01152b;
+  margin: 0 0 0.75rem 0;
+  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+  letter-spacing: -0.5px;
+}
+
+.sectionSubtitle {
+  font-size: 1.3rem;
+  color: #4a5568;
+  margin: 0 0 2rem 0;
+  font-weight: 400;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.tabs::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.tab {
+  background: transparent;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #4a5568;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.tab::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #2b9af3, #3182ce);
+  border-radius: 2px;
+  transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.tab:hover {
+  color: #2b9af3;
+}
+
+.tab:hover::after {
+  width: 40%;
+}
+
+.activeTab {
+  color: #2b9af3;
+}
+
+.activeTab::after {
+  width: 70%;
+}
+
+/* Intelligent Carousel */
+.carouselContainer {
+  position: relative;
+  margin: 0 auto;
+  overflow: hidden;
+  padding: 1rem 0.5rem;
+}
+
+.intelligentCarousel {
+  position: relative;
+  overflow: hidden;
+  cursor: grab;
+  margin-bottom: 2rem;
+  padding: 1.5rem 0.5rem;
+}
+
+.intelligentCarousel:active {
+  cursor: grabbing;
+}
+
+.carouselItems {
+  display: flex;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.carouselCard {
+  flex: 1;
+  min-width: calc(25% - 1.125rem);
+  max-width: calc(25% - 1.125rem);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+  transition: all 0.3s ease;
+}
+
+/* News Card */
+.newsCard {
+  display: block;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  height: 100%;
+  text-decoration: none;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.newsCard:hover {
+  box-shadow: 0 15px 40px rgba(43, 154, 243, 0.15);
+  transform: translateY(-10px);
+}
+
+.newsImage {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.newsCard:hover .cardImage {
+  transform: scale(1.08);
+}
+
+.imageOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 70%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+}
+
+.newsContent {
+  padding: 2rem;
+  position: relative;
+  direction: rtl;
+  background: linear-gradient(to bottom, white, #f8fafc);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.newsDate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -45px;
+  right: 20px;
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, #2b9af3, #3182ce);
+  color: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(43, 154, 243, 0.3);
+  text-align: center;
+  z-index: 1;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.dateNumber {
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.dateMonth {
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+  opacity: 0.9;
+}
+
+.newsTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #01152b;
+  margin: 0 0 1rem 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.newsCategory {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  background: linear-gradient(135deg, rgba(43, 154, 243, 0.1), rgba(49, 130, 206, 0.1));
+  color: #2b9af3;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid rgba(43, 154, 243, 0.2);
+}
+
+/* Carousel Controls */
+.carouselControls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding: 0 1rem;
+}
+
+.carouselNavigation {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.carouselButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #01152b;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.carouselButton:hover {
+  background: linear-gradient(135deg, #2b9af3, #3182ce);
+  color: white;
+  border-color: transparent;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(43, 154, 243, 0.3);
+}
+
+.carouselIndicators {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.carouselIndicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.activeIndicator {
+  background: linear-gradient(135deg, #2b9af3, #3182ce);
+  transform: scale(1.3);
+  box-shadow: 0 3px 8px rgba(43, 154, 243, 0.3);
+}
+
+.viewAllLink {
+  display: inline-block;
+  color: #2b9af3;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 50px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  background: rgba(43, 154, 243, 0.1);
+  border: 1px solid rgba(43, 154, 243, 0.2);
+}
+
+.viewAllLink:hover {
+  background: linear-gradient(135deg, #2b9af3, #3182ce);
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(43, 154, 243, 0.3);
+}
+
+/* Loading and Error States */
+.loadingContainer,
+.errorContainer,
+.noResults {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(43, 154, 243, 0.1);
+  border-radius: 50%;
+  border-top-color: #2b9af3;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(43, 154, 243, 0.1);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.errorMessage {
+  color: #e53e3e;
+  font-weight: 500;
+  padding: 1rem 2rem;
+  background: rgba(229, 62, 62, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(229, 62, 62, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 1400px) {
+  .carouselCard {
+    min-width: calc(33.33% - 1rem);
+    max-width: calc(33.33% - 1rem);
+  }
+}
+
+@media (max-width: 992px) {
+  .carouselCard {
+    min-width: calc(50% - 0.75rem);
+    max-width: calc(50% - 0.75rem);
+  }
+  
+  .newsSection {
+    padding: 5rem 0;
+  }
+  
+  .sectionTitle {
+    font-size: 2.4rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .newsSection {
+    padding: 4rem 0;
+  }
+  
+  .sectionTitle {
+    font-size: 2.2rem;
+  }
+  
+  .sectionSubtitle {
+    font-size: 1.1rem;
+  }
+  
+  .tabs {
+    gap: 1.5rem;
+  }
+  
+  .tab {
+    padding: 0.6rem 1.2rem;
+    font-size: 1.1rem;
+  }
+  
+  .carouselCard {
+    min-width: 100%;
+    max-width: 100%;
+  }
+  
+  .newsImage {
+    height: 200px;
+  }
+  
+  .carouselControls {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .viewAllLink {
+    margin-top: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .newsContainer {
+    padding: 0 1.5rem;
+  }
+  
+  .sectionTitle {
+    font-size: 2rem;
+  }
+  
+  .newsDate {
+    width: 60px;
+    height: 60px;
+    top: -40px;
+  }
+  
+  .dateNumber {
+    font-size: 1.5rem;
+  }
+  
+  .dateMonth {
+    font-size: 0.75rem;
+  }
+  
+  .newsTitle {
+    font-size: 1.1rem;
+  }
+}

@@ -5,9 +5,9 @@ import styles from "../styles/NewsSections.module.css";
 import { newsAPI } from '../services/api';
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function NewsSections() {
+export default function EventsSection() {
   // State for news data from API
-  const [newsData, setNewsData] = useState([]);
+  const [eventsData, setEventsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   
@@ -91,10 +91,10 @@ export default function NewsSections() {
       try {
         setLoading(true);
         setError("");
-        const data = await newsAPI.getAll();
+        const data = await newsAPI.getAllCirculars();
 
         if (data && data.newsPaper) {
-          setNewsData(data.newsPaper);
+          setEventsData(data.newsPaper);
         } else {
           setError("لا توجد بيانات متاحة");
         }
@@ -111,9 +111,9 @@ export default function NewsSections() {
 
   // Carousel navigation functions
   const handleNavigation = (direction) => {
-    if (newsData.length <= itemsPerPage) return;
+    if (eventsData.length <= itemsPerPage) return;
     
-    const maxPages = Math.ceil(newsData.length / itemsPerPage) - 1;
+    const maxPages = Math.ceil(eventsData.length / itemsPerPage) - 1;
     
     if (direction === "next") {
       setCurrentPage((prev) => (prev >= maxPages ? 0 : prev + 1));
@@ -125,13 +125,13 @@ export default function NewsSections() {
   // Auto-scroll carousel
   useEffect(() => {
     const interval = setInterval(() => {
-      if (newsData.length > itemsPerPage) {
+      if (eventsData.length > itemsPerPage) {
         handleNavigation("next");
       }
     }, 7000);
 
     return () => clearInterval(interval);
-  }, [newsData.length, itemsPerPage]);
+  }, [eventsData.length, itemsPerPage]);
 
   // Mouse drag handlers for carousel
   const handleMouseDown = (e) => {
@@ -155,27 +155,27 @@ export default function NewsSections() {
   // Get current page items
   const getCurrentItems = () => {
     const startIndex = currentPage * itemsPerPage;
-    return newsData.slice(startIndex, startIndex + itemsPerPage);
+    return eventsData.slice(startIndex, startIndex + itemsPerPage);
   };
 
   return (
     <section className={styles.newsSection}>
       <div className={styles.newsContainer}>
-        <h2 className={styles.sectionTitle}>اخر الأخبار</h2>
+        <h2 className={styles.sectionTitle}>اخر الاعلانات</h2>
         
         <div className={styles.contentContainer}>
           {loading ? (
             <div className={styles.loadingContainer}>
               <div className={styles.spinner}></div>
-              <p>جاري تحميل الأخبار...</p>
+              <p>جاري تحميل الاعلانات...</p>
             </div>
           ) : error ? (
             <div className={styles.errorContainer}>
               <p className={styles.errorMessage}>{error}</p>
             </div>
-          ) : newsData.length === 0 ? (
+          ) : eventsData.length === 0 ? (
             <div className={styles.noResults}>
-              <h3>لا توجد أخبار متاحة</h3>
+              <h3>لا توجد فعاليات متاحة</h3>
             </div>
           ) : (
             <>
@@ -216,12 +216,12 @@ export default function NewsSections() {
                           }}
                         >
                           <Link
-                            href={`/media-center/news/${news.id}`}
+                            href={`/media-center/events/${news.id}`}
                             className={styles.newsCardLink}
                           >
                             <div className={styles.newsImage}>
                               <Image
-                                src={news.imageUrl || "/news-placeholder.jpg"}
+                                src={news.imageUrl || "/events-placeholder.jpg"}
                                 alt={news.title}
                                 width={400}
                                 height={250}
@@ -245,12 +245,12 @@ export default function NewsSections() {
                 </AnimatePresence>
               </div>
 
-              {newsData.length > itemsPerPage && (
+              {eventsData.length > itemsPerPage && (
                 <div className={styles.carouselControls}>
                   <button 
                     className={`${styles.carouselButton} ${styles.prevButton}`}
                     onClick={() => handleNavigation("prev")}
-                    aria-label="Previous news"
+                    aria-label="Previous events"
                   >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                       <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -258,7 +258,7 @@ export default function NewsSections() {
                   </button>
                   
                   <div className={styles.carouselIndicators}>
-                    {Array.from({ length: Math.ceil(newsData.length / itemsPerPage) }).map((_, index) => (
+                    {Array.from({ length: Math.ceil(eventsData.length / itemsPerPage) }).map((_, index) => (
                       <button
                         key={index}
                         className={`${styles.carouselIndicator} ${
@@ -273,7 +273,7 @@ export default function NewsSections() {
                   <button 
                     className={`${styles.carouselButton} ${styles.nextButton}`}
                     onClick={() => handleNavigation("next")}
-                    aria-label="Next news"
+                    aria-label="Next events"
                   >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                       <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>

@@ -87,7 +87,7 @@
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  --overlay-opacity: 0.7;
+  --overlay-opacity: 0.3;
   padding: 0;
   overflow: hidden;
   display: flex;
@@ -102,26 +102,9 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(1, 21, 43, var(--overlay-opacity)) 0%, rgba(0, 10, 30, calc(var(--overlay-opacity) - 0.1)) 100%);
+  background: linear-gradient(135deg, rgba(0, 0, 0, var(--overlay-opacity)) 0%, rgba(0, 0, 0, calc(var(--overlay-opacity) - 0.1)) 100%);
   z-index: 1;
-  background-size: 200% 200%;
   transition: all 0.5s ease;
-}
-
-.main:hover .mainOverlay {
-  animation: gradientShift 15s ease infinite alternate;
-}
-
-@keyframes gradientShift {
-  0% {
-    background-position: 0% 0%;
-  }
-  50% {
-    background-position: 100% 0%;
-  }
-  100% {
-    background-position: 0% 0%;
-  }
 }
 
 .particlesOverlay {
@@ -168,79 +151,89 @@
 
 /* Logo Container - Now on the left */
 .logoContainer {
-  padding: 0.9rem;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  flex-shrink: 0;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  outline: none;
-}
-
-.logoGlow {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at center, rgba(43, 154, 243, 0.15), transparent 70%);
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  z-index: 0;
-}
-
-.logoContainer:hover .logoGlow {
-  opacity: 1;
-  animation: pulseLogo 2s infinite alternate;
-}
-
-@keyframes pulseLogo {
-  0% {
-    opacity: 0.1;
-  }
-  100% {
-    opacity: 0.3;
-  }
-}
-
-.logoContainer::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-
-.logoContainer:hover {
-  transform: translateY(-5px) scale(1.05);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.logoContainer:hover::after {
-  opacity: 1;
-}
-
-.logoContainer:active {
-  transform: translateY(-2px) scale(0.98);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+  top: 20%;
+  right: 8%;
+  z-index: 2;
+  transition: all 0.5s ease;
 }
 
 .logo {
-  width: 150px !important;
+  width: 220px !important;
   height: auto !important;
   filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
   position: relative;
-  z-index: 1;
+  z-index: 2;
+}
+
+.buttonsContainer {
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+.serviceButton {
+  margin-top: 10px;
+  position: absolute;
+  padding: 20px 35px;
+  color:black;
+  border: none;
+  border-radius: 30px;
+  font-size: 1.2rem;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+  min-width: 200px;
+  text-align: center;
+  z-index: 2;
+  direction: rtl;
+  font-family: 'Arial', sans-serif;
+}
+
+.serviceButton:hover {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+}
+
+.topLeft {
+  border: 2px solid #fff;
+
+  top: 40%;
+  left: 22%;
+  transform: translateY(-50%);
+}
+
+.topRight {
+  border: 2px solid #fff;
+
+  top: 40%;
+  right: 22%;
+  transform: translateY(-50%);
+}
+
+.bottomLeft {
+  border: 2px solid #fff;
+
+  bottom: 40%;
+  left: 35%;
+  transform: translateY(50%);
+}
+
+.bottomRight {
+  border: 2px solid #fff;
+
+  bottom: 40%;
+  right: 35%;
+  transform: translateY(50%);
 }
 
 /* Hero Content */
@@ -798,69 +791,77 @@
 }
 
 @media (max-width: 768px) {
+  .logoContainer {
+    top: 5%;
+    right: 50%;
+    transform: translateX(50%);
+    margin-top: 50px;
+  }
+  
   .logo {
-    width: 140px !important;
+    width: 180px !important;
   }
 
-  .actionButtons {
-    flex-direction: column;
-    width: 100%;
-    max-width: 300px;
+  .serviceButton {
+    min-width: 160px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
   }
 
-  .actionBtn {
-    width: 100%;
-    justify-content: center;
+  .topLeft {
+    top: 38%;
+    left: 10%;
   }
 
-  .mainServicesRow,
-  .servicesCategoriesRow {
-    flex-direction: column;
+  .topRight {
+    top: 38%;
+    right: 10%;
   }
 
-  .primaryButton,
-  .serviceCard {
-    width: 100%;
-    min-width: 0;
+  .bottomLeft {
+    bottom: 35%;
+    left: 10%;
   }
 
-  .buttonIcon {
-    width: 45px;
-    height: 45px;
-  }
-
-  .serviceIconWrapper {
-    width: 50px;
-    height: 50px;
-  }
-
-  .serviceIcon {
-    width: 38px;
-    height: 38px;
+  .bottomRight {
+    bottom: 35%;
+    right: 10%;
   }
 }
 
 @media (max-width: 480px) {
-  .heroTitle {
-    font-size: 2.4rem;
+  .logoContainer {
+    top: 3%;
+    margin-top: 70px;
+  }
+  
+  .logo {
+    width: 150px !important;
   }
 
-  .heroSubtitle {
-    font-size: 1.1rem;
+  .serviceButton {
+    min-width: 130px;
+    padding: 8px 15px;
+    font-size: 0.8rem;
   }
 
-  .buttonIcon {
-    width: 40px;
-    height: 40px;
+  .topLeft {
+    top: 35%;
+    left: 8%;
   }
 
-  .serviceIconWrapper {
-    width: 46px;
-    height: 46px;
+  .topRight {
+    top: 35%;
+    right: 8%;
   }
 
-  .serviceIcon {
-    width: 34px;
-    height: 34px;
+  .bottomLeft {
+    bottom: 30%;
+    left: 8%;
+  }
+
+  .bottomRight {
+    bottom: 30%;
+    right: 8%;
   }
 }

@@ -11,7 +11,8 @@ import NewsSections from './NewsSections';
 import Mainservices from './Mainservices';
 import DetailsBisha from './DetailsBisha';
 import TwitterSection from './TwiterSection';
-
+import AboutBisha from './AboutBisha';
+import EventsSection from './EventsSection';
 // Dynamically import the MapClient component with no SSR
 const MapClient = dynamic(() => import('../components/MapClient'), {
   ssr: false
@@ -57,6 +58,8 @@ const HomePage = () => {
         <Header />
         <Main />
         <NewsSections />
+        <AboutBisha />
+        <EventsSection />
         <Mainservices />
         <DetailsBisha />
         <TwitterSection />

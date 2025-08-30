@@ -1,4 +1,5 @@
 .sectoralSection {
+  background-color: #254D69;
   position: relative;
   padding: 6rem 0;
   min-height: 100vh;
@@ -51,6 +52,7 @@
 }
 
 .sectionHeader {
+  color: white !important;
   text-align: center;
   margin-bottom: 4rem;
   position: relative;
@@ -71,7 +73,7 @@
 .sectionTitle {
   font-size: 3rem;
   font-weight: 800;
-  color: #01152b;
+  color: white !important;
   margin: 0 0 1rem 0;
   position: relative;
 }
@@ -96,7 +98,7 @@
 
 .sectionSubtitle {
   font-size: 1.2rem;
-  color: #4a5568;
+  color: white !important;
   margin: 0;
   max-width: 700px;
   margin: 0 auto;

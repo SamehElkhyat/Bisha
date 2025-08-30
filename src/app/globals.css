@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+
 :root {
   --background: #003366;
   --foreground: #ffffff;
@@ -23,5 +24,6 @@ body {
   background-color: #003366; /* Explicit solid background color */
   background: #003366; /* Fallback */
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Cairo', sans-serif !important;
 }
+

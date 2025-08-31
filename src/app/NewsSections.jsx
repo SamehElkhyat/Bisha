@@ -198,7 +198,7 @@ export default function NewsSections() {
                   >
                     {getCurrentItems().map((news, index) => {
                       const { day, month, year } = formatDate(news.createdAt);
-                      
+                      console.log(news);
                       return (
                         <motion.div 
                           key={news.id} 
@@ -223,8 +223,9 @@ export default function NewsSections() {
                               <Image
                                 src={news.imageUrl || "/news-placeholder.jpg"}
                                 alt={news.title}
-                                width={400}
-                                height={250}
+                                width={600}
+                                height={400}
+                                priority
                                 className={styles.cardImage}
                               />
                             </div>

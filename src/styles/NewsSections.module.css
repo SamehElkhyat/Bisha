@@ -52,12 +52,12 @@
   min-width: calc(33.33% - 1rem);
   max-width: calc(33.33% - 1rem);
   background: white;
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
   position: relative;
-  height: 370px; /* Increased fixed height for all cards to accommodate larger image */
+  height: 500px; /* Further increased height for bigger cards */
   display: flex;
   flex-direction: column;
 }
@@ -73,15 +73,16 @@
 .newsImage {
   position: relative;
   width: 100%;
-  height: 220px; /* Increased height to show more of the image */
+  height: 390px; /* Increased height to show more of the image */
   overflow: hidden;
 }
 
 .cardImage {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: inherit;
   transition: transform 0.5s ease;
+  display: block;
 }
 
 .newsCard:hover .cardImage {
@@ -89,15 +90,18 @@
 }
 
 .newsContent {
+  height: 100px;
   justify-content: center;
   align-items: center;
-  padding: 1.5rem;
+  padding: 2rem;
   position: relative;
   direction: rtl;
   text-align: right;
   flex: 1;
   display: flex;
   flex-direction: column;
+  background-color: #f8f8f8;
+  border-top: 1px solid #eaeaea;
 }
 
 .newsDate {
@@ -137,16 +141,16 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #333;
-  margin: 0;
-  line-height: 1.4;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1e3a5f;
+  margin: 0.5rem 0;
+  line-height: 1.5;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  max-height: 3em; /* Limit to approximately 2 lines */
+  max-height: 4.5em; /* Limit to approximately 3 lines */
   text-overflow: ellipsis;
 }
 
@@ -240,7 +244,7 @@
   .newsCard {
     min-width: calc(33.33% - 1rem);
     max-width: calc(33.33% - 1rem);
-    height: 370px;
+    height: 500px;
   }
 }
 
@@ -248,7 +252,7 @@
   .newsCard {
     min-width: calc(50% - 0.75rem);
     max-width: calc(50% - 0.75rem);
-    height: 360px;
+    height: 490px;
   }
   
   .newsSection {
@@ -272,11 +276,16 @@
   .newsCard {
     min-width: 100%;
     max-width: 100%;
-    height: 350px;
+    height: 480px;
   }
   
   .newsImage {
-    height: 200px;
+    height: 300px;
+  }
+  
+  .newsContent {
+    height: 90px;
+    padding: 1.5rem;
   }
 }
 
@@ -303,14 +312,19 @@
   }
   
   .newsTitle {
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
   
   .newsCard {
-    height: 340px;
+    height: 450px;
   }
   
   .newsImage {
-    height: 190px;
+    height: 280px;
+  }
+  
+  .newsContent {
+    height: 80px;
+    padding: 1.2rem;
   }
 }

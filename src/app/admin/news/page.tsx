@@ -7,6 +7,7 @@ import styles from '../../../styles/AdminList.module.css';
 import { FaNewspaper, FaPlus, FaEdit, FaTrash, FaSearch, FaFilter, FaTimes, FaSave } from 'react-icons/fa';
 import Link from 'next/link';
 import { newsAPI } from '../../../services/api';
+import axios from 'axios';
 
 const AdminNewsPage = () => {
   const router = useRouter();
@@ -29,29 +30,27 @@ const AdminNewsPage = () => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    imageUrl: '',
+    imageUrl: null,
     type: '',
-    imageFile: null
+    createdAt: ''
   });
 
   // Get all unique categories
   const categories = ['all', ...new Set(news.map(item => item.category))];
 
 
-  const UpdateNews = async (newData, id) => {
-    const response = await newsAPI.UpdateNews(newData, id);
-    console.log(response);
-
+  const UpdateNews = async (newData: any) => {
+    console.log(newData);
+    const response = await newsAPI.UpdateNews(newData);
+    return response;
   }
 
   // Modal handlers
   const openEditModal = async (item, type) => {
-
     try {
       setModalLoading(true);
       setIsModalOpen(true);
       setModalType(type);
-
       // Fetch fresh data from API
       let freshData;
       if (type === 'news') {
@@ -68,7 +67,7 @@ const AdminNewsPage = () => {
         description: freshData.description || '',
         imageUrl: freshData.imageUrl || '',
         type: freshData.type || '',
-        imageFile: null
+        createdAt: freshData.createdAt || ''
       });
 
     } catch (error) {
@@ -80,7 +79,7 @@ const AdminNewsPage = () => {
         description: item.description || '',
         imageUrl: item.imageUrl || '',
         type: item.type || '',
-        imageFile: null
+        createdAt: item.createdAt || ''
       });
     } finally {
       setModalLoading(false);
@@ -93,15 +92,15 @@ const AdminNewsPage = () => {
     setFormData({
       title: '',
       description: '',
-      imageUrl: '',
+      imageUrl: null,
       type: '',
-      imageFile: null
+      createdAt: ''
     });
   };
 
   const handleInputChange = (e) => {
     const { name, value, type, files } = e.target;
-    
+
     if (type === 'file') {
       // Handle file input
       if (files && files[0]) {
@@ -127,9 +126,16 @@ const AdminNewsPage = () => {
         description: formData.description,
         imageUrl: formData.imageUrl,
         type: formData.type,
+        createdAt: formData.createdAt
       };
-
-      await UpdateNews(updatedData, editingItem.id);
+      console.log(updatedData);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/NewsPaper/Update`, updatedData, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      console.log(response);
 
       // Update local state
       if (modalType === 'news') {
@@ -173,7 +179,6 @@ const AdminNewsPage = () => {
       setLoading(false);
     }
   }, [user, isAdmin, router]);
-
   // Filter news based on search term and category
   useEffect(() => {
     let result = news;
@@ -191,7 +196,6 @@ const AdminNewsPage = () => {
 
     setFilteredNews(result);
   }, [searchTerm, selectedCategory, news]);
-
   // Filter events based on search term
   useEffect(() => {
     let result = events;
@@ -206,18 +210,16 @@ const AdminNewsPage = () => {
 
     setFilteredEvents(result);
   }, [searchTerm, events]);
-
   // Format date function
   const handleDelete = async (id: number) => {
-    console.log(id);
     const response = await newsAPI.delete(id);
+    console.log(response);
     if (response.message === "تم حذف الخبر بنجاح") {
       alert('تم الحذف بنجاح');
     } else {
       alert('حدث خطأ أثناء الحذف');
     }
   };
-
   if (loading) {
     return (
       <div className={styles.loadingContainer}>
@@ -278,13 +280,14 @@ const AdminNewsPage = () => {
             </tr>
           </thead>
           <tbody>
+
             {filteredNews.length > 0 ? (
               filteredNews.map((item, index) => (
                 <tr key={item.id}>
                   <td className="text-black">{index + 1}</td>
                   <td className="text-black">{item.title}</td>
                   <td className="text-black">{item.category}</td>
-                  <td className="text-black">{item.date}</td>
+                  <td className="text-black">{item.createdAt}</td>
                   <td className={styles.actionsCell}>
                     <button
                       className={styles.editButton}
@@ -292,12 +295,10 @@ const AdminNewsPage = () => {
                     >
                       <FaEdit />
                     </button>
-
                     <button
                       className={styles.deleteButton}
                       onClick={() => handleDelete(item.id)}
-                    >
-                      <FaTrash />
+                    ><FaTrash />
                     </button>
                   </td>
                 </tr>
@@ -407,11 +408,24 @@ const AdminNewsPage = () => {
                   </div>
 
                   <div className={styles.inputGroup}>
-                    <label htmlFor="imageFile" className={styles.inputLabel}>اختر صورة</label>
+                    <label htmlFor="createdAt" className={styles.inputLabel}>التاريخ</label>
+                    <input
+                      type="date"
+                      id="createdAt"
+                      name="createdAt"
+                      value={formData.createdAt}
+                      onChange={handleInputChange}
+                      className={styles.modalInput}
+                      placeholder="أدخل التاريخ"
+                    />
+                  </div>
+
+                  <div className={styles.inputGroup}>
+                    <label htmlFor="imageUrl" className={styles.inputLabel}>اختر صورة</label>
                     <input
                       type="file"
-                      id="imageFile"
-                      name="imageFile"
+                      id="imageUrl"
+                      name="imageUrl"
                       onChange={handleInputChange}
                       className={styles.modalInput}
                       accept="image/*"

@@ -244,7 +244,6 @@ export default function EventsSection() {
                   </motion.div>
                 </AnimatePresence>
               </div>
-
               {eventsData.length > itemsPerPage && (
                 <div className={styles.carouselControls}>
                   <button 

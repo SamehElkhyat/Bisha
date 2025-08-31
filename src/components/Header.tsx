@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import styles from '../styles/Header.module.css';
-import { FaTiktok, FaTelegramPlane, FaSnapchatGhost, FaYoutube, FaFacebookF, FaInstagram, FaTimes, FaChevronDown, FaUserShield, FaBars } from 'react-icons/fa';
+import { FaTiktok, FaTelegramPlane, FaSnapchatGhost, FaYoutube, FaFacebookF, FaInstagram, FaTimes, FaChevronDown, FaUserShield, FaBars, FaTwitter } from 'react-icons/fa';
 import { useAuth } from '../contexts/AuthContext';
 
 interface NavLink {
@@ -121,9 +121,8 @@ const Header = () => {
     { href: '#', icon: <FaTelegramPlane /> },
     { href: '#', icon: <FaSnapchatGhost /> },
     { href: '#', icon: <FaYoutube /> },
-    { href: '#', icon: <FaFacebookF /> },
     { href: '#', icon: <FaInstagram /> },
-    { href: '#', icon: <FaTimes /> }, // Assuming X icon
+    { href: 'https://x.com/Bisha_cci', icon: <FaTwitter /> }, // Assuming X icon
   ];
 
   return (

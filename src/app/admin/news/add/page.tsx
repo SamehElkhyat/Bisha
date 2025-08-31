@@ -16,7 +16,8 @@ const AddNewsPage = () => {
     description: '',
     type: 'أخبار',
     image: null,
-    imagePreview: ''
+    imagePreview: '',
+    createdAt : ''
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -151,7 +152,8 @@ const AddNewsPage = () => {
         description: '',
         type: 'News',
         image: null,
-        imagePreview: ''
+        imagePreview: '',
+        createdAt: ''
       });
       
       // Redirect after 2 seconds
@@ -227,6 +229,19 @@ const AddNewsPage = () => {
             onChange={handleChange}
             placeholder="أدخل محتوى الخبر"
             rows={10}
+            required
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="createdAt">التاريخ</label>
+          <input
+            className="text-black"
+            type="date"
+            id="createdAt"
+            name="createdAt"
+            value={formData.createdAt}
+            onChange={handleChange}
+            placeholder="أدخل التاريخ"
             required
           />
         </div>

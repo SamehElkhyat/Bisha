@@ -88,14 +88,10 @@ export const newsAPI = {
       body: JSON.stringify(newsData), 
     });
   },
+ 
 
-  UpdateNews: async (newData, id) => {
-    return fetchAPI(`/NewsPaper/Update/${id}`, {
-      method: "POST",
-      body: JSON.stringify(newData),
-    });
-  },
-
+  
+  
   delete: async (id) => {
     return fetchAPI(`/NewsPaper/Delete/${id}`, {
       method: "DELETE",

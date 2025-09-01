@@ -216,7 +216,7 @@ export default function EventsSection() {
                           }}
                         >
                           <Link
-                            href={`/media-center/events/${news.id}`}
+                            href={`/media-center/circulars/${news.id}`}
                             className={styles.newsCardLink}
                           >
                             <div className={styles.newsImage}>

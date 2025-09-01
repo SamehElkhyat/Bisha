@@ -16,6 +16,7 @@ interface CircularItem {
   category: string;
   content: string;
   image: string;
+  imageUrl: string;
 }
 
 interface PaginatedResponse {
@@ -158,10 +159,10 @@ const CircularDetailPage = () => {
 
         <div className={styles.circularImageContainer}>
           <Image
-            src={circularItem.image || "/news-placeholder.jpg"}
+            src={circularItem.imageUrl || "/news-placeholder.jpg"}
             alt={circularItem.title}
-            width={800}
-            height={500}
+            width={2000}
+            height={2000}
             className={styles.circularImage}
             priority
           />
@@ -179,7 +180,7 @@ const CircularDetailPage = () => {
                 <div key={circular.id} className={styles.relatedCard}>
                   <div className={styles.relatedImageContainer}>
                     <Image
-                      src={circular.image || "/news-placeholder.jpg"}
+                      src={circular.imageUrl || "/news-placeholder.jpg"}
                       alt={circular.title}
                       width={300}
                       height={200}

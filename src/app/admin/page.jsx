@@ -12,7 +12,7 @@ const AdminDashboard = () => {
   const router = useRouter();
   const { user, isAdmin, logout } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [decodedToken, setDecodedToken] = useState<any>([]);
+  const [decodedToken, setDecodedToken] = useState([]);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [counts, setCounts] = useState();
 
@@ -122,7 +122,7 @@ const AdminDashboard = () => {
           </div>
 
           <nav className={styles.adminNav}>
-            {decodedToken?.Permission.map((item: any, index: number) => {
+            {decodedToken?.Permission.map((item, index) => {
               return (
                 <div key={`nav-${item}-${index}`}>
                   {item === 'GetContact' && (
@@ -209,7 +209,7 @@ const AdminDashboard = () => {
           <div className={styles.quickActions}>
             <h2>إجراءات سريعة</h2>
             <div className={styles.actionCards}>
-              {decodedToken?.Permission.map((item: any, index: number) => {
+              {decodedToken?.Permission.map((item, index) => {
                 return (
                   <div key={`action-${item}-${index}`}>
                     {item === 'AddNewsPaper' && (

@@ -97,7 +97,6 @@ const Header = () => {
       ]
     },
     { href: 'https://eservices.bishacci.org.sa/#/Login', label: 'التدريب', external: true },
-    { href: '/', label: 'المبادرات' },
     { href: '/contact', label: 'اتصل بنا' }
   ];
 

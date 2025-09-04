@@ -103,7 +103,7 @@ const page = () => {
       }
       
       // Show success message
-      setSuccess('تم إضافة المستخدم بنجاح');
+      setSuccess('تم تعديل البيانات بنجاح');
       
       // Reset form after success
       setFormData({
@@ -123,8 +123,8 @@ const page = () => {
         // router.push('/admin/contact');
       }, 2000);
     } catch (error) {
-      console.error('Failed to add user:', error);
-      setError(`فشل إضافة المستخدم: ${error.message || 'خطأ غير معروف'}`);
+      console.error('Failed to update contact:', error);
+      setError(`فشل تعديل البيانات: ${error.message || 'خطأ غير معروف'}`);
     } finally {
       setIsSubmitting(false);
     }

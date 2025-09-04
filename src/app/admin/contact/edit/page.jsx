@@ -54,11 +54,6 @@ const page = () => {
 
     try {
       // Validate form
-      if (!formData.firstPhoneNumber || !formData.secondPhoneNumber || !formData.location || !formData.email || !formData.address || !formData.workingHours) {
-        setError('يرجى تعبئة جميع الحقول المطلوبة');
-        setIsSubmitting(false);
-        return;
-      }
 
       // Validate email format
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

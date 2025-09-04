@@ -169,7 +169,7 @@ export const usersAPI = {
   },
 
   delete: async (id) => {
-    return fetchAPI(`/Users/${id}`, {
+    return fetchAPI(`/Register/Delete/${id}`, {
       method: "DELETE",
     });
   },

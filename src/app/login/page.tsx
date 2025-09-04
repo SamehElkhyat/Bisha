@@ -35,7 +35,6 @@ const LoginPage = () => {
     setIsLoading(true);
     try {
       const success = await login(email, password);
-      
       if (success) {
         router.push('/');
       } else {
@@ -48,7 +47,6 @@ const LoginPage = () => {
       setIsLoading(false);
     }
   };
-
   return (
     <div className={styles.loginContainer}>
       <div className={styles.loginCard}>

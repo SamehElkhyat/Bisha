@@ -19,7 +19,7 @@ const AdminDashboard = () => {
 
   const GetAllCounts = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/Admin/Count`, {
+      const response = await axios.get(`https://bisha.runasp.net/api/Admin/Count`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('auth_token')}`

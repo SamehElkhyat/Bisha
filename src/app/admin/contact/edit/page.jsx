@@ -124,7 +124,7 @@ const page = () => {
       
       // Redirect after 2 seconds
       setTimeout(() => {
-        
+
         // router.push('/admin/contact');
       }, 2000);
     } catch (error) {
@@ -169,7 +169,7 @@ const page = () => {
               value={formData.firstPhoneNumber}
               onChange={handleChange}
               placeholder="أدخل رقم الهاتف الأول"
-              required
+              
             />
           </div>
         </div>
@@ -187,7 +187,7 @@ const page = () => {
                 value={formData.secondPhoneNumber}
                 onChange={handleChange}
                 placeholder="أدخل رقم الهاتف الثاني"
-                required
+                
               />
             </div>
           </div>
@@ -204,7 +204,7 @@ const page = () => {
                 value={formData.location}
                 onChange={handleChange}
                 placeholder="أدخل الموقع"
-                required
+                
               />
             </div>
           </div>
@@ -222,7 +222,7 @@ const page = () => {
               value={formData.email}
               onChange={handleChange}
               placeholder="أدخل البريد الإلكتروني"
-              required
+              
             />
           </div>
         </div>
@@ -239,7 +239,7 @@ const page = () => {
               value={formData.address}
               onChange={handleChange}
               placeholder="أدخل العنوان"
-              required
+              
             />
           </div>
         </div>
@@ -256,7 +256,7 @@ const page = () => {
               value={formData.workingHours}
               onChange={handleChange}
               placeholder="أدخل ساعات العمل"
-              required
+              
             />
           </div>
         </div>

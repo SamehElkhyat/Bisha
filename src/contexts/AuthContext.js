@@ -127,7 +127,15 @@ export const AuthProvider = ({ children }) => {
   // Logout function
   const logout = () => {
     setUser(null);
+    localStorage.removeItem('DecodedToken');
     localStorage.removeItem('user');
+    localStorage.removeItem('isAdmin');
+    localStorage.removeItem('isClient');
+    localStorage.removeItem('isPartner');
+    localStorage.removeItem('isMember');
+    localStorage.removeItem('isNews');
+    localStorage.removeItem('isCircular');
+    localStorage.removeItem('isCertificate');
     localStorage.removeItem('auth_token');
   };
 

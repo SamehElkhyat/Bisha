@@ -3,6 +3,7 @@ import Link from 'next/link';
 import styles from '../styles/Header.module.css';
 import { FaTiktok, FaTelegramPlane, FaSnapchatGhost, FaYoutube, FaFacebookF, FaInstagram, FaTimes, FaChevronDown, FaUserShield, FaBars } from 'react-icons/fa';
 import { useAuth } from '../contexts/AuthContext';
+import { log } from 'console';
 
 interface NavLink {
   href: string;
@@ -61,7 +62,7 @@ const Header = () => {
         { href: 'https://cocclient.mci.gov.sa/', label: 'تجديد الاشتراك' },
         { href: 'https://numo.sa/ar/b/fraa-bysh', label: 'التدريب الالكتروني' },
         { href: 'https://eservices.bishacci.org.sa/#/Login', label: 'الشكاوي والاقتراحات' },
-      
+
       ]
     },
     {
@@ -101,32 +102,28 @@ const Header = () => {
   ];
 
 
-
   // Admin link (only visible to admins)
   const adminLink: NavLink = { href: '/admin', label: '🔧 لوحة التحكم', id: 'admin' };
 
-  // Get user from auth context
-  const { user } = useAuth();
 
-  // Login link
-  const authLink: NavLink = { href: '/login', label: '🔐 تسجيل الدخول', id: 'auth' };
+  // Get user from auth context
+
 
   // Combine base links with conditional links
   let navLinks: NavLink[] = [...baseNavLinks];
 
   const decodedToken = JSON.parse(localStorage.getItem('DecodedToken') || '{}');
+
   // Add admin link ONLY if user is admin
   if (decodedToken?.Role === 'Admin') {
     console.log('Admin user detected, showing admin panel link');
     navLinks.push(adminLink);
   } else {
+
     console.log('Non-admin user, hiding admin panel link');
   }
 
-  // Add login link ONLY if user is not logged in
-  if (!user) {
-    navLinks.push(authLink);
-  }
+
 
   // Custom X (Twitter) logo component
   const XLogo = () => (

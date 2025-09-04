@@ -89,13 +89,10 @@ const AdminDashboard = () => {
     if (typeof window !== "undefined") {
       const decoded = JSON.parse(localStorage.getItem("DecodedToken") || "{}");
       setDecodedToken(decoded);
-      console.log(decoded);
-
       if (decoded?.Role !== "Admin") {
         router.push("/login");
       }
     }
-
     if (!user) {
       setLoading(false);
     } else if (!isAdmin()) {
@@ -103,13 +100,13 @@ const AdminDashboard = () => {
     } else {
       setLoading(false);
     }
-
     GetAllCounts();
   }, [user, isAdmin, router]);
 
   const handleLogout = () => {
+    window.location.href = "/";
+
     logout();
-    router.push("/");
   };
 
   const toggleMobileSidebar = () => {
@@ -245,7 +242,6 @@ const AdminDashboard = () => {
             <h1>لوحة التحكم</h1>
             <p>مرحباً بك في لوحة تحكم غرفة بيشة</p>
           </div>
-
           <div className={styles.statsGrid}>
             <div className={styles.statCard}>
               <div className={styles.statIcon}>
@@ -256,7 +252,6 @@ const AdminDashboard = () => {
                 <p>الأخبار</p>
               </div>
             </div>
-
             <div className={styles.statCard}>
               <div className={styles.statIcon}>
                 <FaUsers />
@@ -266,7 +261,6 @@ const AdminDashboard = () => {
                 <p>العملاء</p>
               </div>
             </div>
-
             <div className={styles.statCard}>
               <div className={styles.statIcon}>
                 <FaBullhorn />
@@ -277,7 +271,6 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
-
           <div className={styles.quickActions}>
             <h2>إجراءات سريعة</h2>
             <div className={styles.actionCards}>

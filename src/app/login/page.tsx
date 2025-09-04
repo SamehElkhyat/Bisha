@@ -36,7 +36,7 @@ const LoginPage = () => {
     try {
       const success = await login(email, password);
       if (success) {
-        router.push('/');
+        router.push('/admin');
       } else {
         setError('اسم البريد الإلكتروني أو كلمة المرور غير صحيحة');
       }
@@ -56,7 +56,7 @@ const LoginPage = () => {
         </div>
         
         {error && <div className={styles.errorMessage}>{error}</div>}
-        
+    
         <form onSubmit={handleSubmit} className={styles.loginForm}>
           <div className={styles.inputGroup}>
             <label htmlFor="email">اسم البريد الإلكتروني</label>

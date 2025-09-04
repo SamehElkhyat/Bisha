@@ -104,9 +104,9 @@ const CircularsPage = () => {
     <div className={styles.circularsPageContainer}>
       <div className={styles.pageHeader}>
         <div className={styles.headerContent}>
-          <h1 className={styles.pageTitle}>التعاميم والفعاليات</h1>
+          <h1 className={styles.pageTitle}>الاعلانات والاخبار</h1>
           <p className={styles.pageDescription}>
-            آخر التعاميم والفعاليات المهمة من غرفة بيشة
+            آخر الاعلانات الاخبار المهمة من غرفة بيشة
           </p>
         </div>
       </div>
@@ -129,7 +129,7 @@ const CircularsPage = () => {
           {loading ? (
             <div className={styles.loadingContainer}>
               <div className={styles.spinner}></div>
-              <p>جاري تحميل التعاميم...</p>
+              <p>جاري تحميل الاعلانات...</p>
             </div>
           ) : error ? (
             <div className={styles.errorContainer}>
@@ -160,7 +160,7 @@ const CircularsPage = () => {
                     </span>
                     <span className={styles.eventCategory}>
                       <FaTag className={styles.metaIcon} />
-                      {event.type || event.category || 'تعاميم'}
+                      {event.type || event.category || 'اعلانات'}
                     </span>
                   </div>
                   <h2 className={styles.eventTitle}>{event.title}</h2>

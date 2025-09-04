@@ -316,7 +316,7 @@ const AdminNewsPage = () => {
 
       {/* Events/Responses Table */}
       <div className={styles.tableContainer}>
-        <h2 className={styles.sectionTitle}>التعاميم</h2>
+        <h2 className={styles.sectionTitle}>الاعلانات</h2>
         <table className={styles.dataTable}>
           <thead>
             <tr>
@@ -354,7 +354,7 @@ const AdminNewsPage = () => {
             ) : (
               <tr>
                 <td colSpan={6} className={styles.noResults}>
-                  لا توجد تعاميم
+                  لا توجد اعلانات
                 </td>
               </tr>
             )}

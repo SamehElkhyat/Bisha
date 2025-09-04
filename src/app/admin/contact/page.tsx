@@ -3,8 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../contexts/AuthContext';
 import styles from '../../../styles/AdminList.module.css';
-import { FaEnvelope, FaUser, FaPhone, FaCalendarAlt, FaEye, FaReply, FaSearch, FaChevronLeft, FaChevronRight, FaComments } from 'react-icons/fa';
+import { FaEnvelope, FaUser, FaPhone, FaCalendarAlt, FaEye, FaReply, FaSearch, FaChevronLeft, FaChevronRight, FaComments, FaEdit } from 'react-icons/fa';
 import { toast, Toaster } from 'react-hot-toast';
+import Link from 'next/link';
 
 // Contact data interface
 interface Contact {
@@ -174,7 +175,8 @@ const AdminContactPage = () => {
       </div>
 
       {error && <div className={styles.errorMessage}>{error}</div>}
-
+   
+      
       <div className={styles.filterSection}>
         <div className={styles.searchBox}>
           <input
@@ -187,6 +189,10 @@ const AdminContactPage = () => {
           <FaSearch className={styles.searchIcon} />
         </div>
       </div>
+      <Link href="/admin/contact/edit" className={styles.addButton}> 
+        <FaEdit /> تعديل البيانات
+      </Link>
+
 
       <div className={styles.tableContainer}>
         <table className={styles.dataTable}>

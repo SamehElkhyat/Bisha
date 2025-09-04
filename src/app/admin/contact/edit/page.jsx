@@ -4,19 +4,22 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../../contexts/AuthContext';
 import styles from '../../../../styles/AdminForms.module.css';
-import { FaUser, FaSave, FaArrowRight, FaEnvelope, FaPhone, FaLock, FaCheckCircle } from 'react-icons/fa';
+import { FaUsers, FaSave, FaArrowRight, FaIdCard, FaEnvelope, FaPhone, FaLock, FaCheckCircle } from 'react-icons/fa';
 import Link from 'next/link';
+import { clientsAPI } from '../../../../services/api';
 
-const AddUserPage = () => {
+const page = () => {
   const router = useRouter();
   const { user, isAdmin } = useAuth();
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phoneNumber: '',
-    passwordHash: '',
-    confirmPassword: ''
+    id: 1,
+    firstPhoneNumber: "",
+    secondPhoneNumber: "",
+    location: "",
+    email: "",
+    address: "",
+    workingHours: ""
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -25,15 +28,17 @@ const AddUserPage = () => {
   useEffect(() => {
     // Check if user is authenticated and is admin
     if (!user) {
-      router.push('/login');
+      // router.push('/login');
+      setLoading(false);
     } else if (!isAdmin()) {
+        // router.push('/');
       setLoading(false);
     } else {
       setLoading(false);
     }
   }, [user, isAdmin, router]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -41,60 +46,43 @@ const AddUserPage = () => {
     }));
   };
 
-  const validateForm = () => {
-    // Check required fields
-    if (!formData.fullName || !formData.email || !formData.phoneNumber || !formData.passwordHash || !formData.confirmPassword) {
-      setError('يرجى تعبئة جميع الحقول المطلوبة');
-      return false;
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      setError('يرجى إدخال بريد إلكتروني صحيح');
-      return false;
-    }
-
-    // Validate password match
-    if (formData.passwordHash !== formData.confirmPassword) {
-      setError('كلمة المرور وتأكيد كلمة المرور غير متطابقين');
-      return false;
-    }
-
-    // Validate password strength
-    if (formData.passwordHash.length < 6) {
-      setError('كلمة المرور يجب أن تكون على الأقل 6 أحرف');
-      return false;
-    }
-
-    return true;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
-    
-    if (!validateForm()) {
-      return;
-    }
-    
     setIsSubmitting(true);
 
     try {
-      // Create user data object for API
+      // Validate form
+      if (!formData.firstPhoneNumber || !formData.secondPhoneNumber || !formData.location || !formData.email || !formData.address || !formData.workingHours) {
+        setError('يرجى تعبئة جميع الحقول المطلوبة');
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        setError('يرجى إدخال بريد إلكتروني صحيح');
+        setIsSubmitting(false);
+        return;
+      }
+      
+
+      // Prepare user data for API
       const userData = {
-        fullName: formData.fullName,
+        id: 1,
+        firstPhoneNumber: formData.firstPhoneNumber,
         email: formData.email,
-        phoneNumber: formData.phoneNumber,
-        passwordHash: formData.passwordHash,
-        confirmPassword: formData.confirmPassword
+        secondPhoneNumber: formData.secondPhoneNumber,
+        location: formData.location,
+        address: formData.address,
+        workingHours: formData.workingHours
       };
 
-      // API call to register user
+      // Send to API
       const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bisha.runasp.net/api';
-      const url = `${API_BASE_URL}/Register/User`;
-      
+      const url = `${API_BASE_URL}/Admin/Update-Contact-US`;
       // Get auth token
       const token = localStorage.getItem('auth_token');
       const headers = {
@@ -124,16 +112,20 @@ const AddUserPage = () => {
       
       // Reset form after success
       setFormData({
-        fullName: '',
+        id: 1,
+        firstPhoneNumber: '',
         email: '',
-        phoneNumber: '',
-        passwordHash: '',
-        confirmPassword: ''
+        secondPhoneNumber: '',
+        location: '',
+        address: '',
+        workingHours: ''
+  
       });
       
       // Redirect after 2 seconds
       setTimeout(() => {
-        router.push('/admin/users');
+        
+        // router.push('/admin/contact');
       }, 2000);
     } catch (error) {
       console.error('Failed to add user:', error);
@@ -155,10 +147,10 @@ const AddUserPage = () => {
   return (
     <div className={styles.adminFormContainer}>
       <div className={styles.formHeader}>
-        <Link href="/admin/users" className={styles.backButton}>
+        <Link href="/admin/contact" className={styles.backButton}>
           <FaArrowRight /> العودة
         </Link>
-        <h1><FaUser className={styles.headerIcon} /> إضافة مستخدم جديد</h1>
+        <h1><FaUsers className={styles.headerIcon} /> تعديل البيانات تواصل معنا</h1>
       </div>
 
       {error && <div className={styles.errorMessage}>{error}</div>}
@@ -166,16 +158,17 @@ const AddUserPage = () => {
 
       <form onSubmit={handleSubmit} className={styles.adminForm}>
         <div className={styles.formGroup}>
-          <label htmlFor="fullName">الاسم الكامل *</label>
+          <label htmlFor="firstPhoneNumber">رقم الهاتف الأول *</label>
           <div className={styles.inputWithIcon}>
-            <FaUser className={styles.inputIcon} />
+            <FaIdCard className={styles.inputIcon} />
             <input
-              type="text"
-              id="fullName"
-              name="fullName"
-              value={formData.fullName}
+              className='text-black'
+              type="number"
+              id="firstPhoneNumber"
+              name="firstPhoneNumber"
+              value={formData.firstPhoneNumber}
               onChange={handleChange}
-              placeholder="أدخل الاسم الكامل"
+              placeholder="أدخل رقم الهاتف الأول"
               required
             />
           </div>
@@ -183,32 +176,34 @@ const AddUserPage = () => {
 
         <div className={styles.formRow}>
           <div className={styles.formGroup}>
-            <label htmlFor="email">البريد الإلكتروني *</label>
+            <label htmlFor="secondPhoneNumber">رقم الهاتف الثاني *</label>
             <div className={styles.inputWithIcon}>
               <FaEnvelope className={styles.inputIcon} />
               <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
+                className='text-black'
+                type="number"
+                id="secondPhoneNumber"
+                name="secondPhoneNumber"
+                value={formData.secondPhoneNumber}
                 onChange={handleChange}
-                placeholder="أدخل البريد الإلكتروني"
+                placeholder="أدخل رقم الهاتف الثاني"
                 required
               />
             </div>
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="phoneNumber">رقم الهاتف *</label>
+            <label htmlFor="location">الموقع *</label>
             <div className={styles.inputWithIcon}>
               <FaPhone className={styles.inputIcon} />
               <input
+                className='text-black'
                 type="text"
-                id="phoneNumber"
-                name="phoneNumber"
-                value={formData.phoneNumber}
+                id="location"
+                name="location"
+                value={formData.location}
                 onChange={handleChange}
-                placeholder="أدخل رقم الهاتف"
+                placeholder="أدخل الموقع"
                 required
               />
             </div>
@@ -216,37 +211,55 @@ const AddUserPage = () => {
         </div>
 
         <div className={styles.formGroup}>
-          <label htmlFor="passwordHash">كلمة المرور *</label>
+          <label htmlFor="email">البريد الإلكتروني *</label>
           <div className={styles.inputWithIcon}>
             <FaLock className={styles.inputIcon} />
             <input
-              type="password"
-              id="passwordHash"
-              name="passwordHash"
-              value={formData.passwordHash}
+              className='text-black'
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
               onChange={handleChange}
-              placeholder="أدخل كلمة المرور"
+              placeholder="أدخل البريد الإلكتروني"
               required
             />
           </div>
         </div>
 
         <div className={styles.formGroup}>
-          <label htmlFor="confirmPassword">تأكيد كلمة المرور *</label>
+          <label htmlFor="address">العنوان *</label>
           <div className={styles.inputWithIcon}>
             <FaCheckCircle className={styles.inputIcon} />
             <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
+              className='text-black'
+              type="text"
+              id="address"
+              name="address"
+              value={formData.address}
               onChange={handleChange}
-              placeholder="أعد إدخال كلمة المرور"
+              placeholder="أدخل العنوان"
               required
             />
           </div>
         </div>
 
+        <div className={styles.formGroup}>
+          <label htmlFor="workingHours">ساعات العمل *</label>
+          <div className={styles.inputWithIcon}>
+            <FaCheckCircle className={styles.inputIcon} />
+            <input
+              className='text-black'
+              type="text"
+              id="workingHours"
+              name="workingHours"
+              value={formData.workingHours}
+              onChange={handleChange}
+              placeholder="أدخل ساعات العمل"
+              required
+            />
+          </div>
+        </div>
         <div className={styles.formActions}>
           <button 
             type="submit" 
@@ -259,11 +272,11 @@ const AddUserPage = () => {
               </>
             ) : (
               <>
-                <FaSave /> حفظ المستخدم
+                <FaSave /> حفظ البيانات
               </>
             )}
           </button>
-          <Link href="/admin/users" className={styles.cancelButton}>
+          <Link href="/admin/contact" className={styles.cancelButton}>
             إلغاء
           </Link>
         </div>
@@ -272,4 +285,4 @@ const AddUserPage = () => {
   );
 };
 
-export default AddUserPage;
+export default page;

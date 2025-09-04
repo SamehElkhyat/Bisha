@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import styles from '../styles/Header.module.css';
-import { FaTiktok, FaTelegramPlane, FaSnapchatGhost, FaYoutube, FaFacebookF, FaInstagram, FaTimes, FaChevronDown, FaUserShield, FaBars, FaTwitter } from 'react-icons/fa';
+import { FaTiktok, FaTelegramPlane, FaSnapchatGhost, FaYoutube, FaFacebookF, FaInstagram, FaTimes, FaChevronDown, FaUserShield, FaBars } from 'react-icons/fa';
 import { useAuth } from '../contexts/AuthContext';
 
 interface NavLink {
@@ -50,14 +50,27 @@ const Header = () => {
 
   // Base navigation links (always visible)
   const baseNavLinks: NavLink[] = [
-    { href: '/', label: 'الرئيسية' },
+    {
+      id: 'services',
+      href: '/', label: 'خدماتنا', hasDropdown: true, dropdownItems: [
+
+        { href: 'https://eservices.bishacci.org.sa/#/Login', label: 'التصديق الإلكتروني' },
+        { href: 'https://eservices.bishacci.org.sa/#/DocumentVerify', label: 'التحقق من الوثائق' },
+        { href: 'https://eservices.bishacci.org.sa/#/Contact', label: 'تحديث البيانات' },
+        { href: 'https://eservices.bishacci.org.sa/#/Login', label: 'الدليل التجاري' },
+        { href: 'https://cocclient.mci.gov.sa/', label: 'تجديد الاشتراك' },
+        { href: 'https://numo.sa/ar/b/fraa-bysh', label: 'التدريب الالكتروني' },
+        { href: 'https://eservices.bishacci.org.sa/#/Login', label: 'الشكاوي والاقتراحات' },
+      
+      ]
+    },
     {
       id: 'about',
       href: '#',
       label: 'عن الغرفة',
       hasDropdown: true,
       dropdownItems: [
-        
+
         { href: '/about/vision', label: 'الرؤية والرسالة' },
         { href: '/about/regulations', label: 'اللوائح والأنظمة' },
         { href: '/about/board', label: 'مجلس الإدارة' },
@@ -80,14 +93,14 @@ const Header = () => {
       hasDropdown: true,
       dropdownItems: [
         { href: '/media-center/news', label: 'الاخبار' },
-        { href: '/media-center/circulars', label: 'التعاميم' }
+        { href: '/media-center/circulars', label: 'الاعلانات' }
       ]
     },
     { href: 'https://eservices.bishacci.org.sa/#/Login', label: 'التدريب', external: true },
     { href: '/', label: 'المبادرات' },
     { href: '/contact', label: 'اتصل بنا' }
   ];
-  
+
 
 
   // Admin link (only visible to admins)
@@ -95,26 +108,35 @@ const Header = () => {
 
   // Get user from auth context
   const { user } = useAuth();
-  
+
   // Login link
   const authLink: NavLink = { href: '/login', label: '🔐 تسجيل الدخول', id: 'auth' };
 
   // Combine base links with conditional links
   let navLinks: NavLink[] = [...baseNavLinks];
-  
+
   const decodedToken = JSON.parse(localStorage.getItem('DecodedToken') || '{}');
   // Add admin link ONLY if user is admin
-  if (decodedToken?.Role === 'Admin' ) {
+  if (decodedToken?.Role === 'Admin') {
     console.log('Admin user detected, showing admin panel link');
     navLinks.push(adminLink);
   } else {
     console.log('Non-admin user, hiding admin panel link');
   }
-  
+
   // Add login link ONLY if user is not logged in
   if (!user) {
     navLinks.push(authLink);
   }
+
+  // Custom X (Twitter) logo component
+  const XLogo = () => (
+    <svg viewBox="0 0 24 24" style={{ width: '16px', height: '16px', fill: 'currentColor' }}>
+      <g>
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+      </g>
+    </svg>
+  );
 
   const socialLinks = [
     { href: '#', icon: <FaTiktok /> },
@@ -122,7 +144,7 @@ const Header = () => {
     { href: '#', icon: <FaSnapchatGhost /> },
     { href: '#', icon: <FaYoutube /> },
     { href: '#', icon: <FaInstagram /> },
-    { href: 'https://x.com/Bisha_cci', icon: <FaTwitter /> }, // Assuming X icon
+    { href: 'https://x.com/Bisha_cci', icon: <XLogo /> },
   ];
 
   return (
@@ -136,7 +158,7 @@ const Header = () => {
         </div>
 
         {/* Mobile hamburger menu button */}
-        <button 
+        <button
           className={styles.mobileMenuButton}
           onClick={toggleMobileMenu}
           aria-label="Toggle mobile menu"
@@ -164,7 +186,7 @@ const Header = () => {
                   {link.label} <FaChevronDown className={`${styles.dropdownIcon} ${activeDropdown === link.id ? styles.rotateIcon : ''}`} />
                 </div>
                 {activeDropdown === link.id && (
-                  <div className={`${styles.dropdownMenu} ${link.id === 'about' ? styles.largeDropdown : ''}`}>
+                  <div className={`${styles.dropdownMenu} ${link.id === 'about' || link.id === 'services' ? styles.largeDropdown : ''}`}>
                     {link.dropdownItems?.map((item, idx) => (
                       <Link key={idx} href={item.href} className={styles.dropdownItem}>
                         {item.label}
@@ -202,7 +224,7 @@ const Header = () => {
             <div className={styles.mobileNavContent}>
               {/* Close button */}
               <div className={styles.mobileNavHeader}>
-                <button 
+                <button
                   className={styles.mobileCloseButton}
                   onClick={toggleMobileMenu}
                   aria-label="Close mobile menu"
@@ -234,9 +256,9 @@ const Header = () => {
                       {activeDropdown === link.id && (
                         <div className={styles.mobileDropdownMenu}>
                           {link.dropdownItems?.map((item, idx) => (
-                            <Link 
-                              key={idx} 
-                              href={item.href} 
+                            <Link
+                              key={idx}
+                              href={item.href}
                               className={styles.mobileDropdownItem}
                               onClick={() => setIsMobileMenuOpen(false)}
                             >
@@ -248,20 +270,20 @@ const Header = () => {
                     </div>
                   ) : (
                     link.external ? (
-                      <a 
-                        key={index} 
-                        href={link.href} 
-                        className={styles.mobileNavLink} 
-                        target="_blank" 
+                      <a
+                        key={index}
+                        href={link.href}
+                        className={styles.mobileNavLink}
+                        target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         {link.label}
                       </a>
                     ) : (
-                      <Link 
-                        key={index} 
-                        href={link.href} 
+                      <Link
+                        key={index}
+                        href={link.href}
                         className={styles.mobileNavLink}
                         onClick={() => setIsMobileMenuOpen(false)}
                       >

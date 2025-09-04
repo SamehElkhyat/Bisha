@@ -12,7 +12,7 @@ const menuItems = [
   { href: '/requests', label: 'الطلبات', icon: <FaFileContract /> },
   { href: '/wallet', label: 'المحفظة', icon: <FaWallet /> },
   { href: '/partner', label: 'الشريك التجاري', icon: <FaHandshake /> },
-  { href: '/announcements', label: 'التعاميم', icon: <FaBullhorn /> },
+  { href: '/announcements', label: 'الاعلانات', icon: <FaBullhorn /> },
   { href: '/certificates', label: 'الشهادات', icon: <FaCertificate /> },
   { href: '/help', label: 'المساعدة', icon: <FaQuestionCircle /> },
 ];

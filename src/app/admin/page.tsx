@@ -6,6 +6,7 @@ import AdminRoute from '../../components/AdminRoute';
 import styles from '../../styles/Admin.module.css';
 import { FaNewspaper, FaUserPlus, FaSignOutAlt, FaChartBar, FaUsers, FaBullhorn, FaBars, FaTimes } from 'react-icons/fa';
 import Link from 'next/link';
+import axios from 'axios';
 
 const AdminDashboard = () => {
   const router = useRouter();
@@ -13,9 +14,25 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [decodedToken, setDecodedToken] = useState<any>([]);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [counts, setCounts] = useState();
+
+
+  const GetAllCounts = async () => {
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/Admin/Count`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+        }
+      });
+      setCounts(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
-
+    GetAllCounts()
 
     const decodedToken = JSON.parse(localStorage.getItem('DecodedToken') || '{}');
     setDecodedToken(decodedToken);
@@ -63,7 +80,7 @@ const AdminDashboard = () => {
       <div className={styles.adminContainer}>
         {/* Mobile Header */}
         <div className={styles.mobileHeader}>
-          <button 
+          <button
             className={styles.mobileMenuButton}
             onClick={toggleMobileSidebar}
             aria-label="Toggle mobile menu"
@@ -85,7 +102,7 @@ const AdminDashboard = () => {
         <div className={`${styles.sidebar} ${isMobileSidebarOpen ? styles.sidebarOpen : ''}`}>
           {/* Mobile Close Button */}
           <div className={styles.mobileCloseContainer}>
-            <button 
+            <button
               className={styles.mobileCloseButton}
               onClick={toggleMobileSidebar}
               aria-label="Close mobile menu"
@@ -108,32 +125,38 @@ const AdminDashboard = () => {
             {decodedToken?.Permission.map((item: any, index: number) => {
               return (
                 <div key={`nav-${item}-${index}`}>
-                {item === 'GetContact' && (
-                <Link href="/admin" className={`${styles.navLink} ${styles.active}`} onClick={() => setIsMobileSidebarOpen(false)}>
-                  <FaChartBar className={styles.navIcon} />
-                  <span>لوحة التحكم</span>
-                </Link>
-                )}
-                {item === 'AddNewsPaper' && (
-                  <Link href="/admin/news" className={styles.navLink} onClick={() => setIsMobileSidebarOpen(false)}>
-                    <FaNewspaper className={styles.navIcon} />
-                    <span>إدارة الأخبار والتعاميم</span>
-                  </Link>
-                )}
-                {item === 'GetAllUsers' && (
-                  <Link href="/admin/clients" className={styles.navLink} onClick={() => setIsMobileSidebarOpen(false)}>
-                    <FaUsers className={styles.navIcon} />
-                    <span>إدارة العملاء</span>
-                  </Link>
-                )}
-                {item === 'GetContact' && (
-                  <Link href="/admin/contact" className={styles.navLink} onClick={() => setIsMobileSidebarOpen(false)}>
-                    <FaUserPlus className={styles.navIcon} />
-                    <span>الاطلاع علي الشكاوي</span>
-                  </Link>
-                )}
+                  {item === 'GetContact' && (
+                    <Link href="/admin" className={`${styles.navLink} ${styles.active}`} onClick={() => setIsMobileSidebarOpen(false)}>
+                      <FaChartBar className={styles.navIcon} />
+                      <span>لوحة التحكم</span>
+                    </Link>
+                  )}
+                  {item === 'AddNewsPaper' && (
+                    <Link href="/admin/news" className={styles.navLink} onClick={() => setIsMobileSidebarOpen(false)}>
+                      <FaNewspaper className={styles.navIcon} />
+                      <span>إدارة الأخبار والاعلانات</span>
+                    </Link>
+                  )}
+                  {item === 'GetAllUsers' && (
+                    <Link href="/admin/clients" className={styles.navLink} onClick={() => setIsMobileSidebarOpen(false)}>
+                      <FaUsers className={styles.navIcon} />
+                      <span>إدارة العملاء</span>
+                    </Link>
+                  )}
+                  {item === 'GetContact' && (
+                    <Link href="/admin/contact" className={styles.navLink} onClick={() => setIsMobileSidebarOpen(false)}>
+                      <FaUserPlus className={styles.navIcon} />
+                      <span>الاطلاع علي الشكاوي</span>
+                    </Link>
+                  )}
+                  {item === 'GetContact' && (
+                    <Link href="/admin/contact/edit" className={styles.navLink} onClick={() => setIsMobileSidebarOpen(false)}>
+                      <FaUserPlus className={styles.navIcon} />
+                      <span>تعديل البيانات تواصل معنا</span>
+                    </Link>
+                  )}
 
-              </div>
+                </div>
               )
             })
             }
@@ -157,7 +180,7 @@ const AdminDashboard = () => {
                 <FaNewspaper />
               </div>
               <div className={styles.statInfo}>
-                <h3>10</h3>
+                <h3>{counts?.newsPaper || 0}</h3>
                 <p>الأخبار</p>
               </div>
             </div>
@@ -167,7 +190,7 @@ const AdminDashboard = () => {
                 <FaUsers />
               </div>
               <div className={styles.statInfo}>
-                <h3>25</h3>
+                <h3>{counts?.users || 0}</h3>
                 <p>العملاء</p>
               </div>
             </div>
@@ -177,8 +200,8 @@ const AdminDashboard = () => {
                 <FaBullhorn />
               </div>
               <div className={styles.statInfo}>
-                <h3>5</h3>
-                <p>التعاميم</p>
+                <h3>{counts?.ads || 0}</h3>
+                <p>الاعلانات</p>
               </div>
             </div>
           </div>
@@ -190,39 +213,46 @@ const AdminDashboard = () => {
                 return (
                   <div key={`action-${item}-${index}`}>
                     {item === 'AddNewsPaper' && (
-                    <Link href="/admin/news/add" className={styles.actionCard} onClick={() => setIsMobileSidebarOpen(false)}>
-                      <FaNewspaper className={styles.actionIcon} />
-                      <h3>إضافة خبر جديد</h3>
-                      <p>أضف خبر جديد للموقع</p>
-                    </Link>
-                  )}
-           
-                  {item === 'AddUser' && (
-                    <Link href="/admin/users/add" className={styles.actionCard} onClick={() => setIsMobileSidebarOpen(false)}>
-                      <FaUserPlus className={styles.actionIcon} />
-                      <h3>إضافة مستخدم جديد</h3>
-                      <p>أضف مستخدم جديد للنظام</p>
-                    </Link>
-                  )}
-                  {item === 'GetContact' && (
-                    <Link href="/admin/contact" className={styles.actionCard} onClick={() => setIsMobileSidebarOpen(false)}>
-                      <FaUserPlus className={styles.actionIcon} />
-                      <h3>الاطلاع علي الشكاوي</h3>
-                      <p>الاطلاع علي الشكاوي</p>
-                    </Link>
-                  )}
-                  {item === 'GetAllUsers' && (
-                    <Link href="/admin/users" className={styles.actionCard} onClick={() => setIsMobileSidebarOpen(false)}>
-                      <FaUserPlus className={styles.actionIcon} />
-                      <h3>عرض واداره المستخدمين</h3>
-                      <p>عرض واداره المستخدمين</p>
-                    </Link>
-                  )}
-               
+                      <Link href="/admin/news/add" className={styles.actionCard} onClick={() => setIsMobileSidebarOpen(false)}>
+                        <FaNewspaper className={styles.actionIcon} />
+                        <h3>إضافة خبر جديد</h3>
+                        <p>أضف خبر جديد للموقع</p>
+                      </Link>
+                    )}
+
+                    {item === 'AddUser' && (
+                      <Link href="/admin/users/add" className={styles.actionCard} onClick={() => setIsMobileSidebarOpen(false)}>
+                        <FaUserPlus className={styles.actionIcon} />
+                        <h3>إضافة مستخدم جديد</h3>
+                        <p>أضف مستخدم جديد للنظام</p>
+                      </Link>
+                    )}
+                    {item === 'GetContact' && (
+                      <Link href="/admin/contact" className={styles.actionCard} onClick={() => setIsMobileSidebarOpen(false)}>
+                        <FaUserPlus className={styles.actionIcon} />
+                        <h3>الاطلاع علي الشكاوي</h3>
+                        <p>الاطلاع علي الشكاوي</p>
+                      </Link>
+                    )}
+                    {item === 'GetAllUsers' && (
+                      <Link href="/admin/users" className={styles.actionCard} onClick={() => setIsMobileSidebarOpen(false)}>
+                        <FaUserPlus className={styles.actionIcon} />
+                        <h3>عرض واداره المستخدمين</h3>
+                        <p>عرض واداره المستخدمين</p>
+                      </Link>
+                    )}
+                    {item === 'GetContact' && (
+                      <Link href="/admin/contact/edit" className={styles.actionCard} onClick={() => setIsMobileSidebarOpen(false)}>
+                        <FaUserPlus className={styles.actionIcon} />
+                        <h3>تعديل البيانات تواصل معنا</h3>
+                        <p>تعديل البيانات تواصل معنا</p>
+                      </Link>
+                    )}
+
                   </div>
                 )
               })
-            }
+              }
             </div>
           </div>
         </div>

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { FaCalendarAlt, FaTag, FaArrowRight, FaShare, FaFacebookF, FaTwitter, FaWhatsapp, FaCopy, FaEye, FaHome, FaNewspaper, FaTimes, FaExpand, FaDownload, FaSearchPlus } from 'react-icons/fa';
+import { FaCalendarAlt, FaTag, FaArrowRight, FaShare, FaFacebookF, FaWhatsapp, FaCopy, FaEye, FaHome, FaNewspaper, FaTimes, FaExpand, FaDownload, FaSearchPlus } from 'react-icons/fa';
 import styles from '../../../../styles/NewsDetail.module.css';
 import { newsAPI } from '../../../../services/api';
 
@@ -29,6 +29,15 @@ const NewsDetailPage = () => {
   const params = useParams();
   const router = useRouter();
   const id = Number(params.id);
+
+  // Custom X (Twitter) logo component
+  const XLogo = () => (
+    <svg viewBox="0 0 24 24" style={{ width: '16px', height: '16px', fill: 'currentColor' }}>
+      <g>
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+      </g>
+    </svg>
+  );
   const [newsItem, setNewsItem] = useState<NewsItem | null>(null);
   const [relatedNews, setRelatedNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -291,7 +300,7 @@ const NewsDetailPage = () => {
                       فيسبوك
                     </button>
                     <button onClick={shareOnTwitter} className={styles.shareOption}>
-                      <FaTwitter className={styles.shareOptionIcon} />
+                      <XLogo />
                       تويتر
                     </button>
                     <button onClick={shareOnWhatsApp} className={styles.shareOption}>

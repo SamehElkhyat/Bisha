@@ -215,9 +215,9 @@ const AddNewsPage = () => {
             required
           >
             <option value="أخبار">الأخبار</option>
-            <option value="تعاميم">التعاميم</option>
+            <option value="اعلانات">الاعلانات</option>
           </select>
-        </div>
+        </div>  
 
         <div className={styles.formGroup}>
           <label htmlFor="description">محتوى الخبر *</label>

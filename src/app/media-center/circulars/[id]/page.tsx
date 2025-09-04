@@ -128,7 +128,7 @@ const CircularDetailPage = () => {
         <h1>التعميم غير موجود</h1>
         <p>{error || 'عذراً، التعميم الذي تبحث عنه غير موجود.'}</p>
         <Link href="/media-center/circulars" className={styles.backButton}>
-          <FaArrowRight className={styles.backIcon} /> العودة إلى التعاميم
+          <FaArrowRight className={styles.backIcon} /> العودة إلى الاعلانات
         </Link>
       </div>
     );
@@ -138,7 +138,7 @@ const CircularDetailPage = () => {
     <div className={styles.circularDetailContainer}>
       <div className={styles.backLink}>
         <Link href="/media-center/circulars" className={styles.backButton}>
-          <FaArrowRight className={styles.backIcon} /> العودة إلى التعاميم
+          <FaArrowRight className={styles.backIcon} /> العودة إلى الاعلانات
         </Link>
       </div>
 
@@ -174,7 +174,7 @@ const CircularDetailPage = () => {
 
         {relatedCirculars.length > 0 && (
           <div className={styles.relatedCirculars}>
-            <h2 className={styles.relatedTitle}>تعاميم ذات صلة</h2>
+            <h2 className={styles.relatedTitle}>اعلانات ذات صلة</h2>
             <div className={styles.relatedGrid}>
               {relatedCirculars.map((circular) => (
                 <div key={circular.id} className={styles.relatedCard}>

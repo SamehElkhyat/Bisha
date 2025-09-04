@@ -134,78 +134,7 @@ export default function Main() {
       </motion.div>
 
       {/* Buttons */}
-      <div className={styles.buttonsContainer}>
-        {/* Top Left Button */}
-        <motion.button
-          className={`${styles.serviceButton} ${styles.topLeft}`}
-          variants={buttonVariants}
-          whileHover={{ 
-            scale: 1.05,
-            boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
-            transition: { duration: 0.3 }
-          }}
-          whileTap={{ scale: 0.98 }}
-          style={{
-            transform: `perspective(1000px) rotateX(${mousePosition.y * 3}deg) rotateY(${-mousePosition.x * 3}deg)`
-          }}
-        >
-          الخدمات التجارية
-        </motion.button>
-
-        {/* Top Right Button */}
-        <motion.button
-          onClick={() => {
-            window.open('https://eservices.bishacci.org.sa/#/Login', '_blank');
-          }}
-          className={`${styles.serviceButton} ${styles.topRight}`}
-          variants={buttonVariants}
-          whileHover={{ 
-            scale: 1.05,
-            boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
-            transition: { duration: 0.3 }
-          }}
-          whileTap={{ scale: 0.98 }}
-          style={{
-            transform: `perspective(1000px) rotateX(${mousePosition.y * 3}deg) rotateY(${-mousePosition.x * 3}deg)`
-          }}
-        >
-          التصديق الالكتروني
-        </motion.button>
-
-        {/* Bottom Left Button */}
-        <motion.button
-          className={`${styles.serviceButton} ${styles.bottomLeft}`}
-          variants={buttonVariants}
-          whileHover={{ 
-            scale: 1.05,
-            boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
-            transition: { duration: 0.3 }
-          }}
-          whileTap={{ scale: 0.98 }}
-          style={{
-            transform: `perspective(1000px) rotateX(${mousePosition.y * 3}deg) rotateY(${-mousePosition.x * 3}deg)`
-          }}
-        >
-          تجديد الإشتراك
-        </motion.button>
-
-        {/* Bottom Right Button */}
-        <motion.button
-          className={`${styles.serviceButton} ${styles.bottomRight}`}
-          variants={buttonVariants}
-          whileHover={{ 
-            scale: 1.05,
-            boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
-            transition: { duration: 0.3 }
-          }}
-          whileTap={{ scale: 0.98 }}
-          style={{
-            transform: `perspective(1000px) rotateX(${mousePosition.y * 3}deg) rotateY(${-mousePosition.x * 3}deg)`
-          }}
-        >
-          طباعة شهادة العضوية
-        </motion.button>
-      </div>
+   
     </motion.main>
   );
 }

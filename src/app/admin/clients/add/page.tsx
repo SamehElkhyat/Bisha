@@ -90,8 +90,8 @@ const AddClientPage = () => {
       };
 
       // Send to API
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://bisha.runasp.net';
-      const url = `${API_BASE_URL}/api/Register/User`;
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bisha.runasp.net/api';
+      const url = `${API_BASE_URL}/Register/User`;
       
       // Get auth token
       const token = localStorage.getItem('auth_token');

@@ -37,7 +37,7 @@ const LoginPage = () => {
       const success = await login(email, password);
       
       if (success) {
-        router.push('/admin');
+        router.push('/');
       } else {
         setError('اسم البريد الإلكتروني أو كلمة المرور غير صحيحة');
       }

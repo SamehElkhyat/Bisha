@@ -17,7 +17,7 @@ const AddNewsPage = () => {
     type: 'أخبار',
     image: null,
     imagePreview: '',
-    createdAt : ''
+    createdAt: ''
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -58,22 +58,22 @@ const AddNewsPage = () => {
     const MAX_FILE_SIZE = 5 * 1024 * 1024;
     // Allowed image types
     const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-    
+
     if (!file) {
       return { isValid: false, error: 'No file provided' };
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      return { 
-        isValid: false, 
-        error: `File size exceeds the maximum limit of ${Math.round(MAX_FILE_SIZE / (1024 * 1024))}MB` 
+      return {
+        isValid: false,
+        error: `File size exceeds the maximum limit of ${Math.round(MAX_FILE_SIZE / (1024 * 1024))}MB`
       };
     }
 
     if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-      return { 
-        isValid: false, 
-        error: `File type not supported. Allowed types: ${ALLOWED_IMAGE_TYPES.map(type => type.split('/')[1]).join(', ')}` 
+      return {
+        isValid: false,
+        error: `File type not supported. Allowed types: ${ALLOWED_IMAGE_TYPES.map(type => type.split('/')[1]).join(', ')}`
       };
     }
 
@@ -100,7 +100,7 @@ const AddNewsPage = () => {
       apiFormData.append('Description', formData.description);
       apiFormData.append('Type', formData.type);
       apiFormData.append('CreatedAt', formData.createdAt);
-      
+
       // Add image if provided
       if (formData.image) {
         // Validate the image file
@@ -110,7 +110,7 @@ const AddNewsPage = () => {
           setIsSubmitting(false);
           return;
         }
-        
+
         // Append the file to the form data
         apiFormData.append('ImageUrl', formData.image);
       }
@@ -118,35 +118,34 @@ const AddNewsPage = () => {
       // Custom API call to handle FormData with file upload
       const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bisha.runasp.net/api';
       const url = `${API_BASE_URL}/NewsPaper/Add`;
-      
       const token = localStorage.getItem('auth_token');
       const headers = {};
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
       }
-      
+
       console.log('Submitting news with data:', {
         title: formData.title,
         description: formData.description,
         type: formData.type,
         hasImage: !!formData.image
       });
-      
+
       // Make the API request
       const response = await fetch(url, {
         method: 'POST',
         headers,
         body: apiFormData,
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || `API error: ${response.status}`);
       }
-      
+
       // Show success message
       setSuccess('تم إضافة الخبر بنجاح');
-      
+
       // Reset form after success
       setFormData({
         title: '',
@@ -156,7 +155,7 @@ const AddNewsPage = () => {
         imagePreview: '',
         createdAt: ''
       });
-      
+
       // Redirect after 2 seconds
       setTimeout(() => {
         router.push('/admin/news');
@@ -194,7 +193,7 @@ const AddNewsPage = () => {
         <div className={styles.formGroup}>
           <label htmlFor="title">عنوان الخبر *</label>
           <input
-          className="text-black"
+            className="text-black"
             type="text"
             id="title"
             name="title"
@@ -208,7 +207,7 @@ const AddNewsPage = () => {
         <div className={styles.formGroup}>
           <label htmlFor="type">نوع الخبر *</label>
           <select
-          className="text-black"
+            className="text-black"
             id="type"
             name="type"
             value={formData.type}
@@ -218,12 +217,12 @@ const AddNewsPage = () => {
             <option value="أخبار">الأخبار</option>
             <option value="اعلانات">الاعلانات</option>
           </select>
-        </div>  
+        </div>
 
         <div className={styles.formGroup}>
           <label htmlFor="description">محتوى الخبر *</label>
           <textarea
-          className="text-black"
+            className="text-black"
             id="description"
             name="description"
             value={formData.description}
@@ -276,8 +275,8 @@ const AddNewsPage = () => {
         </div>
 
         <div className={styles.formActions}>
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className={styles.submitButton}
             disabled={isSubmitting}
           >

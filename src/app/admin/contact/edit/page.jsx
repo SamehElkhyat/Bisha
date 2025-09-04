@@ -119,8 +119,7 @@ const page = () => {
       
       // Redirect after 2 seconds
       setTimeout(() => {
-
-        // router.push('/admin/contact');
+        router.push('/admin/contact');
       }, 2000);
     } catch (error) {
       console.error('Failed to update contact:', error);

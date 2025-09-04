@@ -1,12 +1,21 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '../../contexts/AuthContext';
-import AdminRoute from '../../components/AdminRoute';
-import styles from '../../styles/Admin.module.css';
-import { FaNewspaper, FaUserPlus, FaSignOutAlt, FaChartBar, FaUsers, FaBullhorn, FaBars, FaTimes } from 'react-icons/fa';
-import Link from 'next/link';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../../contexts/AuthContext";
+import AdminRoute from "../../components/AdminRoute";
+import styles from "../../styles/Admin.module.css";
+import {
+  FaNewspaper,
+  FaUserPlus,
+  FaSignOutAlt,
+  FaChartBar,
+  FaUsers,
+  FaBullhorn,
+  FaBars,
+  FaTimes,
+} from "react-icons/fa";
+import Link from "next/link";
+import axios from "axios";
 
 const AdminDashboard = () => {
   const router = useRouter();
@@ -15,51 +24,92 @@ const AdminDashboard = () => {
   const [decodedToken, setDecodedToken] = useState([]);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [counts, setCounts] = useState();
-
+  const navItems = [
+    {
+      permission: "GetContact",
+      links: [
+        {
+          href: "/admin",
+          label: "لوحة التحكم",
+          icon: <FaChartBar />,
+        },
+        {
+          href: "/admin/contact",
+          label: "الاطلاع علي الشكاوي",
+          icon: <FaUserPlus />,
+        },
+        {
+          href: "/admin/contact/edit",
+          label: "تعديل البيانات تواصل معنا",
+          icon: <FaUserPlus />,
+        },
+      ],
+    },
+    {
+      permission: "AddNewsPaper",
+      links: [
+        {
+          href: "/admin/news",
+          label: "إدارة الأخبار والاعلانات",
+          icon: <FaNewspaper />,
+        },
+      ],
+    },
+    {
+      permission: "GetAllUsers",
+      links: [
+        {
+          href: "/admin/clients",
+          label: "إدارة العملاء",
+          icon: <FaUsers />,
+        },
+      ],
+    },
+  ];
 
   const GetAllCounts = async () => {
     try {
-      const response = await axios.get(`https://bisha.runasp.net/api/Admin/Count`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+      const response = await axios.get(
+        `https://bisha.runasp.net/api/Admin/Count`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          },
         }
-      });
+      );
+      console.log(response.data);
       setCounts(response.data);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
-    GetAllCounts()
+    if (typeof window !== "undefined") {
+      const decoded = JSON.parse(localStorage.getItem("DecodedToken") || "{}");
+      setDecodedToken(decoded);
+      console.log(decoded);
 
-    const decodedToken = JSON.parse(localStorage.getItem('DecodedToken') || '{}');
-    setDecodedToken(decodedToken);
-    console.log(decodedToken);
-
-    if (decodedToken?.Role !== 'Admin') {
-      router.push('/login');
+      if (decoded?.Role !== "Admin") {
+        router.push("/login");
+      }
     }
 
-
-    // Check if user is authenticated and is admin
     if (!user) {
       setLoading(false);
-
-      // router.push('/login');
     } else if (!isAdmin()) {
       setLoading(false);
-
-      // router.push('/');
     } else {
       setLoading(false);
     }
+
+    GetAllCounts();
   }, [user, isAdmin, router]);
 
   const handleLogout = () => {
     logout();
-    router.push('/');
+    router.push("/");
   };
 
   const toggleMobileSidebar = () => {
@@ -99,7 +149,11 @@ const AdminDashboard = () => {
         )}
 
         {/* Sidebar */}
-        <div className={`${styles.sidebar} ${isMobileSidebarOpen ? styles.sidebarOpen : ''}`}>
+        <div
+          className={`${styles.sidebar} ${
+            isMobileSidebarOpen ? styles.sidebarOpen : ""
+          }`}
+        >
           {/* Mobile Close Button */}
           <div className={styles.mobileCloseContainer}>
             <button
@@ -116,7 +170,7 @@ const AdminDashboard = () => {
               <FaUsers size={40} />
             </div>
             <div className={styles.profileInfo}>
-              <h3>{user?.name || 'مدير النظام'}</h3>
+              <h3>{user?.name || "مدير النظام"}</h3>
               <p>مدير النظام</p>
             </div>
           </div>
@@ -125,41 +179,59 @@ const AdminDashboard = () => {
             {decodedToken?.Permission.map((item, index) => {
               return (
                 <div key={`nav-${item}-${index}`}>
-                  {item === 'GetContact' && (
-                    <Link href="/admin" className={`${styles.navLink} ${styles.active}`} onClick={() => setIsMobileSidebarOpen(false)}>
+                  {item === "GetContact" && (
+                    <Link
+                      href="/admin"
+                      className={`${styles.navLink} ${styles.active}`}
+                      onClick={() => setIsMobileSidebarOpen(false)}
+                    >
                       <FaChartBar className={styles.navIcon} />
                       <span>لوحة التحكم</span>
                     </Link>
                   )}
-                  {item === 'AddNewsPaper' && (
-                    <Link href="/admin/news" className={styles.navLink} onClick={() => setIsMobileSidebarOpen(false)}>
+                  {item === "AddNewsPaper" && (
+                    <Link
+                      href="/admin/news"
+                      className={styles.navLink}
+                      onClick={() => setIsMobileSidebarOpen(false)}
+                    >
                       <FaNewspaper className={styles.navIcon} />
                       <span>إدارة الأخبار والاعلانات</span>
                     </Link>
                   )}
-                  {item === 'GetAllUsers' && (
-                    <Link href="/admin/clients" className={styles.navLink} onClick={() => setIsMobileSidebarOpen(false)}>
+                  {item === "GetAllUsers" && (
+                    <Link
+                      href="/admin/clients"
+                      className={styles.navLink}
+                      onClick={() => setIsMobileSidebarOpen(false)}
+                    >
                       <FaUsers className={styles.navIcon} />
                       <span>إدارة العملاء</span>
                     </Link>
                   )}
-                  {item === 'GetContact' && (
-                    <Link href="/admin/contact" className={styles.navLink} onClick={() => setIsMobileSidebarOpen(false)}>
+                  {item === "GetContact" && (
+                    <Link
+                      href="/admin/contact"
+                      className={styles.navLink}
+                      onClick={() => setIsMobileSidebarOpen(false)}
+                    >
                       <FaUserPlus className={styles.navIcon} />
                       <span>الاطلاع علي الشكاوي</span>
                     </Link>
                   )}
-                  {item === 'GetContact' && (
-                    <Link href="/admin/contact/edit" className={styles.navLink} onClick={() => setIsMobileSidebarOpen(false)}>
+                  {item === "GetContact" && (
+                    <Link
+                      href="/admin/contact/edit"
+                      className={styles.navLink}
+                      onClick={() => setIsMobileSidebarOpen(false)}
+                    >
                       <FaUserPlus className={styles.navIcon} />
                       <span>تعديل البيانات تواصل معنا</span>
                     </Link>
                   )}
-
                 </div>
-              )
-            })
-            }
+              );
+            })}
 
             <button onClick={handleLogout} className={styles.logoutButton}>
               <FaSignOutAlt className={styles.navIcon} />
@@ -209,50 +281,22 @@ const AdminDashboard = () => {
           <div className={styles.quickActions}>
             <h2>إجراءات سريعة</h2>
             <div className={styles.actionCards}>
-              {decodedToken?.Permission.map((item, index) => {
-                return (
-                  <div key={`action-${item}-${index}`}>
-                    {item === 'AddNewsPaper' && (
-                      <Link href="/admin/news/add" className={styles.actionCard} onClick={() => setIsMobileSidebarOpen(false)}>
-                        <FaNewspaper className={styles.actionIcon} />
-                        <h3>إضافة خبر جديد</h3>
-                        <p>أضف خبر جديد للموقع</p>
+              {Array.isArray(decodedToken?.Permission) &&
+                navItems.map(
+                  ({ permission, links }) =>
+                    decodedToken.Permission.includes(permission) &&
+                    links.map(({ href, label, icon }, index) => (
+                      <Link
+                        key={`${permission}-${index}`}
+                        href={href}
+                        className={styles.navLink}
+                        onClick={() => setIsMobileSidebarOpen(false)}
+                      >
+                        <span className={styles.navIcon}>{icon}</span>
+                        <span>{label}</span>
                       </Link>
-                    )}
-
-                    {item === 'AddUser' && (
-                      <Link href="/admin/users/add" className={styles.actionCard} onClick={() => setIsMobileSidebarOpen(false)}>
-                        <FaUserPlus className={styles.actionIcon} />
-                        <h3>إضافة مستخدم جديد</h3>
-                        <p>أضف مستخدم جديد للنظام</p>
-                      </Link>
-                    )}
-                    {item === 'GetContact' && (
-                      <Link href="/admin/contact" className={styles.actionCard} onClick={() => setIsMobileSidebarOpen(false)}>
-                        <FaUserPlus className={styles.actionIcon} />
-                        <h3>الاطلاع علي الشكاوي</h3>
-                        <p>الاطلاع علي الشكاوي</p>
-                      </Link>
-                    )}
-                    {item === 'GetAllUsers' && (
-                      <Link href="/admin/users" className={styles.actionCard} onClick={() => setIsMobileSidebarOpen(false)}>
-                        <FaUserPlus className={styles.actionIcon} />
-                        <h3>عرض واداره المستخدمين</h3>
-                        <p>عرض واداره المستخدمين</p>
-                      </Link>
-                    )}
-                    {item === 'GetContact' && (
-                      <Link href="/admin/contact/edit" className={styles.actionCard} onClick={() => setIsMobileSidebarOpen(false)}>
-                        <FaUserPlus className={styles.actionIcon} />
-                        <h3>تعديل البيانات تواصل معنا</h3>
-                        <p>تعديل البيانات تواصل معنا</p>
-                      </Link>
-                    )}
-
-                  </div>
-                )
-              })
-              }
+                    ))
+                )}
             </div>
           </div>
         </div>

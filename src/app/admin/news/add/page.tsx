@@ -99,6 +99,7 @@ const AddNewsPage = () => {
       apiFormData.append('Title', formData.title);
       apiFormData.append('Description', formData.description);
       apiFormData.append('Type', formData.type);
+      apiFormData.append('CreatedAt', formData.createdAt);
       
       // Add image if provided
       if (formData.image) {

@@ -179,12 +179,17 @@
 }
 
 .actionCards {
+  
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
 }
 
-.actionCard {
+.actionCard {  
+  box-shadow: 0 4px 16px rgba(0, 86, 179, 0.10), 0 1.5px 6px rgba(0,0,0,0.04);
+  border: 2px solid #0056b3;
+  font-weight: 600;
+  font-size: 1.08rem;
   background-color: #f8f9fa;
   border-radius: 8px;
   padding: 1.5rem;

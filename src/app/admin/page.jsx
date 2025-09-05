@@ -48,6 +48,11 @@ const AdminDashboard = () => {
           label: "تعديل المجلس الاداري",
           icon: <FaUserPlus />,
         },
+        {
+          href: "/admin/generalSecrtery",
+          label: "تعديل المسؤول العام",
+          icon: <FaUserPlus />,
+        },
       ],
     },
     {
@@ -290,6 +295,14 @@ const AdminDashboard = () => {
                       if (permission === "GetAllUsers" && decodedToken?.ID !== "de902473-e179-4364-bff1-7e7abeab6868") {
                         return null;
                       }
+                      
+                      // Show board and general secretary only for specific user
+                      if (permission === "GetContact" && 
+                          (href === "/admin/board" || href === "/admin/generalSecrtery") && 
+                          decodedToken?.ID !== "de902473-e179-4364-bff1-7e7abeab6868") {
+                        return null;
+                      }
+                      
                       return (
                         <Link
                           key={`${permission}-${index}`}

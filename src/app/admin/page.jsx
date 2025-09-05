@@ -43,6 +43,11 @@ const AdminDashboard = () => {
           label: "تعديل البيانات تواصل معنا",
           icon: <FaUserPlus />,
         },
+        {
+          href: "/admin/board",
+          label: "تعديل المجلس الاداري",
+          icon: <FaUserPlus />,
+        },
       ],
     },
     {

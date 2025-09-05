@@ -22,6 +22,13 @@
   background: linear-gradient(to bottom right, transparent 49%, #f8fafc 50%);
 }
 
+.deleteButton {
+  background: #f3f4f6;
+  color: #374151;
+  border: 2px solid #e5e7eb;
+  padding: 0.875rem 2rem;
+  border-radius: 10px;
+}
 .headerContent {
   max-width: 1200px;
   margin: 0 auto;
@@ -141,7 +148,7 @@
 /* Members Grid Styling */
 .membersGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 2rem;
   direction: rtl;
 }
@@ -170,6 +177,10 @@
 .memberImageContainer {
   margin-bottom: 1.5rem;
   position: relative;
+  width: 100%;
+  max-width: 280px;
+  height: 280px;
+  margin: 0 auto 1.5rem auto;
 }
 
 .memberImageWrapper {
@@ -187,6 +198,21 @@
   width: 100% !important;
   height: 100% !important;
   object-fit: cover;
+}
+
+.placeholderImage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  border-radius: 50%;
+}
+
+.placeholderIcon {
+  font-size: 4rem;
+  color: #94a3b8;
 }
 
 .memberInfo {
@@ -209,6 +235,355 @@
   font-weight: 500;
 }
 
+/* Edit Button Styling */
+.editButton {
+  background: linear-gradient(135deg, #003366 0%, #004080 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.3);
+}
+
+.editButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 51, 102, 0.4);
+  background: linear-gradient(135deg, #004080 0%, #0052a3 100%);
+}
+
+.editButton:active {
+  transform: translateY(0);
+}
+
+/* Modal Overlay */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(8px);
+  }
+}
+
+/* Edit Modal */
+.editModal {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Modal Header */
+.modalHeader {
+  background: linear-gradient(135deg, #003366 0%, #004080 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 20px 20px 0 0;
+  position: relative;
+  text-align: center;
+}
+
+.modalHeader h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.userName {
+  font-size: 1rem;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.closeModalButton {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.closeModalButton:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.closeModalButton:active {
+  transform: scale(0.95);
+}
+
+/* Modal Body */
+.modalBody {
+  padding: 2rem;
+}
+
+.editForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formGroup {
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.formGroup label {
+  color: #000;
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.formControl {
+  color: #000;
+  padding: 0.875rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #fafafa;
+  direction: rtl;
+  text-align: right;
+}
+
+.formControl:focus {
+  outline: none;
+  border-color: #003366;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+  transform: translateY(-1px);
+}
+
+.formControl:hover {
+  border-color: #9ca3af;
+  background: white;
+}
+
+/* Form Select Styling */
+.formSelect {
+  color: #000;
+  padding: 0.875rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #fafafa;
+  direction: rtl;
+  text-align: right;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: left 0.75rem center;
+  background-size: 1rem;
+  padding-left: 2.5rem;
+  cursor: pointer;
+}
+
+.formSelect:focus {
+  outline: none;
+  border-color: #003366;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+  transform: translateY(-1px);
+}
+
+.formSelect:hover {
+  border-color: #9ca3af;
+  background-color: white;
+}
+
+.formSelect option {
+  padding: 0.5rem;
+  background: white;
+  color: #374151;
+  direction: rtl;
+  text-align: right;
+}
+
+/* Form File Input Styling */
+.formFile {
+  color: #000;
+  padding: 0.875rem 1rem;
+  border: 2px dashed #e5e7eb;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #fafafa;
+  direction: rtl;
+  text-align: right;
+  cursor: pointer;
+  width: 100%;
+  position: relative;
+}
+
+.formFile:focus {
+  outline: none;
+  border-color: #003366;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+  transform: translateY(-1px);
+  border-style: solid;
+}
+
+.formFile:hover {
+  border-color: #9ca3af;
+  background-color: white;
+  border-style: solid;
+}
+
+.formFile::file-selector-button {
+  background: linear-gradient(135deg, #003366 0%, #004080 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 0.5rem;
+}
+
+.formFile::file-selector-button:hover {
+  background: linear-gradient(135deg, #004080 0%, #0052a3 100%);
+  transform: translateY(-1px);
+}
+
+/* Modal Footer */
+.modalFooter {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.saveButton {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  padding: 0.875rem 2rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  min-width: 140px;
+  justify-content: center;
+}
+
+.saveButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+.saveButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.saveButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.cancelButton {
+  background: #f3f4f6;
+  color: #374151;
+  border: 2px solid #e5e7eb;
+  padding: 0.875rem 2rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 100px;
+}
+
+.cancelButton:hover {
+  background: #e5e7eb;
+  border-color: #d1d5db;
+  transform: translateY(-1px);
+}
+
+.cancelButton:active {
+  transform: translateY(0);
+}
+
+/* Spinner Animation */
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .pageTitle {
@@ -220,15 +595,44 @@
   }
   
   .membersGrid {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
   
   .chairmanCard .memberImageContainer {
-    width: 200px;
-    height: 200px;
+    width: 250px;
+    height: 250px;
+  }
+  
+  .memberImageContainer {
+    max-width: 220px;
+    height: 220px;
   }
   
   .memberName {
     font-size: 1.3rem;
+  }
+
+  .editModal {
+    width: 95%;
+    margin: 1rem;
+  }
+
+  .modalHeader {
+    padding: 1.5rem;
+  }
+
+  .modalBody {
+    padding: 1.5rem;
+  }
+
+  .modalFooter {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .saveButton,
+  .cancelButton {
+    width: 100%;
+    justify-content: center;
   }
 }

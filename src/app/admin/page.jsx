@@ -86,6 +86,9 @@ const AdminDashboard = () => {
   };
 
   useEffect(() => {
+   const decodedToken = localStorage.getItem("DecodedToken")
+     
+
     if (typeof window !== "undefined") {
       const decoded = JSON.parse(localStorage.getItem("DecodedToken") || "{}");
       setDecodedToken(decoded);
@@ -161,7 +164,6 @@ const AdminDashboard = () => {
               <FaTimes />
             </button>
           </div>
-
           <div className={styles.adminProfile}>
             <div className={styles.profileImage}>
               <FaUsers size={40} />
@@ -196,7 +198,7 @@ const AdminDashboard = () => {
                       <span>إدارة الأخبار والاعلانات</span>
                     </Link>
                   )}
-                  {item === "GetAllUsers" && (
+                  {item === "GetAllUsers" && decodedToken?.ID === "de902473-e179-4364-bff1-7e7abeab6868" && (
                     <Link
                       href="/admin/clients"
                       className={styles.navLink}
@@ -278,17 +280,23 @@ const AdminDashboard = () => {
                 navItems.map(
                   ({ permission, links }) =>
                     decodedToken.Permission.includes(permission) &&
-                    links.map(({ href, label, icon }, index) => (
-                      <Link
-                        key={`${permission}-${index}`}
-                        href={href}
-                        className={styles.navLink}
-                        onClick={() => setIsMobileSidebarOpen(false)}
-                      >
-                        <span className={styles.navIcon}>{icon}</span>
-                        <span>{label}</span>
-                      </Link>
-                    ))
+                    links.map(({ href, label, icon }, index) => {
+                      // Show client management only for specific user
+                      if (permission === "GetAllUsers" && decodedToken?.ID !== "de902473-e179-4364-bff1-7e7abeab6868") {
+                        return null;
+                      }
+                      return (
+                        <Link
+                          key={`${permission}-${index}`}
+                          href={href}
+                          className={styles.navLink}
+                          onClick={() => setIsMobileSidebarOpen(false)}
+                        >
+                          <span className={styles.navIcon}>{icon}</span>
+                          <span>{label}</span>
+                        </Link>
+                      );
+                    })
                 )}
             </div>
           </div>

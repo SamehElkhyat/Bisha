@@ -20,8 +20,21 @@ interface NavLink {
 const Header = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
   const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const { isAdmin } = useAuth();
+
+  // Check if device is mobile or tablet
+  useEffect(() => {
+    const checkDevice = () => {
+      setIsMobileOrTablet(window.innerWidth <= 1024);
+    };
+    
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+    
+    return () => window.removeEventListener('resize', checkDevice);
+  }, []);
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -242,28 +255,55 @@ const Header = () => {
               <nav className={styles.mobileNavLinks}>
                 {navLinks.map((link, index) => (
                   link.hasDropdown ? (
-                    <div key={index} className={styles.mobileDropdownContainer}>
-                      <div
-                        className={`${styles.mobileNavLink} ${styles.mobileDropdownTrigger}`}
-                        onClick={() => link.id && toggleDropdown(link.id)}
+                    isMobileOrTablet ? (
+                      // For mobile/tablet: Direct navigation to dedicated pages
+                      <Link
+                        key={index}
+                        href={
+                          link.id === 'services' ? '/services' :
+                          link.id === 'about' ? '/about-mobile' :
+                          link.id === 'media' ? '/media-mobile' : '#'
+                        }
+                        className={styles.mobileNavLink}
+                        onClick={() => setIsMobileMenuOpen(false)}
                       >
-                        {link.label} <FaChevronDown className={`${styles.dropdownIcon} ${activeDropdown === link.id ? styles.rotateIcon : ''}`} />
-                      </div>
-                      {activeDropdown === link.id && (
-                        <div className={styles.mobileDropdownMenu}>
-                          {link.dropdownItems?.map((item, idx) => (
-                            <Link
-                              key={idx}
-                              href={item.href}
-                              className={styles.mobileDropdownItem}
-                              onClick={() => setIsMobileMenuOpen(false)}
-                            >
-                              {item.label}
-                            </Link>
-                          ))}
+                        {link.label}
+                      </Link>
+                    ) : (
+                      // For desktop: Keep dropdown functionality
+                      <div key={index} className={styles.mobileDropdownContainer}>
+                        <div
+                          className={`${styles.mobileNavLink} ${styles.mobileDropdownTrigger}`}
+                          onClick={() => link.id && toggleDropdown(link.id)}
+                        >
+                          {link.label} <FaChevronDown className={`${styles.dropdownIcon} ${activeDropdown === link.id ? styles.rotateIcon : ''}`} />
                         </div>
-                      )}
-                    </div>
+                        {activeDropdown === link.id && (
+                           <div className={styles.mobileDropdownMenu}>
+                             {link.dropdownItems?.map((item, idx) => (
+                               <button
+                                 key={idx}
+                                 className={styles.mobileDropdownItem}
+                                 onClick={() => {
+                                   window.location.href = item.href;
+                                   setIsMobileMenuOpen(false);
+                                 }}
+                                 style={{
+                                   background: 'none',
+                                   border: 'none',
+                                   color: 'white',
+                                   textAlign: 'right',
+                                   width: '100%',
+                                   cursor: 'pointer'
+                                 }}
+                               >
+                                 {item.label}
+                               </button>
+                             ))}
+                           </div>
+                        )}
+                      </div>
+                    )
                   ) : (
                     link.external ? (
                       <a

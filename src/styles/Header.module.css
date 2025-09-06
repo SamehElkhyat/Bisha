@@ -202,6 +202,7 @@
 
 /* Mobile menu button */
 .mobileMenuButton {
+  z-index: 99999999999999999999999;
   display: none;
   background: none;
   border: none;
@@ -219,6 +220,7 @@
 
 /* Mobile navigation */
 .mobileNav {
+  z-index: 99999999999999999999999;
   position: absolute;
   top: 100%;
   left: 0;
@@ -235,13 +237,15 @@
 }
 
 .mobileNavContent {
-  padding: 1.5rem;
+  padding: 1.5rem;  
+  z-index: 99999999999999999999999;
 }
 
 .mobileNavHeader {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 1rem;
+  z-index: 99999999999999999999999;
 }
 
 .mobileCloseButton {
@@ -253,6 +257,7 @@
   padding: 0.5rem;
   border-radius: 4px;
   transition: all 0.3s ease;
+  z-index: 99999999999999999999999;
 }
 
 .mobileCloseButton:hover {
@@ -267,12 +272,14 @@
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 99999999999999999999999;
 }
 
 .mobileNavLinks {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  z-index: 99999999999999999999999;
 }
 
 .mobileNavLink {
@@ -288,6 +295,7 @@
   align-items: center;
   justify-content: space-between;
   min-height: 44px; /* Touch-friendly minimum height */
+  z-index: 99999999999999999999999;
 }
 
 .mobileNavLink:hover {
@@ -298,10 +306,12 @@
 .mobileDropdownContainer {
   display: flex;
   flex-direction: column;
+  z-index: 99999999999999999999999;
 }
 
 .mobileDropdownTrigger {
   cursor: pointer;
+  z-index: 99999999999999999999999;
 }
 
 .mobileDropdownMenu {
@@ -309,6 +319,7 @@
   border-radius: 8px;
   margin: 0.5rem 0 1rem 1rem;
   overflow: hidden;
+  z-index: 99999999999999999999999;
 }
 
 .mobileDropdownItem {
@@ -323,6 +334,7 @@
   min-height: 44px; /* Touch-friendly */
   display: flex;
   align-items: center;
+  z-index: 99999999999999999999999;
 }
 
 .mobileDropdownItem:hover {

@@ -1,24 +1,51 @@
 "use client";
 
-import React, { useState } from 'react';
-import Image from 'next/image';
-import { FaUserTie, FaQuoteRight, FaQuoteLeft, FaEnvelope, FaTimes, FaExpand } from 'react-icons/fa';
-import styles from '../../../styles/Secretariat.module.css';
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import {
+  FaUserTie,
+  FaQuoteRight,
+  FaQuoteLeft,
+  FaEnvelope,
+  FaTimes,
+  FaExpand,
+} from "react-icons/fa";
+import styles from "../../../styles/Secretariat.module.css";
+import axios from "axios";
 
 const SecretariatPage = () => {
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
-
+  const [boardMembers, setBoardMembers] = useState([]);
   const openImageModal = () => setIsImageModalOpen(true);
   const closeImageModal = () => setIsImageModalOpen(false);
+
+  const GetAllBoard = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/Admin/Get-Secretary-General`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        }
+      );
+      console.log(response);
+      setBoardMembers(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    GetAllBoard();
+  }, []);
 
   return (
     <div className={styles.secretariatContainer}>
       <div className={styles.pageHeader}>
         <div className={styles.headerContent}>
           <h1 className={styles.pageTitle}>الأمانة العامة</h1>
-          <p className={styles.pageDescription}>
-            مكتب الأمين العام لغرفة بيشة
-          </p>
+          <p className={styles.pageDescription}>مكتب الأمين العام لغرفة بيشة</p>
         </div>
       </div>
 
@@ -27,18 +54,29 @@ const SecretariatPage = () => {
           <div className={styles.secretaryCard}>
             <div className={styles.cardContent}>
               <div className={styles.secretaryImageContainer}>
-                <div className={styles.secretaryImageWrapper} onClick={openImageModal}>
-                  <Image 
-                    src="/محمد بن إبراهيم بن مشوط.jpg" 
-                    alt="محمد بن إبراهيم بن مشوط" 
-                    width={300} 
-                    height={400} 
-                    className={styles.secretaryImage}
-                  />
-                  <div className={styles.imageOverlay}>
-                    <FaExpand className={styles.expandIcon} />
-                    <span className={styles.expandText}>اضغط للتكبير</span>
-                  </div>
+                <div
+                  className={styles.secretaryImageWrapper}
+                  onClick={boardMembers.imageUrl ? openImageModal : undefined}
+                >
+                  {boardMembers.imageUrl ? (
+                    <Image
+                      src={boardMembers.imageUrl}
+                      alt="محمد بن إبراهيم بن مشوط"
+                      width={300}
+                      height={400}
+                      className={styles.secretaryImage}
+                    />
+                  ) : (
+                    <div className={styles.placeholderImage}>
+                      <FaUserTie className={styles.placeholderIcon} />
+                    </div>
+                  )}
+                  {boardMembers.imageUrl && (
+                    <div className={styles.imageOverlay}>
+                      <FaExpand className={styles.expandIcon} />
+                      <span className={styles.expandText}>اضغط للتكبير</span>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -47,12 +85,15 @@ const SecretariatPage = () => {
                   <FaUserTie className={styles.titleIcon} />
                   <h2>الأمين العام</h2>
                 </div>
-                <h3 className={styles.secretaryName}>محمد بن إبراهيم بن مشوط</h3>
-                
+                <h3 className={styles.secretaryName}>
+                  {boardMembers.fullName}
+                </h3>
+
                 <div className={styles.quoteContainer}>
                   <FaQuoteRight className={styles.quoteIconRight} />
                   <p className={styles.secretaryQuote}>
-                    نواصل المسيرة في وضع الأسس الإدارية والاستراتيجية لبناء تنمية مستدامة لقطاع أعمال حيوي.
+                    نواصل المسيرة في وضع الأسس الإدارية والاستراتيجية لبناء
+                    تنمية مستدامة لقطاع أعمال حيوي.
                   </p>
                   <FaQuoteLeft className={styles.quoteIconLeft} />
                 </div>
@@ -67,16 +108,18 @@ const SecretariatPage = () => {
               <FaEnvelope className={styles.contactIcon} />
               <h3>للتواصل</h3>
             </div>
-            
+
             <div className={styles.contactInfo}>
               <div className={styles.emailContact}>
                 <div className={styles.emailLabel}>البريد الإلكتروني:</div>
-                <a href="mailto:malmawi@bishacci.org" className={styles.emailLink}>
-                malmawi@bishacci.org                </a>
+                <a
+                  href={`mailto:${boardMembers.email}`}
+                  className={styles.emailLink}
+                >
+                  malmawi@bishacci.org{" "}
+                </a>
               </div>
             </div>
-            
-         
           </div>
         </div>
 
@@ -95,30 +138,36 @@ const SecretariatPage = () => {
           <div className={styles.infoCard}>
             <h3 className={styles.infoTitle}>الرؤية المستقبلية</h3>
             <p className={styles.infoText}>
-              تسعى الأمانة العامة إلى تطوير آليات العمل وتحسين الخدمات المقدمة لأعضاء الغرفة، وتعزيز التواصل مع القطاعات المختلفة، والمساهمة في تحقيق رؤية المملكة 2030 من خلال دعم قطاع الأعمال وتشجيع الاستثمار في المنطقة.
+              تسعى الأمانة العامة إلى تطوير آليات العمل وتحسين الخدمات المقدمة
+              لأعضاء الغرفة، وتعزيز التواصل مع القطاعات المختلفة، والمساهمة في
+              تحقيق رؤية المملكة 2030 من خلال دعم قطاع الأعمال وتشجيع الاستثمار
+              في المنطقة.
             </p>
           </div>
         </div>
       </div>
 
       {/* Image Modal */}
-      {isImageModalOpen && (
+      {isImageModalOpen && boardMembers.imageUrl && (
         <div className={styles.imageModal} onClick={closeImageModal}>
-          <div className={styles.imageModalContent} onClick={(e) => e.stopPropagation()}>
+          <div
+            className={styles.imageModalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
             <button className={styles.closeButton} onClick={closeImageModal}>
               <FaTimes />
             </button>
             <div className={styles.modalImageContainer}>
-              <Image 
-                src="/محمد بن إبراهيم بن مشوط.jpg" 
-                alt="محمد بن إبراهيم بن مشوط" 
-                width={600} 
-                height={800} 
+              <Image
+                src={boardMembers.imageUrl}
+                alt="محمد بن إبراهيم بن مشوط"
+                width={600}
+                height={800}
                 className={styles.modalImage}
               />
             </div>
             <div className={styles.modalImageInfo}>
-              <h3>محمد بن إبراهيم بن مشوط</h3>
+              <h3>{boardMembers.fullName}</h3>
               <p>الأمين العام - غرفة بيشة التجارية</p>
             </div>
           </div>

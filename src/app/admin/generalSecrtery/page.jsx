@@ -207,13 +207,19 @@ export default function page() {
                 <div key={boardMembers.id} className={styles.memberCard}>
                   <div className={styles.memberImageContainer}>
                     <div className={styles.memberImageWrapper}>
-                      <Image
-                        src={boardMembers.imageUrl}
-                        alt={boardMembers.fullName}
-                        width={300}
-                        height={300}
-                        className={styles.memberImage}
-                      />
+                      {boardMembers.imageUrl ? (
+                        <Image
+                          src={boardMembers.imageUrl}
+                          alt={boardMembers.fullName || "الأمين العام"}
+                          width={300}
+                          height={300}
+                          className={styles.memberImage}
+                        />
+                      ) : (
+                        <div className={styles.placeholderImage}>
+                          <FaUserTie className={styles.placeholderIcon} />
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className={styles.memberInfo}>

@@ -167,8 +167,8 @@ export default function page() {
       />
       <div className={styles.pageHeader}>
         <div className={styles.headerContent}>
-          <h1 className={styles.pageTitle}>مجلس الإدارة</h1>
-          <p className={styles.pageDescription}>أعضاء مجلس إدارة غرفة بيشة</p>
+          <h1 className={styles.pageTitle}>الأمين العام</h1>
+          <p className={styles.pageDescription}>مسؤول الأمين العام لغرفة بيشة</p>
         </div>
       </div>
 
@@ -188,7 +188,7 @@ export default function page() {
           <div className={styles.sectionTitle}>
             <FaUsers className={styles.sectionIcon} />
 
-            <h2>مسؤولو المجلس العام</h2>
+            <h2>مسؤول الأمين العام</h2>
           </div>
 
           <div className={styles.membersGrid}>
@@ -198,7 +198,7 @@ export default function page() {
                 {/* Empty state */}
                 <div className={styles.noMembersFound}>
                   <FaUsers className={styles.noMembersIcon} />
-                  <p className="text-center text-gray-500 font-bold">لا يوجد مسؤولو مجلس الإدارة</p>
+                  <p className="text-center text-gray-500 font-bold">لا يوجد مسؤولو الأمين العام</p>
                 </div>
               </div>
               </>
@@ -254,7 +254,7 @@ export default function page() {
             <div className={styles.modalOverlay}>
               <div className={styles.editModal}>
                 <div className={styles.modalHeader}>
-                  <h2>تعديل بيانات المستخدم</h2>
+                  <h2>تعديل بيانات المسؤول العام</h2>
                   <span className={styles.userName}>
                     {editingUser?.fullName}
                   </span>

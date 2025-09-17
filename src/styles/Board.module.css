@@ -178,8 +178,8 @@
   margin-bottom: 1.5rem;
   position: relative;
   width: 100%;
-  max-width: 280px;
-  height: 280px;
+  max-width: 380px;
+  height: 380px;
   margin: 0 auto 1.5rem auto;
 }
 
@@ -197,7 +197,7 @@
 .memberImage {
   width: 100% !important;
   height: 100% !important;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .placeholderImage {
@@ -604,8 +604,8 @@
   }
   
   .memberImageContainer {
-    max-width: 220px;
-    height: 220px;
+    max-width: 320px;
+    height: 320px;
   }
   
   .memberName {

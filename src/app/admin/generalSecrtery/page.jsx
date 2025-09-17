@@ -211,8 +211,8 @@ export default function page() {
                         <Image
                           src={boardMembers.imageUrl}
                           alt={boardMembers.fullName || "الأمين العام"}
-                          width={300}
-                          height={300}
+                          width={400}
+                          height={400}
                           className={styles.memberImage}
                         />
                       ) : (

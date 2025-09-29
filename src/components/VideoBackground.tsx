@@ -7,16 +7,32 @@ const VideoBackground = () => {
     <div className={styles.videoContainer}>
       <div className={styles.imageWrapper}>
         <Image 
-          src="/bisha-background.jpg" 
-          alt="Bisha Background"
+          src="/image1.jpg" 
+          alt="Bisha Background 1"
           fill
           priority
           quality={100}
+          className={styles.backgroundImage1}
           style={{
             objectFit: 'cover',
             objectPosition: 'center',
-            imageRendering: 'crisp-edges', // Prevent browser blur
-            WebkitBackfaceVisibility: 'hidden', // Prevent blur on some browsers
+            imageRendering: 'crisp-edges',
+            WebkitBackfaceVisibility: 'hidden',
+            backfaceVisibility: 'hidden'
+          }}
+        />
+        <Image 
+          src="/image2.jpg" 
+          alt="Bisha Background 2"
+          fill
+          priority
+          quality={100}
+          className={styles.backgroundImage2}
+          style={{
+            objectFit: 'cover',
+            objectPosition: 'center',
+            imageRendering: 'crisp-edges',
+            WebkitBackfaceVisibility: 'hidden',
             backfaceVisibility: 'hidden'
           }}
         />

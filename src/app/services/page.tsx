@@ -8,10 +8,18 @@ const ServicesPage = () => {
   const services = [
     { href: 'https://eservices.bishacci.org.sa/#/Login', label: 'التصديق الإلكتروني', external: true },
     { href: 'https://eservices.bishacci.org.sa/#/DocumentVerify', label: 'التحقق من الوثائق', external: true },
+    { href: 'https://www.coccertificate.org/#/', label: 'التحقق وطباعة شهادة االشتراك', external: true },
     { href: 'https://eservices.bishacci.org.sa/#/Contact', label: 'تحديث البيانات', external: true },
-    { href: 'https://eservices.bishacci.org.sa/#/Login', label: 'الدليل التجاري', external: true },
-    { href: 'https://cocclient.mci.gov.sa/', label: 'تجديد الاشتراك', external: true },
-    { href: 'https://numo.sa/ar/b/fraa-bysh', label: 'التدريب الالكتروني', external: true },
+    { href: 'https://eservices.bishacci.org.sa/#/MemberIdQuery/false', label: 'الاستعلام عن عضوية', external: true },
+    { href: 'https://eservices.bishacci.org.sa/#/MemberIdQuery/true', label: 'الاستعلام عن منتسب', external: true },
+    { href: 'https://www.sdb.gov.sa/ar/تمويل-المنشات/تمويل-رواد-الاعمال', label: 'قنوف لتمويل رواد االعمال', external: true },
+    { href: 'https://bishacci.org.sa/?page_id=11593', label: 'مبادرة حلول لتحديات قطاع االعمال', external: true },
+    { href: 'https://bishacci.org.sa/?page_id=12733', label: 'بطاقة مزايا العضوية للمشتركين', external: true },
+    { href: 'https://eservices.bishacci.org.sa/#/CommericalManual', label: 'الدليل التجاري', external: true },
+    { href: 'https://bishacci.org.sa/?page_id=14839', label: 'مركز ريادة االعمال الرقمي', external: true },
+
+    { href: 'https://cocclient.mc.gov.sa/', label: 'تجديد الاشتراك', external: true },
+    { href: 'https://numo.sa/ar/b/fraa-bysh', label: 'التدريب', external: true },
     { href: 'https://eservices.bishacci.org.sa/#/Login', label: 'الشكاوي والاقتراحات', external: true },
   ];
 

@@ -29,10 +29,10 @@ const Header = () => {
     const checkDevice = () => {
       setIsMobileOrTablet(window.innerWidth <= 1024);
     };
-    
+
     checkDevice();
     window.addEventListener('resize', checkDevice);
-    
+
     return () => window.removeEventListener('resize', checkDevice);
   }, []);
   // Close dropdown when clicking outside
@@ -70,10 +70,18 @@ const Header = () => {
 
         { href: 'https://eservices.bishacci.org.sa/#/Login', label: 'التصديق الإلكتروني' },
         { href: 'https://eservices.bishacci.org.sa/#/DocumentVerify', label: 'التحقق من الوثائق' },
+        { href: 'https://www.coccertificate.org/#/', label: 'التحقق وطباعة شهادة االشتراك' },
         { href: 'https://eservices.bishacci.org.sa/#/Contact', label: 'تحديث البيانات' },
-        { href: 'https://eservices.bishacci.org.sa/#/Login', label: 'الدليل التجاري' },
-        { href: 'https://cocclient.mci.gov.sa/', label: 'تجديد الاشتراك' },
-        { href: 'https://numo.sa/ar/b/fraa-bysh', label: 'التدريب الالكتروني' },
+        { href: 'https://eservices.bishacci.org.sa/#/MemberIdQuery/false', label: 'الاستعلام عن عضوية' },
+        { href: 'https://eservices.bishacci.org.sa/#/MemberIdQuery/true', label: 'الاستعلام عن منتسب' },
+        { href: 'https://www.sdb.gov.sa/ar/تمويل-المنشات/تمويل-رواد-الاعمال', label: 'قنوف لتمويل رواد االعمال' },
+        { href: 'https://bishacci.org.sa/?page_id=11593', label: 'مبادرة حلول لتحديات قطاع االعمال' },
+        { href: 'https://bishacci.org.sa/?page_id=12733', label: 'بطاقة مزايا العضوية للمشتركين' },
+        { href: 'https://eservices.bishacci.org.sa/#/CommericalManual', label: 'الدليل التجاري' },
+        { href: 'https://bishacci.org.sa/?page_id=14839', label: 'مركز ريادة االعمال الرقمي' },
+
+        { href: 'https://cocclient.mc.gov.sa/', label: 'تجديد الاشتراك' },
+        { href: 'https://numo.sa/ar/b/fraa-bysh', label: 'التدريب' },
         { href: 'https://eservices.bishacci.org.sa/#/Login', label: 'الشكاوي والاقتراحات' },
 
       ]
@@ -261,8 +269,8 @@ const Header = () => {
                         key={index}
                         href={
                           link.id === 'services' ? '/services' :
-                          link.id === 'about' ? '/about-mobile' :
-                          link.id === 'media' ? '/media-mobile' : '#'
+                            link.id === 'about' ? '/about-mobile' :
+                              link.id === 'media' ? '/media-mobile' : '#'
                         }
                         className={styles.mobileNavLink}
                         onClick={() => setIsMobileMenuOpen(false)}
@@ -279,28 +287,28 @@ const Header = () => {
                           {link.label} <FaChevronDown className={`${styles.dropdownIcon} ${activeDropdown === link.id ? styles.rotateIcon : ''}`} />
                         </div>
                         {activeDropdown === link.id && (
-                           <div className={styles.mobileDropdownMenu}>
-                             {link.dropdownItems?.map((item, idx) => (
-                               <button
-                                 key={idx}
-                                 className={styles.mobileDropdownItem}
-                                 onClick={() => {
-                                   window.location.href = item.href;
-                                   setIsMobileMenuOpen(false);
-                                 }}
-                                 style={{
-                                   background: 'none',
-                                   border: 'none',
-                                   color: 'white',
-                                   textAlign: 'right',
-                                   width: '100%',
-                                   cursor: 'pointer'
-                                 }}
-                               >
-                                 {item.label}
-                               </button>
-                             ))}
-                           </div>
+                          <div className={styles.mobileDropdownMenu}>
+                            {link.dropdownItems?.map((item, idx) => (
+                              <button
+                                key={idx}
+                                className={styles.mobileDropdownItem}
+                                onClick={() => {
+                                  window.location.href = item.href;
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                style={{
+                                  background: 'none',
+                                  border: 'none',
+                                  color: 'white',
+                                  textAlign: 'right',
+                                  width: '100%',
+                                  cursor: 'pointer'
+                                }}
+                              >
+                                {item.label}
+                              </button>
+                            ))}
+                          </div>
                         )}
                       </div>
                     )

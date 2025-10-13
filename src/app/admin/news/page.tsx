@@ -8,6 +8,7 @@ import { FaNewspaper, FaPlus, FaEdit, FaTrash, FaSearch, FaFilter, FaTimes, FaSa
 import Link from 'next/link';
 import { newsAPI } from '../../../services/api';
 import axios from 'axios';
+import PaginationComponent from '../../../components/PaginationComponent';
 
 const AdminNewsPage = () => {
   const router = useRouter();
@@ -19,6 +20,14 @@ const AdminNewsPage = () => {
   const [filteredNews, setFilteredNews] = useState([]);
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
+  
+  // Pagination state for News
+  const [newsCurrentPage, setNewsCurrentPage] = useState(1);
+  const [newsTotalPages, setNewsTotalPages] = useState(1);
+  
+  // Pagination state for Events
+  const [eventsCurrentPage, setEventsCurrentPage] = useState(1);
+  const [eventsTotalPages, setEventsTotalPages] = useState(1);
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -160,12 +169,14 @@ const AdminNewsPage = () => {
 
   useEffect(() => {
     const fetchNews = async () => {
-      const data = await newsAPI.getAll();
-      const eventsData = await newsAPI.getAllCirculars();
+      const data = await newsAPI.getAll(newsCurrentPage);
+      const eventsData = await newsAPI.getAllCirculars(eventsCurrentPage);
       setNews(data.newsPaper);
       setFilteredNews(data.newsPaper);
+      setNewsTotalPages(data.totalPages || 1);
       setEvents(eventsData.newsPaper);
       setFilteredEvents(eventsData.newsPaper);
+      setEventsTotalPages(eventsData.totalPages || 1);
     };
     fetchNews();
     // Check if user is authenticated and is admin
@@ -178,7 +189,7 @@ const AdminNewsPage = () => {
     } else {
       setLoading(false);
     }
-  }, [user, isAdmin, router]);
+  }, [user, isAdmin, router, newsCurrentPage, eventsCurrentPage]);
   // Filter news based on search term and category
   useEffect(() => {
     let result = news;
@@ -196,6 +207,7 @@ const AdminNewsPage = () => {
 
     setFilteredNews(result);
   }, [searchTerm, selectedCategory, news]);
+  
   // Filter events based on search term
   useEffect(() => {
     let result = events;
@@ -210,6 +222,15 @@ const AdminNewsPage = () => {
 
     setFilteredEvents(result);
   }, [searchTerm, events]);
+  
+  // Pagination handlers
+  const handleNewsPageChange = (page) => {
+    setNewsCurrentPage(page);
+  };
+  
+  const handleEventsPageChange = (page) => {
+    setEventsCurrentPage(page);
+  };
   // Format date function
   const handleDelete = async (id: number) => {
     const response = await newsAPI.delete(id);
@@ -312,6 +333,13 @@ const AdminNewsPage = () => {
             )}
           </tbody>
         </table>
+        
+        {/* Pagination for News */}
+        <PaginationComponent
+          currentPage={newsCurrentPage}
+          totalPages={newsTotalPages}
+          onPageChange={handleNewsPageChange}
+        />
       </div>
 
       {/* Events/Responses Table */}
@@ -360,6 +388,13 @@ const AdminNewsPage = () => {
             )}
           </tbody>
         </table>
+        
+        {/* Pagination for Events */}
+        <PaginationComponent
+          currentPage={eventsCurrentPage}
+          totalPages={eventsTotalPages}
+          onPageChange={handleEventsPageChange}
+        />
       </div>
 
       {/* Edit Modal */}

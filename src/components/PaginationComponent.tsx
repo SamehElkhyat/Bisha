@@ -8,8 +8,8 @@ const PaginationComponent = ({
   onPageChange,
   showPageInfo = true,
 }) => {
-  const generateConsecutivePages = (start, end) => {
-    const pages = [];
+  const generateConsecutivePages = (start: number, end: number) => {
+    const pages: number[] = [];
     for (let i = start; i <= end; i++) {
       pages.push(i);
     }
@@ -83,12 +83,17 @@ const PaginationComponent = ({
             } else if (isActive) {
               pageClass = "bg-blue-500 text-white";
             } else {
-              pageClass = "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105";
+              pageClass =
+                "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105";
             }
 
             return (
               <button
-                key={typeof page === "number" ? `page-${page}` : `ellipsis-${index}`}
+                key={
+                  typeof page === "number"
+                    ? `page-${page}`
+                    : `ellipsis-${index}`
+                }
                 onClick={() => typeof page === "number" && onPageChange(page)}
                 disabled={isEllipsis}
                 className={`flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-200 text-sm font-medium ${pageClass}`}

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "../styles/NewsSections.module.css";
-import { newsAPI } from '../services/api';
+import { newsAPI } from "../services/api";
 import { motion, AnimatePresence } from "framer-motion";
 import PaginationComponent from "../components/PaginationComponent";
 
@@ -13,13 +13,13 @@ export default function NewsSections() {
   const [error, setError] = useState("");
   const [totalPages, setTotalPages] = useState(1);
   const [apiPage, setApiPage] = useState(1);
-  
+
   // Carousel states
   const [currentPage, setCurrentPage] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
-  
+
   const carouselRef = useRef(null);
 
   // Items per page based on screen size
@@ -39,8 +39,8 @@ export default function NewsSections() {
     };
 
     handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Format date
@@ -72,15 +72,15 @@ export default function NewsSections() {
         "07": "يوليو",
         "08": "أغسطس",
         "09": "سبتمبر",
-        "10": "أكتوبر",
-        "11": "نوفمبر",
-        "12": "ديسمبر",
+        10: "أكتوبر",
+        11: "نوفمبر",
+        12: "ديسمبر",
       };
 
-      return { 
-        day, 
-        month: monthNames[monthNum], 
-        year 
+      return {
+        day,
+        month: monthNames[monthNum],
+        year,
       };
     } catch (error) {
       console.error("Error formatting date:", error);
@@ -117,9 +117,9 @@ export default function NewsSections() {
   // Carousel navigation functions
   const handleCarouselNavigation = (direction) => {
     if (newsData.length <= itemsPerPage) return;
-    
+
     const maxPages = Math.ceil(newsData.length / itemsPerPage) - 1;
-    
+
     if (direction === "next") {
       setCurrentPage((prev) => (prev >= maxPages ? 0 : prev + 1));
     } else {
@@ -130,7 +130,7 @@ export default function NewsSections() {
   // Auto-scroll carousel within current API page
   useEffect(() => {
     if (newsData.length <= itemsPerPage) return;
-    
+
     const interval = setInterval(() => {
       handleCarouselNavigation("next");
     }, 5000);
@@ -172,7 +172,7 @@ export default function NewsSections() {
     <section className={styles.newsSection}>
       <div className={styles.newsContainer}>
         <h2 className={styles.sectionTitle}>اخر الأخبار</h2>
-        
+
         <div className={styles.contentContainer}>
           {loading ? (
             <div className={styles.loadingContainer}>
@@ -189,7 +189,7 @@ export default function NewsSections() {
             </div>
           ) : (
             <>
-              <div 
+              <div
                 className={styles.newsCarousel}
                 ref={carouselRef}
                 onMouseDown={handleMouseDown}
@@ -198,7 +198,7 @@ export default function NewsSections() {
                 onMouseLeave={handleMouseUp}
               >
                 <AnimatePresence mode="wait">
-                  <motion.div 
+                  <motion.div
                     key={currentPage}
                     className={styles.carouselItems}
                     initial={{ opacity: 0, x: 50 }}
@@ -209,19 +209,19 @@ export default function NewsSections() {
                     {getCurrentItems().map((news, index) => {
                       const { day, month, year } = formatDate(news.createdAt);
                       return (
-                        <motion.div 
-                          key={news.id} 
+                        <motion.div
+                          key={news.id}
                           className={styles.newsCard}
                           initial={{ opacity: 0, y: 20 }}
-                          animate={{ 
-                            opacity: 1, 
+                          animate={{
+                            opacity: 1,
                             y: 0,
-                            transition: { delay: index * 0.1 }
+                            transition: { delay: index * 0.1 },
                           }}
-                          whileHover={{ 
+                          whileHover={{
                             y: -5,
                             boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
-                            transition: { duration: 0.2 }
+                            transition: { duration: 0.2 },
                           }}
                         >
                           <Link
@@ -241,8 +241,12 @@ export default function NewsSections() {
                             <div className={styles.newsContent}>
                               <div className={styles.newsDate}>
                                 <div className={styles.dateBox}>
-                                  <span className={styles.dateNumber}>{day}</span>
-                                  <span className={styles.dateText}>{`${month} ${year}`}</span>
+                                  <span className={styles.dateNumber}>
+                                    {day}
+                                  </span>
+                                  <span
+                                    className={styles.dateText}
+                                  >{`${month} ${year}`}</span>
                                 </div>
                               </div>
                               <h3 className={styles.newsTitle}>{news.title}</h3>
@@ -258,18 +262,26 @@ export default function NewsSections() {
               {/* Carousel controls for items within current page */}
               {newsData.length > itemsPerPage && (
                 <div className={styles.carouselControls}>
-                  <button 
+                  <button
                     className={`${styles.carouselButton} ${styles.prevButton}`}
                     onClick={() => handleCarouselNavigation("prev")}
                     aria-label="Previous news"
                   >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                      <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path
+                        d="M15 18l-6-6 6-6"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   </button>
-                  
+
                   <div className={styles.carouselIndicators}>
-                    {Array.from({ length: Math.ceil(newsData.length / itemsPerPage) }).map((_, index) => (
+                    {Array.from({
+                      length: Math.ceil(newsData.length / itemsPerPage),
+                    }).map((_, index) => (
                       <button
                         key={index}
                         className={`${styles.carouselIndicator} ${
@@ -280,14 +292,20 @@ export default function NewsSections() {
                       />
                     ))}
                   </div>
-                  
-                  <button 
+
+                  <button
                     className={`${styles.carouselButton} ${styles.nextButton}`}
                     onClick={() => handleCarouselNavigation("next")}
                     aria-label="Next news"
                   >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                      <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path
+                        d="M9 18l6-6-6-6"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   </button>
                 </div>

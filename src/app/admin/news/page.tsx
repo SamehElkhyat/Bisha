@@ -14,7 +14,8 @@ const AdminNewsPage = () => {
   const router = useRouter();
   const { user, isAdmin } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [newsSearchTerm, setNewsSearchTerm] = useState('');
+  const [eventsSearchTerm, setEventsSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [news, setNews] = useState([]);
   const [filteredNews, setFilteredNews] = useState([]);
@@ -137,7 +138,6 @@ const AdminNewsPage = () => {
         type: formData.type,
         createdAt: formData.createdAt
       };
-      console.log(updatedData);
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/NewsPaper/Update`, updatedData, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
@@ -194,10 +194,10 @@ const AdminNewsPage = () => {
   useEffect(() => {
     let result = news;
 
-    if (searchTerm) {
+    if (newsSearchTerm) {
       result = result.filter(item =>
-        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.content.toLowerCase().includes(searchTerm.toLowerCase())
+        item.title?.toLowerCase().includes(newsSearchTerm.toLowerCase()) ||
+        item.content?.toLowerCase().includes(newsSearchTerm.toLowerCase())
       );
     }
 
@@ -206,22 +206,22 @@ const AdminNewsPage = () => {
     }
 
     setFilteredNews(result);
-  }, [searchTerm, selectedCategory, news]);
+  }, [newsSearchTerm, selectedCategory, news]);
   
   // Filter events based on search term
   useEffect(() => {
     let result = events;
 
-    if (searchTerm) {
+    if (eventsSearchTerm) {
       result = result.filter(item =>
-        item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.type?.toLowerCase().includes(searchTerm.toLowerCase())
+        item.title?.toLowerCase().includes(eventsSearchTerm.toLowerCase()) ||
+        item.description?.toLowerCase().includes(eventsSearchTerm.toLowerCase()) ||
+        item.content?.toLowerCase().includes(eventsSearchTerm.toLowerCase())
       );
     }
 
     setFilteredEvents(result);
-  }, [searchTerm, events]);
+  }, [eventsSearchTerm, events]);
   
   // Pagination handlers
   const handleNewsPageChange = (page) => {
@@ -259,43 +259,29 @@ const AdminNewsPage = () => {
         </Link>
       </div>
 
-      <div className={styles.filterSection}>
-        <div className={styles.searchBox}>
-          <input
-            className="text-black"
-            type="text"
-            placeholder="ابحث هنا..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <FaSearch className={styles.searchIcon} />
-        </div>
-
-        <div className={styles.categoryFilter}>
-          <FaFilter className={styles.filterIcon} />
-          <select
-            className="text-black"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-          >
-            {categories.map((category, index) => (
-              <option key={index} value={category}>
-                {category === 'all' ? 'جميع التصنيفات' : category}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
       {/* News Table */}
       <div className={styles.tableContainer}>
         <h2 className={styles.sectionTitle}>الأخبار</h2>
+        
+        {/* News Search Bar */}
+        <div className={styles.filterSection}>
+          <div className={styles.searchBox}>
+            <input
+              className="text-black"
+              type="text"
+              placeholder="ابحث في الأخبار..."
+              value={newsSearchTerm}
+              onChange={(e) => setNewsSearchTerm(e.target.value)}
+            />
+            <FaSearch className={styles.searchIcon} />
+          </div>
+
+        </div>
         <table className={styles.dataTable}>
           <thead>
             <tr>
               <th>الرقم</th>
               <th>العنوان</th>
-              <th>التصنيف</th>
               <th>التاريخ</th>
               <th>الإجراءات</th>
             </tr>
@@ -307,8 +293,7 @@ const AdminNewsPage = () => {
                 <tr key={item.id}>
                   <td className="text-black">{index + 1}</td>
                   <td className="text-black">{item.title}</td>
-                  <td className="text-black">{item.category}</td>
-                  <td className="text-black">{item.createdAt}</td>
+                  <td className="text-black">{new Date(item.createdAt).toDateString()}</td>
                   <td className={styles.actionsCell}>
                     <button
                       className={styles.editButton}
@@ -345,12 +330,26 @@ const AdminNewsPage = () => {
       {/* Events/Responses Table */}
       <div className={styles.tableContainer}>
         <h2 className={styles.sectionTitle}>الاعلانات</h2>
+        
+        {/* Events Search Bar */}
+        <div className={styles.filterSection}>
+          <div className={styles.searchBox}>
+            <input
+              className="text-black"
+              type="text"
+              placeholder="ابحث في الاعلانات..."
+              value={eventsSearchTerm}
+              onChange={(e) => setEventsSearchTerm(e.target.value)}
+            />
+            <FaSearch className={styles.searchIcon} />
+          </div>
+        </div>
         <table className={styles.dataTable}>
           <thead>
             <tr>
               <th>الرقم</th>
               <th>العنوان</th>
-              <th>المحتوى</th>
+              <th>التاريخ</th>
               <th>الإجراءات</th>
             </tr>
           </thead>
@@ -361,7 +360,7 @@ const AdminNewsPage = () => {
                   <td className="text-black">{index + 1}</td>
                   <td className="text-black">{item.title || 'غير محدد'}</td>
                   <td className="text-black">
-                    {item.content ? item.content.substring(0, 100) + '...' : 'غير محدد'}
+                    {new Date(item.createdAt).toDateString()}
                   </td>
                   <td className={styles.actionsCell}>
                     <button

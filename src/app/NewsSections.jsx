@@ -4,12 +4,15 @@ import Image from "next/image";
 import styles from "../styles/NewsSections.module.css";
 import { newsAPI } from '../services/api';
 import { motion, AnimatePresence } from "framer-motion";
+import PaginationComponent from "../components/PaginationComponent";
 
 export default function NewsSections() {
   // State for news data from API
   const [newsData, setNewsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [totalPages, setTotalPages] = useState(1);
+  const [apiPage, setApiPage] = useState(1);
   
   // Carousel states
   const [currentPage, setCurrentPage] = useState(0);
@@ -91,9 +94,11 @@ export default function NewsSections() {
       try {
         setLoading(true);
         setError("");
-        const data = await newsAPI.getAll();
+        const data = await newsAPI.getAll(apiPage);
 
         if (data && data.newsPaper) {
+          setApiPage(data.pageNumber);
+          setTotalPages(data.totalPages);
           setNewsData(data.newsPaper);
         } else {
           setError("لا توجد بيانات متاحة");
@@ -107,10 +112,10 @@ export default function NewsSections() {
     };
 
     fetchNews();
-  }, []);
+  }, [apiPage]);
 
   // Carousel navigation functions
-  const handleNavigation = (direction) => {
+  const handleCarouselNavigation = (direction) => {
     if (newsData.length <= itemsPerPage) return;
     
     const maxPages = Math.ceil(newsData.length / itemsPerPage) - 1;
@@ -122,16 +127,16 @@ export default function NewsSections() {
     }
   };
 
-  // Auto-scroll carousel
+  // Auto-scroll carousel within current API page
   useEffect(() => {
+    if (newsData.length <= itemsPerPage) return;
+    
     const interval = setInterval(() => {
-      if (newsData.length > itemsPerPage) {
-        handleNavigation("next");
-      }
-    }, 7000);
+      handleCarouselNavigation("next");
+    }, 5000);
 
     return () => clearInterval(interval);
-  }, [newsData.length, itemsPerPage]);
+  }, [newsData.length, itemsPerPage, currentPage]);
 
   // Mouse drag handlers for carousel
   const handleMouseDown = (e) => {
@@ -156,6 +161,11 @@ export default function NewsSections() {
   const getCurrentItems = () => {
     const startIndex = currentPage * itemsPerPage;
     return newsData.slice(startIndex, startIndex + itemsPerPage);
+  };
+
+  const handlePageChange = (page) => {
+    setApiPage(page);
+    setCurrentPage(0); // Reset carousel to first item when changing API page
   };
 
   return (
@@ -198,7 +208,6 @@ export default function NewsSections() {
                   >
                     {getCurrentItems().map((news, index) => {
                       const { day, month, year } = formatDate(news.createdAt);
-                      console.log(news);
                       return (
                         <motion.div 
                           key={news.id} 
@@ -246,11 +255,12 @@ export default function NewsSections() {
                 </AnimatePresence>
               </div>
 
+              {/* Carousel controls for items within current page */}
               {newsData.length > itemsPerPage && (
                 <div className={styles.carouselControls}>
                   <button 
                     className={`${styles.carouselButton} ${styles.prevButton}`}
-                    onClick={() => handleNavigation("prev")}
+                    onClick={() => handleCarouselNavigation("prev")}
                     aria-label="Previous news"
                   >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -266,14 +276,14 @@ export default function NewsSections() {
                           index === currentPage ? styles.activeIndicator : ""
                         }`}
                         onClick={() => setCurrentPage(index)}
-                        aria-label={`Go to page ${index + 1}`}
+                        aria-label={`Go to carousel page ${index + 1}`}
                       />
                     ))}
                   </div>
                   
                   <button 
                     className={`${styles.carouselButton} ${styles.nextButton}`}
-                    onClick={() => handleNavigation("next")}
+                    onClick={() => handleCarouselNavigation("next")}
                     aria-label="Next news"
                   >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -282,6 +292,13 @@ export default function NewsSections() {
                   </button>
                 </div>
               )}
+
+              {/* API Pagination for navigating between pages */}
+              <PaginationComponent
+                currentPage={apiPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
             </>
           )}
         </div>

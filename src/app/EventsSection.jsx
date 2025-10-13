@@ -2,21 +2,24 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "../styles/NewsSections.module.css";
-import { newsAPI } from '../services/api';
+import { newsAPI } from "../services/api";
 import { motion, AnimatePresence } from "framer-motion";
+import PaginationComponent from "../components/PaginationComponent";
 
 export default function EventsSection() {
   // State for news data from API
   const [eventsData, setEventsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  
+  const [totalPages, setTotalPages] = useState(1);
+  const [apiPage, setApiPage] = useState(1);
+
   // Carousel states
   const [currentPage, setCurrentPage] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
-  
+
   const carouselRef = useRef(null);
 
   // Items per page based on screen size
@@ -36,8 +39,8 @@ export default function EventsSection() {
     };
 
     handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Format date
@@ -69,15 +72,15 @@ export default function EventsSection() {
         "07": "يوليو",
         "08": "أغسطس",
         "09": "سبتمبر",
-        "10": "أكتوبر",
-        "11": "نوفمبر",
-        "12": "ديسمبر",
+        10: "أكتوبر",
+        11: "نوفمبر",
+        12: "ديسمبر",
       };
 
-      return { 
-        day, 
-        month: monthNames[monthNum], 
-        year 
+      return {
+        day,
+        month: monthNames[monthNum],
+        year,
       };
     } catch (error) {
       console.error("Error formatting date:", error);
@@ -91,9 +94,11 @@ export default function EventsSection() {
       try {
         setLoading(true);
         setError("");
-        const data = await newsAPI.getAllCirculars();
+        const data = await newsAPI.getAllCirculars(apiPage);
 
         if (data && data.newsPaper) {
+          setApiPage(data.pageNumber);
+          setTotalPages(data.totalPages);
           setEventsData(data.newsPaper);
         } else {
           setError("لا توجد بيانات متاحة");
@@ -107,10 +112,10 @@ export default function EventsSection() {
     };
 
     fetchNews();
-  }, []);
+  }, [apiPage]);
 
-  // Carousel navigation functions
-  const handleNavigation = (direction) => {
+  // Carousel navigation
+  const handleCarouselNavigation = (direction) => {
     if (eventsData.length <= itemsPerPage) return;
     
     const maxPages = Math.ceil(eventsData.length / itemsPerPage) - 1;
@@ -122,16 +127,16 @@ export default function EventsSection() {
     }
   };
 
-  // Auto-scroll carousel
+  // Auto-scroll carousel within current API page
   useEffect(() => {
+    if (eventsData.length <= itemsPerPage) return;
+    
     const interval = setInterval(() => {
-      if (eventsData.length > itemsPerPage) {
-        handleNavigation("next");
-      }
-    }, 7000);
+      handleCarouselNavigation("next");
+    }, 5000);
 
     return () => clearInterval(interval);
-  }, [eventsData.length, itemsPerPage]);
+  }, [eventsData.length, itemsPerPage, currentPage]);
 
   // Mouse drag handlers for carousel
   const handleMouseDown = (e) => {
@@ -158,11 +163,15 @@ export default function EventsSection() {
     return eventsData.slice(startIndex, startIndex + itemsPerPage);
   };
 
+  const handlePageChange = (page) => {
+    setApiPage(page);
+    setCurrentPage(0); // Reset carousel to first item when changing API page
+  };
   return (
     <section className={styles.newsSection}>
       <div className={styles.newsContainer}>
         <h2 className={styles.sectionTitle}>اخر الاعلانات</h2>
-        
+
         <div className={styles.contentContainer}>
           {loading ? (
             <div className={styles.loadingContainer}>
@@ -179,7 +188,7 @@ export default function EventsSection() {
             </div>
           ) : (
             <>
-              <div 
+              <div
                 className={styles.newsCarousel}
                 ref={carouselRef}
                 onMouseDown={handleMouseDown}
@@ -188,7 +197,7 @@ export default function EventsSection() {
                 onMouseLeave={handleMouseUp}
               >
                 <AnimatePresence mode="wait">
-                  <motion.div 
+                  <motion.div
                     key={currentPage}
                     className={styles.carouselItems}
                     initial={{ opacity: 0, x: 50 }}
@@ -198,21 +207,21 @@ export default function EventsSection() {
                   >
                     {getCurrentItems().map((news, index) => {
                       const { day, month, year } = formatDate(news.createdAt);
-                      
+
                       return (
-                        <motion.div 
-                          key={news.id} 
+                        <motion.div
+                          key={news.id}
                           className={styles.newsCard}
                           initial={{ opacity: 0, y: 20 }}
-                          animate={{ 
-                            opacity: 1, 
+                          animate={{
+                            opacity: 1,
                             y: 0,
-                            transition: { delay: index * 0.1 }
+                            transition: { delay: index * 0.1 },
                           }}
-                          whileHover={{ 
+                          whileHover={{
                             y: -5,
                             boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
-                            transition: { duration: 0.2 }
+                            transition: { duration: 0.2 },
                           }}
                         >
                           <Link
@@ -231,8 +240,12 @@ export default function EventsSection() {
                             <div className={styles.newsContent}>
                               <div className={styles.newsDate}>
                                 <div className={styles.dateBox}>
-                                  <span className={styles.dateNumber}>{day}</span>
-                                  <span className={styles.dateText}>{`${month} ${year}`}</span>
+                                  <span className={styles.dateNumber}>
+                                    {day}
+                                  </span>
+                                  <span
+                                    className={styles.dateText}
+                                  >{`${month} ${year}`}</span>
                                 </div>
                               </div>
                               <h3 className={styles.newsTitle}>{news.title}</h3>
@@ -244,11 +257,13 @@ export default function EventsSection() {
                   </motion.div>
                 </AnimatePresence>
               </div>
+
+              {/* Carousel controls for items within current page */}
               {eventsData.length > itemsPerPage && (
                 <div className={styles.carouselControls}>
                   <button 
                     className={`${styles.carouselButton} ${styles.prevButton}`}
-                    onClick={() => handleNavigation("prev")}
+                    onClick={() => handleCarouselNavigation("prev")}
                     aria-label="Previous events"
                   >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -264,14 +279,14 @@ export default function EventsSection() {
                           index === currentPage ? styles.activeIndicator : ""
                         }`}
                         onClick={() => setCurrentPage(index)}
-                        aria-label={`Go to page ${index + 1}`}
+                        aria-label={`Go to carousel page ${index + 1}`}
                       />
                     ))}
                   </div>
                   
                   <button 
                     className={`${styles.carouselButton} ${styles.nextButton}`}
-                    onClick={() => handleNavigation("next")}
+                    onClick={() => handleCarouselNavigation("next")}
                     aria-label="Next events"
                   >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -280,6 +295,13 @@ export default function EventsSection() {
                   </button>
                 </div>
               )}
+
+              {/* API Pagination for navigating between pages */}
+              <PaginationComponent
+                currentPage={apiPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
             </>
           )}
         </div>
